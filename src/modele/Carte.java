@@ -8,17 +8,20 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 public class Carte {
 
-	private int [][] sol, milieu;
+	private int [][] sol, milieu, bg;
 	
-	private String fichierDuSol, fichierDuMilieu;
+	private String fichierDuSol, fichierDuMilieu, fichierDuBg;
 
-	public Carte(String carteSol, String carteMilieu) {
+	public Carte(String carteSol, String carteMilieu, String carteBg) {
 		this.fichierDuSol=carteSol;
 		this.fichierDuMilieu=carteMilieu;
-		this.sol = new int [30][30];
-		this.milieu = new int [30][30];
+		this.fichierDuBg=carteBg;
+		this.sol = new int [20][30];
+		this.milieu = new int [20][30];
+		this.bg = new int [20][30];
 		this.initialiseMap(this.sol, fichierDuSol);
 		this.initialiseMap(this.milieu, fichierDuMilieu);
+		this.initialiseMap(this.bg, fichierDuBg);
 	}
 
 	public void initialiseMap(int[][] carte, String fichier) {
@@ -50,5 +53,8 @@ public class Carte {
 	
 	public int [][] getMapMilieu(){
 		return this.milieu;
+	}
+	public int [][] getMapBg(){
+		return this.bg;
 	}
 }
