@@ -8,9 +8,12 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import modele.Carte;
+import modele.PersonnageQuiBougent;
 import modele.Tuiles;
 
 public class Controleur implements Initializable {
@@ -19,13 +22,14 @@ public class Controleur implements Initializable {
 	Carte tileSol = new Carte("src/carte.txt", "src/carte2.txt", "src/carte3.txt");	
 	int temps;
 	private Timeline loop;
+	PersonnageQuiBougent p1 = new PersonnageQuiBougent(0, 0, 3);
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		creerVue(tileSol, sol);
 		initAnimation();
 		loop.play();
-
+		sol.getChildren().add(p1.getPersoVue().getImage());
 	}
 
 	public void creerVue(Carte map, Pane lePane) {
@@ -56,6 +60,20 @@ public class Controleur implements Initializable {
 				img.relocate(y * 32, x * 32);
 				sol.getChildren().add(img);}
 			}
+		}
+	}
+	
+	
+	public void actions(KeyEvent a) {
+		if(a.getCode() == KeyCode.D || a.getCode()==KeyCode.RIGHT) {
+			sol.relocate(sol.getLayoutX()-p1.getVitesse(),sol.getLayoutY());
+			p1.setX(p1.getX()+p1.getVitesse());
+		}
+						
+		if(a.getCode()==KeyCode.Q|| a.getCode()==KeyCode.LEFT) {
+			p1.setX(p1.getX()-p1.getVitesse());
+			sol.relocate(sol.getLayoutX()+p1.getVitesse(),sol.getLayoutY());
+
 		}
 	}
 

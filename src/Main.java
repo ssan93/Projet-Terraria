@@ -23,7 +23,7 @@ public class Main extends Application {
 		Controleur c= loader.getController();
      	Scene scene = new Scene(root,root.getPrefWidth(),root.getPrefHeight());	
      	
-     	//scene.setOnKeyPressed(e->c.gestionActionsLink(e));
+     	scene.setOnKeyPressed(e->c.actions(e));
      	primaryStage.setScene(scene);												
 		primaryStage.setFullScreen(true);
      	primaryStage.show();															
