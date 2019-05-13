@@ -27,4 +27,11 @@ public abstract class Personnage {
 		this.y.setValue(y);
 	}
 	
+	public SimpleIntegerProperty getXProperty() {
+		return this.x;
+	}
+	
+	public SimpleIntegerProperty getYProperty() {
+		return this.y;
+	}
 }
