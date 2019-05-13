@@ -2,11 +2,11 @@ package modele;
 
 import javafx.beans.property.SimpleIntegerProperty;
 
-public abstract class Personnage {
+public abstract class Character {
 
 	private SimpleIntegerProperty x,y;
 	
-	public Personnage(int x, int y) {
+	public Character(int x, int y) {
 		this.x = new SimpleIntegerProperty(x);
 		this.y = new SimpleIntegerProperty(y);
 	}

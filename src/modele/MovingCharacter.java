@@ -1,17 +1,17 @@
 package modele;
 
 import javafx.beans.property.SimpleStringProperty;
-import vue.personnages.PersonnageVue;
+import vue.personnages.CharacterView;
 
-public class PersonnageQuiBougent extends Personnage{
+public class MovingCharacter extends Character{
 
-	private int vitesse;
-	PersonnageVue persoVue;
+	private int speed;
+	CharacterView persoVue;
 	SimpleStringProperty anim;
-	public PersonnageQuiBougent(int x, int y, int vitesse) {
+	public MovingCharacter(int x, int y, int speed) {
 		super(x, y);
-		this.vitesse=vitesse;
-		this.persoVue=new PersonnageVue(this, "vue/personnages/rambo_run_right.gif");
+		this.speed=speed;
+		this.persoVue=new CharacterView(this, "vue/personnages/rambo_run_right.gif");
 		this.anim = new SimpleStringProperty("repos");
 	}
 	
@@ -24,14 +24,14 @@ public class PersonnageQuiBougent extends Personnage{
 	}
 	
 	public int getVitesse() {
-		return this.vitesse;
+		return this.speed;
 	}
 	
 	public void setVitesse(int vitesse) {
-		this.vitesse=vitesse;
+		this.speed=vitesse;
 	}
 	
-	public PersonnageVue getPersoVue() {
+	public CharacterView getPersoVue() {
 		return this.persoVue;
 	}
 

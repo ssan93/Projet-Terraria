@@ -1,9 +1,9 @@
 package modele;
 
-import vue.personnages.PersonnageVue;
+import vue.personnages.CharacterView;
 import vue.personnages.RamboVue;
 
-public class Rambo extends PersonnageQuiBougent{
+public class Rambo extends MovingCharacter{
 
 	public Rambo(int x, int y, int vitesse) {
 		super(x, y, vitesse);

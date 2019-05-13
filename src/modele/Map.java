@@ -6,19 +6,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-public class Carte {
+public class Map {
 
 	private int [][] sol, milieu, bg;
 	
 	private String fichierDuSol, fichierDuMilieu, fichierDuBg;
 
-	public Carte(String carteSol, String carteMilieu, String carteBg) {
+	public Map(String carteSol, String carteMilieu, String carteBg) {
 		this.fichierDuSol=carteSol;
 		this.fichierDuMilieu=carteMilieu;
 		this.fichierDuBg=carteBg;
-		this.sol = new int [20][60];
-		this.milieu = new int [20][60];
-		this.bg = new int [20][60];
+		this.sol = new int [20][65];
+		this.milieu = new int [20][65];
+		this.bg = new int [20][65];
 		this.initialiseMap(this.sol, fichierDuSol);
 		this.initialiseMap(this.milieu, fichierDuMilieu);
 		this.initialiseMap(this.bg, fichierDuBg);

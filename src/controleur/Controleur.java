@@ -13,15 +13,15 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
-import modele.Carte;
-import modele.PersonnageQuiBougent;
+import modele.Map;
+import modele.MovingCharacter;
 import modele.Rambo;
 import modele.Tuiles;
 
 public class Controleur implements Initializable {
 	@FXML
 	private Pane sol;
-	Carte tileSol = new Carte("src/carte.txt", "src/carte2.txt", "src/carte3.txt");	
+	Map tileSol = new Map("src/carte.txt", "src/carte2.txt", "src/carte3.txt");	
 	int temps;
 	private Timeline loop;
 	Rambo p1 = new Rambo(500, 350, 3);	
@@ -35,7 +35,7 @@ public class Controleur implements Initializable {
 		
 	}
 
-	public void creerVue(Carte map, Pane lePane) {
+	public void creerVue(Map map, Pane lePane) {
 		int t2[][] = map.getMapBg();
 		for (int x = 0; x < t2.length; x++) {
 			for (int y = 0; y < t2[x].length; y++) {

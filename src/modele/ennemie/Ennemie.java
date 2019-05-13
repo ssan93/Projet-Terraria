@@ -1,9 +1,9 @@
 package modele.ennemie;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import modele.Personnage;
+import modele.Character;
 
-public class Ennemie extends Personnage{
+public class Ennemie extends Character{
 
 	SimpleIntegerProperty pv, pa;
 	public Ennemie(int x, int y, int pv, int pa) {
