@@ -24,7 +24,7 @@ public class Controleur implements Initializable {
 	Carte tileSol = new Carte("src/carte.txt", "src/carte2.txt", "src/carte3.txt");	
 	int temps;
 	private Timeline loop;
-	Rambo p1 = new Rambo(0, 0, 3);	
+	Rambo p1 = new Rambo(500, 350, 3);	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
