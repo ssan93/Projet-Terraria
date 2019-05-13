@@ -7,6 +7,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -14,6 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import modele.Carte;
 import modele.PersonnageQuiBougent;
+import modele.Rambo;
 import modele.Tuiles;
 
 public class Controleur implements Initializable {
@@ -22,21 +24,23 @@ public class Controleur implements Initializable {
 	Carte tileSol = new Carte("src/carte.txt", "src/carte2.txt", "src/carte3.txt");	
 	int temps;
 	private Timeline loop;
-	PersonnageQuiBougent p1 = new PersonnageQuiBougent(0, 0, 3);
-
+	Rambo p1 = new Rambo(0, 0, 3);	
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		creerVue(tileSol, sol);
 		initAnimation();
 		loop.play();
 		sol.getChildren().add(p1.getPersoVue().getImage());
+		
 	}
 
 	public void creerVue(Carte map, Pane lePane) {
 		int t2[][] = map.getMapBg();
 		for (int x = 0; x < t2.length; x++) {
 			for (int y = 0; y < t2[x].length; y++) {
-				if (t2[x][y] != 0) {
+				if (t2[x][y] != 0) {					//sol.relocate(sol.getLayoutX()-(48*5),sol.getLayoutY()-(48*5));
+
 				ImageView img = new ImageView(Tuiles.selectionTuile(t2[x][y]));
 				img.relocate(y * 32, x * 32);
 				sol.getChildren().add(img);}
@@ -68,11 +72,13 @@ public class Controleur implements Initializable {
 		if(a.getCode() == KeyCode.D || a.getCode()==KeyCode.RIGHT) {
 			sol.relocate(sol.getLayoutX()-p1.getVitesse(),sol.getLayoutY());
 			p1.setX(p1.getX()+p1.getVitesse());
+			p1.setAnim("right");
 		}
 						
 		if(a.getCode()==KeyCode.Q|| a.getCode()==KeyCode.LEFT) {
 			p1.setX(p1.getX()-p1.getVitesse());
 			sol.relocate(sol.getLayoutX()+p1.getVitesse(),sol.getLayoutY());
+			p1.setAnim("left");
 
 		}
 	}
@@ -85,7 +91,6 @@ public class Controleur implements Initializable {
 		KeyFrame kf = new KeyFrame(
 			Duration.seconds(0.033), (ev ->{
 				if(temps%30==0) {
-					//sol.relocate(sol.getLayoutX()-(48*5),sol.getLayoutY()-(48*5));
 					System.out.println("tac");
 				}
 				temps++;

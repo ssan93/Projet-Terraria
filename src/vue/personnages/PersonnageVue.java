@@ -1,4 +1,6 @@
 package vue.personnages;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import modele.PersonnageQuiBougent;
@@ -19,4 +21,5 @@ public class PersonnageVue {
 		return this.imageViewPerso;
 	}
 
+	
 }

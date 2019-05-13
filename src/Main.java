@@ -25,7 +25,7 @@ public class Main extends Application {
      	
      	scene.setOnKeyPressed(e->c.actions(e));
      	primaryStage.setScene(scene);												
-		primaryStage.setFullScreen(true);
+		//primaryStage.setFullScreen(true);
      	primaryStage.show();															
 		} catch (Exception e) {
 			e.printStackTrace();													
