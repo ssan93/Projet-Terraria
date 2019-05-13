@@ -16,9 +16,9 @@ public class Carte {
 		this.fichierDuSol=carteSol;
 		this.fichierDuMilieu=carteMilieu;
 		this.fichierDuBg=carteBg;
-		this.sol = new int [20][30];
-		this.milieu = new int [20][30];
-		this.bg = new int [20][30];
+		this.sol = new int [20][60];
+		this.milieu = new int [20][60];
+		this.bg = new int [20][60];
 		this.initialiseMap(this.sol, fichierDuSol);
 		this.initialiseMap(this.milieu, fichierDuMilieu);
 		this.initialiseMap(this.bg, fichierDuBg);
