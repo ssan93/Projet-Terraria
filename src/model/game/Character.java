@@ -12,7 +12,7 @@ public class Character extends AnimatedObject {
 	@Override
 	public void animation(String newAnim) {
 		anim.set(newAnim);
-		if (newAnim.equals("left") || newAnim.equals("right"))
+		if (newAnim.equals("RunLeft") || newAnim.equals("RunRight"))
 			this.move(newAnim);
 
 	}
@@ -26,9 +26,9 @@ public class Character extends AnimatedObject {
 	}
 
 	public void move(String direction) {
-		if (direction.equals("left"))
+		if (direction.equals("RunLeft"))
 			this.x.set(this.x.get() - this.speed);
-		if (direction.equals("right"))
+		if (direction.equals("RunRight"))
 			this.x.set(this.x.get() + this.speed);
 	}
 }

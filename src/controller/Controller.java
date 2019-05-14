@@ -25,7 +25,8 @@ public class Controller implements Initializable {
 	Carte tileSol = new Carte("src/maps/carte.txt", "src/maps/carte2.txt", "src/maps/carte3.txt");	
 	int temps;
 	private Timeline loop;
-	BillView b = new BillView("view/resources/personnages/rambo_run_right.gif");	
+	BillView b = new BillView("view/resources/personnages/right_static_bill.png");	
+	String oldAnim="tactac";
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -76,13 +77,15 @@ public class Controller implements Initializable {
 	public void actions(KeyEvent a) {
 		if(a.getCode() == KeyCode.D || a.getCode()==KeyCode.RIGHT) {
 			sol.relocate(sol.getLayoutX()-b.getChrac().getSpeed(),sol.getLayoutY());
-			b.getChrac().animation("right");
+			b.getChrac().animation("RunRight");
+			oldAnim="RunRight";
 		}
 						
 		if(a.getCode()==KeyCode.Q|| a.getCode()==KeyCode.LEFT) {
 			sol.relocate(sol.getLayoutX()+b.getChrac().getSpeed(),sol.getLayoutY());
-			b.getChrac().animation("left");
-		}
+			b.getChrac().animation("RunLeft");
+			oldAnim="RunLeft";
+		}	
 	}
 
 	public void initAnimation() {
@@ -99,6 +102,17 @@ public class Controller implements Initializable {
 			})
 		);
 		loop.getKeyFrames().add(kf);
+	}
+
+	public void negationdaction(KeyEvent e) {
+		if(oldAnim.equals("RunRight")) {
+			b.getChrac().animation("idleRight");
+			oldAnim="idleRight";
+		}
+		if(oldAnim.equals("RunLeft")){
+			b.getChrac().animation("idleLeft");
+			oldAnim="idleLeft";
+		}
 	}
 	
 }

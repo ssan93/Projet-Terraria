@@ -18,11 +18,17 @@ public class BillView extends CharacterView{
 		this.charac.getAnimation().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if(newValue.equals("right")) {
-					getImage().setImage(new Image("view/resources/personnages/rambo_run_right.gif"));
+				if(newValue.equals("RunRight")) {
+					getImage().setImage(new Image("view/resources/personnages/right_run_bill.gif"));
 				}
-				if(newValue.equals("left")) {
-					getImage().setImage(new Image("view/resources/personnages/rambo_run_left.gif"));
+				if(newValue.equals("RunLeft")) {
+					getImage().setImage(new Image("view/resources/personnages/left_run_bill.gif"));
+				}
+				if(newValue.equals("idleLeft")) {
+					getImage().setImage(new Image("view/resources/personnages/left_static_bill.png"));
+				}
+				if(newValue.equals("idleRight")) {
+					getImage().setImage(new Image("view/resources/personnages/right_static_bill.png"));
 				}
 			}
 		});

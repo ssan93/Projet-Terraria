@@ -28,6 +28,7 @@ public class Main extends Application {
      	Scene scene = new Scene(root,root.getPrefWidth(),root.getPrefHeight());	
      	
      	scene.setOnKeyPressed(e->c.actions(e));
+     	scene.setOnKeyReleased(e->c.negationdaction(e));
      	primaryStage.setScene(scene);												
 		//primaryStage.setFullScreen(true);
      	primaryStage.show();															
