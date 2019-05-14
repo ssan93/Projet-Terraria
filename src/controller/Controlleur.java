@@ -13,7 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
-import model.game.MovingCharacter;
+import model.game.Character;
 import model.game.Tiles;
 import model.game.Carte;
 

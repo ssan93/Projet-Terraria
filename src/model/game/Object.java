@@ -5,11 +5,14 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 public abstract class Object {
 	
-	SimpleIntegerProperty x, y;
+	protected SimpleIntegerProperty x, y;
+	protected int id;
+	private static int lastId=0;
 	
 	public Object(int x, int y) {
 		this.x = new SimpleIntegerProperty(x);
 		this.y = new SimpleIntegerProperty(y);
+		this.id=++lastId;
 	}
 	
 	public int getX() {

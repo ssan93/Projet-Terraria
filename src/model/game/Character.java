@@ -1,37 +1,29 @@
 package model.game;
 
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+public class Character extends AnimatedObject{
 
-public abstract class Character {
-
-	private SimpleIntegerProperty x,y;
-	
-	public Character(int x, int y) {
-		this.x = new SimpleIntegerProperty(x);
-		this.y = new SimpleIntegerProperty(y);
-	}
-
-	public int getX() {
-		return this.x.getValue();
-	}
-
-	public int getY() {
-		return this.y.getValue();
+	private int vitesse;
+	SimpleStringProperty anim;
+	public Character(int x, int y, int vitesse) {
+		super(x, y);
+		this.vitesse=vitesse;
+		this.anim = new SimpleStringProperty("repos");
 	}
 	
-	public void setX(int x) {
-		this.x.setValue(x);
-	}
-
-	public void setY(int y) {
-		this.y.setValue(y);
+	public void setAnim(String anim) {
+		this.anim.set(anim);
 	}
 	
-	public SimpleIntegerProperty getXProperty() {
-		return this.x;
+	public  SimpleStringProperty getAnim() {
+		return this.anim;
 	}
 	
-	public SimpleIntegerProperty getYProperty() {
-		return this.y;
+	public int getVitesse() {
+		return this.vitesse;
+	}
+	
+	public void setVitesse(int vitesse) {
+		this.vitesse=vitesse;
 	}
 }
