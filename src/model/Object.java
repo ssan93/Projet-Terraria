@@ -1,12 +1,12 @@
-package modele;
+package model;
 
 import javafx.beans.property.SimpleIntegerProperty;
 
-public abstract class Objets {
+public abstract class Object {
 	
 	SimpleIntegerProperty x, y;
 	
-	public Objets(int x, int y) {
+	public Object(int x, int y) {
 		this.x = new SimpleIntegerProperty(x);
 		this.y = new SimpleIntegerProperty(y);
 	}

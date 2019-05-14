@@ -3,11 +3,11 @@ package vue.personnages;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
-import modele.PersonnageQuiBougent;
+import model.MovingCharacter;
 
-public class RamboVue extends PersonnageVue{
+public class BillView extends CharacterView{
 
-	public RamboVue(PersonnageQuiBougent perso, String imagePerso) {
+	public BillView(MovingCharacter perso, String imagePerso) {
 		super(perso, imagePerso);
 		animations();
 	}

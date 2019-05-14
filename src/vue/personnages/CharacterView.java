@@ -3,14 +3,14 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import modele.PersonnageQuiBougent;
+import model.MovingCharacter;
 
-public class PersonnageVue {
+public class CharacterView {
 
-	protected PersonnageQuiBougent perso;
+	protected MovingCharacter perso;
 	protected ImageView imageViewPerso;
 	
-	public PersonnageVue(PersonnageQuiBougent perso, String imagePerso) {
+	public CharacterView(MovingCharacter perso, String imagePerso) {
 		this.perso=perso;
 		this.imageViewPerso=new ImageView(new Image(imagePerso));
 		this.imageViewPerso.translateXProperty().bind(this.perso.getXProperty());

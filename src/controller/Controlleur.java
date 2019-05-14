@@ -1,4 +1,4 @@
-package controleur;
+package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -13,25 +13,24 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
-import modele.Carte;
-import modele.PersonnageQuiBougent;
-import modele.Rambo;
-import modele.Tuiles;
+import model.MovingCharacter;
+import model.Tiles;
+import model.game.Carte;
 
-public class Controleur implements Initializable {
+public class Controlleur implements Initializable {
 	@FXML
 	private Pane sol;
 	Carte tileSol = new Carte("src/carte.txt", "src/carte2.txt", "src/carte3.txt");	
 	int temps;
 	private Timeline loop;
-	Rambo p1 = new Rambo(0, 0, 3);	
+	//Rambo p1 = new Rambo(0, 0, 3);	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		creerVue(tileSol, sol);
 		initAnimation();
 		loop.play();
-		sol.getChildren().add(p1.getPersoVue().getImage());
+		//sol.getChildren().add(p1.getPersoVue().getImage());
 		
 	}
 
@@ -41,7 +40,7 @@ public class Controleur implements Initializable {
 			for (int y = 0; y < t2[x].length; y++) {
 				if (t2[x][y] != 0) {					//sol.relocate(sol.getLayoutX()-(48*5),sol.getLayoutY()-(48*5));
 
-				ImageView img = new ImageView(Tuiles.selectionTuile(t2[x][y]));
+				ImageView img = new ImageView(Tiles.selectionTuile(t2[x][y]));
 				img.relocate(y * 32, x * 32);
 				sol.getChildren().add(img);}
 			}
@@ -51,7 +50,7 @@ public class Controleur implements Initializable {
 		for (int x = 0; x < t1.length; x++) {
 			for (int y = 0; y < t1[x].length; y++) {
 				if (t1[x][y] != 0) {
-				ImageView img = new ImageView(Tuiles.selectionTuile(t1[x][y]));
+				ImageView img = new ImageView(Tiles.selectionTuile(t1[x][y]));
 				img.relocate(y * 32, x * 32);
 				sol.getChildren().add(img);}
 			}
@@ -60,7 +59,7 @@ public class Controleur implements Initializable {
 		for (int x = 0; x < t.length; x++) {
 			for (int y = 0; y < t[x].length; y++) {
 				if (t[x][y] != 0) {
-				ImageView img = new ImageView(Tuiles.selectionTuile(t[x][y]));
+				ImageView img = new ImageView(Tiles.selectionTuile(t[x][y]));
 				img.relocate(y * 32, x * 32);
 				sol.getChildren().add(img);}
 			}
@@ -70,15 +69,15 @@ public class Controleur implements Initializable {
 	
 	public void actions(KeyEvent a) {
 		if(a.getCode() == KeyCode.D || a.getCode()==KeyCode.RIGHT) {
-			sol.relocate(sol.getLayoutX()-p1.getVitesse(),sol.getLayoutY());
-			p1.setX(p1.getX()+p1.getVitesse());
-			p1.setAnim("right");
+			//sol.relocate(sol.getLayoutX()-p1.getVitesse(),sol.getLayoutY());
+			//p1.setX(p1.getX()+p1.getVitesse());
+			//p1.setAnim("right");
 		}
 						
 		if(a.getCode()==KeyCode.Q|| a.getCode()==KeyCode.LEFT) {
-			p1.setX(p1.getX()-p1.getVitesse());
-			sol.relocate(sol.getLayoutX()+p1.getVitesse(),sol.getLayoutY());
-			p1.setAnim("left");
+			//p1.setX(p1.getX()-p1.getVitesse());
+			//sol.relocate(sol.getLayoutX()+p1.getVitesse(),sol.getLayoutY());
+			//p1.setAnim("left");
 
 		}
 	}

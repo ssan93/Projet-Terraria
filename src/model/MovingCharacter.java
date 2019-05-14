@@ -1,17 +1,13 @@
-package modele;
+package model;
 
 import javafx.beans.property.SimpleStringProperty;
-import vue.personnages.PersonnageVue;
-
-public class PersonnageQuiBougent extends Personnage{
+public class MovingCharacter extends Character{
 
 	private int vitesse;
-	PersonnageVue persoVue;
 	SimpleStringProperty anim;
-	public PersonnageQuiBougent(int x, int y, int vitesse) {
+	public MovingCharacter(int x, int y, int vitesse) {
 		super(x, y);
 		this.vitesse=vitesse;
-		this.persoVue=new PersonnageVue(this, "vue/personnages/rambo_run_right.gif");
 		this.anim = new SimpleStringProperty("repos");
 	}
 	
@@ -30,9 +26,4 @@ public class PersonnageQuiBougent extends Personnage{
 	public void setVitesse(int vitesse) {
 		this.vitesse=vitesse;
 	}
-	
-	public PersonnageVue getPersoVue() {
-		return this.persoVue;
-	}
-
 }
