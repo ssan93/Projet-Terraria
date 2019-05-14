@@ -14,7 +14,6 @@ public abstract class Character {
 	public int getX() {
 		return this.x.getValue();
 	}
-	/////ezagvbaq
 
 	public int getY() {
 		return this.y.getValue();
