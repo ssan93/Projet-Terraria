@@ -22,4 +22,12 @@ public abstract class Object {
 	public int getY() {
 		return this.y.getValue();
 	}
+	
+	public SimpleIntegerProperty getXProperty() {
+		return this.x;
+	}
+	
+	public SimpleIntegerProperty getYProperty() {
+		return this.y;
+	}
 }
