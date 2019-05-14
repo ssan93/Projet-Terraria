@@ -15,22 +15,27 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import model.game.Character;
 import model.game.Tiles;
+import view.game.BillView;
 import model.game.Carte;
 
-public class Controlleur implements Initializable {
+public class Controller implements Initializable {
 	@FXML
-	private Pane sol;
-	Carte tileSol = new Carte("src/carte.txt", "src/carte2.txt", "src/carte3.txt");	
+    private Pane sol;
+    
+	Carte tileSol = new Carte("src/maps/carte.txt", "src/maps/carte2.txt", "src/maps/carte3.txt");	
 	int temps;
 	private Timeline loop;
-	//Rambo p1 = new Rambo(0, 0, 3);	
+	BillView b = new BillView("view/resources/personnages/rambo_run_right.gif");	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		creerVue(tileSol, sol);
-		initAnimation();
-		loop.play();
-		//sol.getChildren().add(p1.getPersoVue().getImage());
+		//initAnimation();
+		//loop.play();
+		b.getChrac().setSpeed(3);
+		b.getChrac().getXProperty().set(32*5);
+		b.getChrac().getYProperty().set(32*11);
+		sol.getChildren().add(b.getImage());
 		
 	}
 
@@ -38,7 +43,8 @@ public class Controlleur implements Initializable {
 		int t2[][] = map.getMapBg();
 		for (int x = 0; x < t2.length; x++) {
 			for (int y = 0; y < t2[x].length; y++) {
-				if (t2[x][y] != 0) {					//sol.relocate(sol.getLayoutX()-(48*5),sol.getLayoutY()-(48*5));
+				if (t2[x][y] != 0) {					
+					//sol.relocate(sol.getLayoutX()-(48*5),sol.getLayoutY()-(48*5));
 
 				ImageView img = new ImageView(Tiles.selectionTuile(t2[x][y]));
 				img.relocate(y * 32, x * 32);
@@ -69,16 +75,13 @@ public class Controlleur implements Initializable {
 	
 	public void actions(KeyEvent a) {
 		if(a.getCode() == KeyCode.D || a.getCode()==KeyCode.RIGHT) {
-			//sol.relocate(sol.getLayoutX()-p1.getVitesse(),sol.getLayoutY());
-			//p1.setX(p1.getX()+p1.getVitesse());
-			//p1.setAnim("right");
+			sol.relocate(sol.getLayoutX()-b.getChrac().getSpeed(),sol.getLayoutY());
+			b.getChrac().animation("right");
 		}
 						
 		if(a.getCode()==KeyCode.Q|| a.getCode()==KeyCode.LEFT) {
-			//p1.setX(p1.getX()-p1.getVitesse());
-			//sol.relocate(sol.getLayoutX()+p1.getVitesse(),sol.getLayoutY());
-			//p1.setAnim("left");
-
+			sol.relocate(sol.getLayoutX()+b.getChrac().getSpeed(),sol.getLayoutY());
+			b.getChrac().animation("left");
 		}
 	}
 

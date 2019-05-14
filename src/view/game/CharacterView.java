@@ -6,19 +6,26 @@ import model.game.Character;
 
 public class CharacterView {
 
-	protected Character perso;
-	protected ImageView imageViewPerso;
+	protected Character charac;
+	protected ImageView imageViewCharac;
 	
 	public CharacterView(String imagePerso) {
-		this.perso= new Character(0, 0, 0);
-		this.imageViewPerso=new ImageView(new Image(imagePerso));
-		this.imageViewPerso.translateXProperty().bind(this.perso.getXProperty());
-		this.imageViewPerso.translateYProperty().bind(this.perso.getYProperty());
+		this.charac= new Character(0, 0, 0);
+		this.imageViewCharac=new ImageView(new Image(imagePerso));
+		this.bind();
+	}
+	
+	public void bind() {
+		this.imageViewCharac.translateXProperty().bind(this.charac.getXProperty());
+		this.imageViewCharac.translateYProperty().bind(this.charac.getYProperty());
 	}
 	
 	public ImageView getImage() {
-		return this.imageViewPerso;
+		return this.imageViewCharac;
 	}
-
+	
+	public Character getChrac() {
+		return this.charac;
+	}
 	
 }

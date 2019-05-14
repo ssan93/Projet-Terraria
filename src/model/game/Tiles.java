@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 public class Tiles {
 
 	public static Image selectionTuile(int i) {
-		return new Image("vue/tiles/tile"+i+".png");
+		return new Image("view/resources/tiles/tile"+i+".png");
 	}
 	
 }
