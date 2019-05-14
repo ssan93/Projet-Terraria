@@ -28,6 +28,11 @@ public class Controller implements Initializable {
 	BillView b = new BillView("view/resources/personnages/right_static_bill.png");	
 	String oldAnim="tactac";
 	
+	int coordMapXRight = 32*30;
+	int count = 32;
+	int depart = 0;
+	int map=0;int ok = 0;
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		creerVue(tileSol, sol);
@@ -79,6 +84,34 @@ public class Controller implements Initializable {
 			sol.relocate(sol.getLayoutX()-b.getChrac().getSpeed(),sol.getLayoutY());
 			b.getChrac().animation("RunRight");
 			oldAnim="RunRight";
+			
+			
+			//int t[][] = tileSol.getMapSol();
+			//int t1[][] = tileSol.getMapBg();
+			count -=3;
+			
+			
+			
+			depart+=b.getChrac().getSpeed();
+			int tile = depart%960/32-1;
+			if (tile > 5) ok =1;
+			if (tile == 0 && ok == 1) {
+				ok = 0;
+				map++;
+			}
+			int t[][] = tileSol.getMap(map);
+			if (count <= 0) {
+			for (int x =0 ; x < t.length ; x++) {
+				//sol.getChildren().remove(x*29);
+				if (t[x][tile] != 0) {
+					ImageView img = new ImageView(Tiles.selectionTuile(t[x][tile]));
+					img.relocate(coordMapXRight, x*32);
+					sol.getChildren().add(img);
+				}
+			}
+			coordMapXRight+=32;
+			count += 32;}
+			
 		}
 						
 		if(a.getCode()==KeyCode.Q|| a.getCode()==KeyCode.LEFT) {
