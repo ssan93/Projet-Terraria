@@ -13,8 +13,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
-import model.MovingCharacter;
-import model.Tiles;
+import model.game.MovingCharacter;
+import model.game.Tiles;
 import model.game.Carte;
 
 public class Controlleur implements Initializable {

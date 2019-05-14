@@ -1,4 +1,4 @@
-package model;
+package model.game;
 
 import javafx.beans.property.SimpleStringProperty;
 public class MovingCharacter extends Character{
