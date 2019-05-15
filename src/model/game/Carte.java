@@ -1,11 +1,7 @@
 package model.game;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 public class Carte {
 
@@ -18,8 +14,8 @@ public class Carte {
 		this.fichierDuMilieu=carteMilieu;
 		this.fichierDuBg=carteBg;
 		this.sol = new int [20][30];
-		this.milieu = new int [20][30];
-		this.bg = new int [20][30];
+		this.milieu = new int [20][30];//
+		this.bg = new int [20][30];//background
 		this.initialiseMap(this.sol, fichierDuSol);
 		this.initialiseMap(this.milieu, fichierDuMilieu);
 		this.initialiseMap(this.bg, fichierDuBg);

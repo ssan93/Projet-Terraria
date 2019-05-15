@@ -12,8 +12,8 @@ public class Character extends AnimatedObject {
 	@Override
 	public void animation(String newAnim) {
 		anim.set(newAnim);
-		if (newAnim.equals("RunLeft") || newAnim.equals("RunRight"))
-			this.move(newAnim);
+		//if (newAnim.equals("RunLeft") || newAnim.equals("RunRight"))
+			//this.move(newAnim);
 
 	}
 
