@@ -1,10 +1,13 @@
 package controller;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
@@ -18,8 +21,12 @@ import view.game.BillView;
 import model.game.Carte;
 
 public class Controller implements Initializable {
-	
-	private static final int gauche=-32,droite=1952;
+
+	private static final int gauche = -32, droite = 1952;
+
+	// liste observable ou liste simple ??
+	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
+
 	@FXML
 	private AnchorPane background;
 
@@ -42,8 +49,7 @@ public class Controller implements Initializable {
 		// loop.play();
 		bill.getChrac().setSpeed(4);
 		bill.getChrac().getXProperty().set(32 * 5);
-		bill.getChrac().getYProperty	
-		().set(32 * 11);
+		bill.getChrac().getYProperty().set(32 * 11);
 		charapane.getChildren().add(bill.getImage());
 
 	}
@@ -84,34 +90,64 @@ public class Controller implements Initializable {
 		}
 	}
 
-	public void actions(KeyEvent a) {
-		if (a.getCode() == KeyCode.D || a.getCode() == KeyCode.RIGHT) {
-			//floor.relocate(floor.getLayoutX() - bill.getChrac().getSpeed(), floor.getLayoutY());
+	public void actions() {
+		if (keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)) {
+			// floor.relocate(floor.getLayoutX() - bill.getChrac().getSpeed(),
+			// floor.getLayoutY());
 			bill.getChrac().animation("RunRight");
 			oldAnim = "RunRight";
-			for(int i=0; i< floor.getChildren().size();i++) {
-				floor.getChildren().get(i).relocate(floor.getChildren().get(i).getLayoutX()-bill.getChrac().getSpeed(), floor.getChildren().get(i).getLayoutY());
-				if(floor.getChildren().get(i).getLayoutX()<-32) {
+			for (int i = 0; i < floor.getChildren().size(); i++) {
+				floor.getChildren().get(i).relocate(
+						floor.getChildren().get(i).getLayoutX() - bill.getChrac().getSpeed(),
+						floor.getChildren().get(i).getLayoutY());
+				if (floor.getChildren().get(i).getLayoutX() < -32) {
 					floor.getChildren().remove(floor.getChildren().get(i));
-				}	
-				
+				}
+
 			}
-			
+
 		}
 
-		if (a.getCode() == KeyCode.Q || a.getCode() == KeyCode.LEFT) {
-			
-			//floor.relocate(floor.getLayoutX() + bill.getChrac().getSpeed(), floor.getLayoutY());
+		if (keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)) {
+
+			// floor.relocate(floor.getLayoutX() + bill.getChrac().getSpeed(),
+			// floor.getLayoutY());
 			bill.getChrac().animation("RunLeft");
 			oldAnim = "RunLeft";
-			for(int i=floor.getChildren().size()-1; i>=0 ;i--) {
-				
-				floor.getChildren().get(i).relocate(floor.getChildren().get(i).getLayoutX()+bill.getChrac().getSpeed(), floor.getChildren().get(i).getLayoutY());
-				if(floor.getChildren().get(i).getLayoutX()>32*30) {
+			for (int i = floor.getChildren().size() - 1; i >= 0; i--) {
+
+				floor.getChildren().get(i).relocate(
+						floor.getChildren().get(i).getLayoutX() + bill.getChrac().getSpeed(),
+						floor.getChildren().get(i).getLayoutY());
+				if (floor.getChildren().get(i).getLayoutX() > 32 * 30) {
 					floor.getChildren().remove(floor.getChildren().get(i));
 				}
 			}
 		}
+	}
+
+	public void negationdaction() {
+		switch (oldAnim) {
+		case "RunRight":
+			bill.getChrac().animation("idleRight");
+			oldAnim = "idleRight";
+			break;
+		case "RunLeft":
+			bill.getChrac().animation("idleLeft");
+			oldAnim = "idleLeft";
+			break;
+		default:
+			break;
+		}
+		
+//		if (oldAnim.equals("RunRight")) {
+//			bill.getChrac().animation("idleRight");
+//			oldAnim = "idleRight";
+//		}
+//		if (oldAnim.equals("RunLeft")) {
+//			bill.getChrac().animation("idleLeft");
+//			oldAnim = "idleLeft";
+//		}
 	}
 
 	public void initAnimation() {
@@ -128,15 +164,13 @@ public class Controller implements Initializable {
 		loop.getKeyFrames().add(kf);
 	}
 
-	public void negationdaction(KeyEvent e) {
-		if (oldAnim.equals("RunRight")) {
-			bill.getChrac().animation("idleRight");
-			oldAnim = "idleRight";
-		}
-		if (oldAnim.equals("RunLeft")) {
-			bill.getChrac().animation("idleLeft");
-			oldAnim = "idleLeft";
-		}
+	public void addKeyCode(KeyCode k) {
+		if (!keyPressed.contains(k))
+			keyPressed.add(k);
+	}
+
+	public void removeKeyCode(KeyCode k) {
+		keyPressed.remove(k);
 	}
 
 }

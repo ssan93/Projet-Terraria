@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -24,9 +25,17 @@ public class Main extends Application {
 			root = loader.load();
 			Controller c = loader.getController();
 			Scene scene = new Scene(root, root.getMaxWidth(), root.getMaxHeight());
-
-			scene.setOnKeyPressed(e -> c.actions(e));
-			scene.setOnKeyReleased(e -> c.negationdaction(e));
+			
+			//quand une touche est pressé
+			scene.setOnKeyPressed(e -> {
+				c.addKeyCode(e.getCode());
+				c.actions();
+			});
+			//quand une touche est relaché
+			scene.setOnKeyReleased(e -> {
+				c.removeKeyCode(e.getCode());
+				c.negationdaction();
+			});
 			primaryStage.setScene(scene);
 			// primaryStage.setFullScreen(true);
 			primaryStage.show();
