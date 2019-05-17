@@ -54,15 +54,20 @@ public class Controller implements Initializable {
 
 	public void actions() {
 		if (keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)) {
-			bill.getChrac().animation("RunRight");
-			oldAnim = "RunRight";
-			removeImages("Right");
-		}
+			if (!stopSroll().equals("right stop")) {
 
+				bill.getChrac().animation("RunRight");
+				oldAnim = "RunRight";
+				removeImages("Right");
+
+			}
+		}
 		if (keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)) {
-			bill.getChrac().animation("RunLeft");
-			oldAnim = "RunLeft";
-			removeImages("Left");
+			if (!stopSroll().equals("left stop")) {
+				bill.getChrac().animation("RunLeft");
+				oldAnim = "RunLeft";
+				removeImages("Left");
+			}
 		}
 	}
 
@@ -95,6 +100,20 @@ public class Controller implements Initializable {
 			break;
 		}
 
+	}
+
+	public String stopSroll() {
+
+		if (floor.getChildren().get(1).getLayoutX() == charapane.getLayoutX() + bill.getChrac().getX() + 64) {
+			return "left stop";
+		}
+		System.out.println(floor.getChildren().size());
+
+		if (floor.getChildren().get(floor.getChildren().size() - 1).getLayoutX() == charapane.getLayoutX()
+				+ bill.getChrac().getX() + 32) {
+			return "right stop";
+		}
+		return "";
 	}
 
 	public void stopAction() {
