@@ -35,7 +35,7 @@ public class Main extends Application {
 			//quand une touche est relaché
 			scene.setOnKeyReleased(e -> {
 				c.removeKeyCode(e.getCode());
-				c.negationdaction();
+				c.stopAction();
 			});
 			primaryStage.setScene(scene);
 			// primaryStage.setFullScreen(true);
