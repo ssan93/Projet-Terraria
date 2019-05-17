@@ -43,7 +43,11 @@ public class Carte {
 		} catch (Exception e) {
 		}
 	}
-
+	public int [][] getMap(int map){
+		if (map%2==0)
+			return this.sol;
+		return this.bg;
+	}
 	public int [][] getMapSol(){
 		return this.sol;
 	}
