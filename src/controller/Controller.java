@@ -42,7 +42,7 @@ public class Controller implements Initializable {
 
 	int count = 32;
 	int depart = 0;
-	int map=0;int ok = 0;
+	int map=0;
 	
 
 	BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
@@ -67,37 +67,48 @@ public class Controller implements Initializable {
 			bill.getChrac().animation("RunRight");
 			oldAnim = "RunRight";
 			removeImages("Right");
-			count -=bill.getChrac().getSpeed();
+			addImages("Right");
 			
-			
-			
-			depart+=bill.getChrac().getSpeed();
-			int tile = depart%960/32-1;
-			if (tile > 5) ok =1;
-			if (tile == 0 && ok == 1) {
-				ok = 0;
-				map++;
-			}
-			int t[][] = tileSol.getMap(map);
-			if (count <= 0) {
-			for (int x =0 ; x < t.length ; x++) {
-				//sol.getChildren().remove(x*29);
-				if (t[x][tile] != 0) {
-					ImageView img = new ImageView(Tiles.selectionTuile(t[x][tile]));
-					img.relocate(29*32, x*32);
-					floor.getChildren().add(img);
-				}
-			}
-			count += 32;}
 		}
 
 		if (keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)) {
 			bill.getChrac().animation("RunLeft");
 			oldAnim = "RunLeft";
 			removeImages("Left");
+			addImages("Left");
+			
+			
 		}
 	}
+	public void addImages(String direction) {
+		switch (direction) {
+		case "Right":
 
+			count -=bill.getChrac().getSpeed();
+			depart+=bill.getChrac().getSpeed();
+			int tile = depart%960/32-1;
+			int t[][] = tileSol.getMap(map);
+			if (count <= 0) {
+			for (int x =0 ; x < t.length ; x++) {
+				if (t[x][tile] != 0) {
+					ImageView img = new ImageView(Tiles.selectionTuile(t[x][tile]));
+					img.relocate(29*32, x*32);
+					floor.getChildren().add(img);
+				}
+			}
+			count += 32;
+			}
+			
+
+			break;
+
+
+		case "Left":
+			depart-=bill.getChrac().getSpeed();
+			break;
+		}
+
+	}
 	public void removeImages(String direction) {
 		switch (direction) {
 		case "Right":
