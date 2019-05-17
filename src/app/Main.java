@@ -17,6 +17,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			System.out.println("test");
 			FXMLLoader loader = new FXMLLoader();
 			URL url = new File("src/view/game/view.fxml").toURI().toURL();
 			loader.setLocation(url);
