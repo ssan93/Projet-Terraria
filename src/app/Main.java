@@ -4,18 +4,19 @@ import java.io.File;
 
 import java.net.URL;
 
+import controller.GameController;
 import controller.Controller;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
-
-	@Override
-	public void start(Stage primaryStage) {
+	
+	public void changeGame(Stage primaryStage) {
 		try {
 			System.out.println("test");
 			FXMLLoader loader = new FXMLLoader();
@@ -24,7 +25,7 @@ public class Main extends Application {
 			System.out.println(loader.getLocation());
 			Pane root = new Pane();
 			root = loader.load();
-			Controller c = loader.getController();
+			GameController c = loader.getController();
 			Scene scene = new Scene(root, root.getMaxWidth(), root.getMaxHeight());
 			
 			//quand une touche est pressé
@@ -44,7 +45,33 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 	}
-
+	
+	
+	@Override
+	public void start(Stage primaryStage) {
+		BorderPane root;
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			URL url = new File("src/view/game/menu.fxml").toURI().toURL();
+			loader.setLocation(url);
+			System.out.println(loader.getLocation());
+			root = new BorderPane();
+			root = loader.load();
+			Controller c = loader.getController();
+						Scene scene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
+			//scene.getStylesheets().clear();
+			//scene.getStylesheets().add(getClass().getResource("vue/connect.css").toExternalForm());
+			primaryStage.setScene(scene);
+			primaryStage.show();
+			primaryStage.setResizable(false);
+			c.getInGame().addListener((observable, oldValue, newValue) -> {
+				changeGame(primaryStage);
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
