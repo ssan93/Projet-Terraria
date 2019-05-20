@@ -11,6 +11,7 @@ public class MapView {
 	private ArrayList<ImageView> images;
 
 	private Map m;
+	public static int test = 0;
 
 	public MapView(Map m) {
 		images = new ArrayList<>();
@@ -23,9 +24,8 @@ public class MapView {
 			for (int y = 0; y < t2[x].length; y++) {
 				if (t2[x][y] != 0) {
 					// sol.relocate(sol.getLayoutX()-(48*5),sol.getLayoutY()-(48*5));
-
 					ImageView img = new ImageView(Tiles.selectionTuile(t2[x][y]));
-					img.relocate(y * 32, x * 32);
+					img.relocate(test+y * 32, x * 32);
 					images.add(img);
 				}
 			}
@@ -36,7 +36,7 @@ public class MapView {
 			for (int y = 0; y < t1[x].length; y++) {
 				if (t1[x][y] != 0) {
 					ImageView img = new ImageView(Tiles.selectionTuile(t1[x][y]));
-					img.relocate(y * 32, x * 32);
+					img.relocate(test+y * 32, x * 32);
 					images.add(img);
 				}
 			}
@@ -46,11 +46,12 @@ public class MapView {
 			for (int y = 0; y < t[x].length; y++) {
 				if (t[x][y] != 0) {
 					ImageView img = new ImageView(Tiles.selectionTuile(t[x][y]));
-					img.relocate(y * 32, x * 32);
+					img.relocate(test+y * 32, x * 32);
 					images.add(img);
 				}
 			}
 		}
+		//test+=32*14;
 		return images;
 	}
 

@@ -23,6 +23,7 @@ public class Controller implements Initializable {
 	private static final int gauche = -32, droite = 1952;
 
 	// liste observable ou liste simple ??
+	
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
 
 	@FXML
@@ -39,11 +40,13 @@ public class Controller implements Initializable {
 	Map tileSol = new Map("src/maps/carte.txt", "src/maps/carte2.txt", "src/maps/carte3.txt");
 	int temps;
 	private Timeline loop;
+	private Timeline loop2;
 
 	int countRight = 32; 
 	int countLeft = 32;
 	int departl = 0;
-	int departr = 0;
+	int tailleCarte= 13*32;
+	int departr = tailleCarte;
 
 
 	BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
@@ -52,13 +55,14 @@ public class Controller implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		mv = new MapView(tileSol);
-		// initAnimation();
-		// loop.play();
+		initAnimation();
+		loop.play();
 		bill.getChrac().setSpeed(4);
-		bill.getChrac().getXProperty().set(32 * 5);
-		bill.getChrac().getYProperty().set(32 * 11);
+		bill.getChrac().getXProperty().set(32 * 6);
+		bill.getChrac().getYProperty().set(32 * 8-12);
 		charapane.getChildren().add(bill.getImage());
 		floor.getChildren().addAll(mv.creerVue());
+		System.out.println(bill.getChrac().getY());
 	}
 
 	public void actions() {
@@ -67,7 +71,20 @@ public class Controller implements Initializable {
 				bill.getChrac().animation("RunRight");
 				oldAnim = "RunRight";
 				removeImages("Right");
-				addImages("Right");
+				departr += bill.getChrac().getSpeed();
+				if(departr%960/32 == 29) {
+					tileSol = new Map("src/maps/carte.txt", "src/maps/carte2.txt", "src/maps/carte3.txt");
+					mv = new MapView(tileSol);
+					floor.getChildren().addAll(mv.creerVue());
+					departr=13*32;
+					
+				}
+				System.out.println(bill.getChrac().getY()%960/32);
+				
+				
+				
+				
+				//addImages("Right");
 			}
 		}
 
@@ -79,6 +96,29 @@ public class Controller implements Initializable {
 				addImages("Left");
 			}
 
+		}
+		
+		if (keyPressed.contains(KeyCode.SPACE)) {
+			bill.getChrac().animation("jumpRight");
+			oldAnim ="jumpRight";
+			loop.pause();
+			loop2 = new Timeline();
+			loop2.setCycleCount(16);
+			KeyFrame kf = new KeyFrame(Duration.seconds(0.033), (ev -> {
+				System.out.println("test");
+				bill.getChrac().getYProperty().set(bill.getChrac().getYProperty().get()-4);
+				temps++;
+				loop2.setCycleCount(loop2.getCycleCount()-1);
+				if(loop2.getCycleCount()==1)
+					loop.play();
+			}));
+			loop2.getKeyFrames().add(kf);
+			loop2.play();
+			
+			
+			
+			
+			
 		}
 	}
 
@@ -138,9 +178,9 @@ public class Controller implements Initializable {
 				floor.getChildren().get(i).relocate(
 						floor.getChildren().get(i).getLayoutX() - bill.getChrac().getSpeed(),
 						floor.getChildren().get(i).getLayoutY());
-				if (floor.getChildren().get(i).getLayoutX() < -32) {
-					floor.getChildren().remove(floor.getChildren().get(i));
-				}
+//				if (floor.getChildren().get(i).getLayoutX() < -32) {
+//					floor.getChildren().remove(floor.getChildren().get(i));
+//				}
 
 			}
 
@@ -168,7 +208,7 @@ public class Controller implements Initializable {
 //		if (floor.getChildren().get(1).getLayoutX() == charapane.getLayoutX() + bill.getChrac().getX() + 64) {
 //			return "left stop";
 //		}
-		System.out.println(floor.getChildren().size());
+		//System.out.println(floor.getChildren().size());
 
 		if (floor.getChildren().get(floor.getChildren().size() - 1).getLayoutX() == charapane.getLayoutX()
 				+ bill.getChrac().getX() + 32) {
@@ -194,9 +234,10 @@ public class Controller implements Initializable {
 		loop = new Timeline();
 		loop.setCycleCount(Timeline.INDEFINITE);
 		System.out.println(temps);
-
 		KeyFrame kf = new KeyFrame(Duration.seconds(0.033), (ev -> {
-
+			if(bill.getChrac().getY() < 244) {
+				bill.getChrac().getYProperty().set(bill.getChrac().getYProperty().get()+4);
+			}
 			temps++;
 		}));
 		loop.getKeyFrames().add(kf);

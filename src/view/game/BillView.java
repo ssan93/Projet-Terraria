@@ -30,6 +30,9 @@ public class BillView extends CharacterView{
 				if(newValue.equals("idleRight")) {
 					getImage().setImage(new Image("view/resources/personnages/right_static_bill.png"));
 				}
+				if(newValue.equals("jumpRight")) {
+					getImage().setImage(new Image("view/resources/personnages/right_jump_bill.gif"));
+				}
 			}
 		});
 	}
