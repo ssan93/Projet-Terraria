@@ -4,47 +4,82 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.StringTokenizer;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class Map {
 
-	private int[][] sol, milieu, bg;
+	private int[][] sol, mid, bg;
+	private ObservableList<Tiles> tilesListSol, tilesListMid;
+
+	private static final int Largeur = 300, Hauteur = 100;
 
 	private String fichierDuSol, fichierDuMilieu, fichierDuBg;
 
+	/**
+	 * 
+	 * @param carteSol
+	 * @param carteMilieu
+	 * @param carteBg
+	 */
 	public Map(String carteSol, String carteMilieu, String carteBg) {
 		this.fichierDuSol = carteSol;
 		this.fichierDuMilieu = carteMilieu;
 		this.fichierDuBg = carteBg;
-		this.sol = new int[20][30];
-		this.milieu = new int[20][30];//
-		this.bg = new int[20][30];// background
-		this.initialiseMap(this.sol, fichierDuSol);
-		this.initialiseMap(this.milieu, fichierDuMilieu);
-		this.initialiseMap(this.bg, fichierDuBg);
+		this.tilesListSol = FXCollections.observableArrayList();
+		this.tilesListMid = FXCollections.observableArrayList();
+		/*
+		 * this.sol = new int[Hauteur][Largeur];// sol : terre, pierre, mine this.milieu
+		 * = new int[Hauteur][Largeur];//environnement : arbre, caillou,etc.. this.bg =
+		 * new int[Hauteur][Largeur];// background
+		 */
+		this.initialiseMap(this.sol, fichierDuSol, true);
+		this.initialiseMap(this.mid, fichierDuMilieu, false);
 	}
 
-	public void initialiseMap(int[][] carte, String fichier) {
+	/**
+	 * 
+	 * @param carte
+	 * @param fichier
+	 *            Url
+	 * @param sol
+	 *            ground or mid
+	 */
+	public void initialiseMap(int[][] carte, String fichier, boolean sol) {
 
 		String ligne = "";
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(fichier));
-			int x = 0;
+			int y = 0;
 			do {
-				int y = 0;
+				int x = 0;
 				ligne = br.readLine();
 				if (ligne != null) {
 					StringTokenizer s = new StringTokenizer(ligne, ",");
 					while (s.hasMoreTokens()) {
-						carte[x][y] = Integer.parseInt(s.nextToken());
-						y++;
+						int token = Integer.parseInt(s.nextToken());
+						if (token != 0) {
+							if (sol)
+								tilesListSol.add(new Tiles(x, y, token));
+							else
+								tilesListMid.add(new Tiles(x, y, token));
+						}
+						x++;
 					}
-					x++;
+					y++;
 				}
 
 			} while (ligne != null);
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 	}
 
+	/**
+	 * 
+	 * @param map
+	 * @return sol or background
+	 */
 	public int[][] getMap(int map) {
 		if (map % 2 == 0)
 			return this.sol;
@@ -56,10 +91,18 @@ public class Map {
 	}
 
 	public int[][] getMapMilieu() {
-		return this.milieu;
+		return this.mid;
 	}
 
 	public int[][] getMapBg() {
 		return this.bg;
+	}
+
+	public ObservableList<Tiles> getTilesListSol() {
+		return tilesListSol;
+	}
+
+	public ObservableList<Tiles> getTilesListMid() {
+		return tilesListMid;
 	}
 }

@@ -9,7 +9,7 @@ public class BillView extends CharacterView{
 
 	public BillView(String imagePerso) {
 		super(imagePerso);
-		this.charac=new Bill(32*9, 32*11, 9);
+		this.charac=new Bill(768-64, 432-32, 9);
 		this.bind();
 		this.animation();
 	}
