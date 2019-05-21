@@ -178,7 +178,7 @@ public class Controller implements Initializable {
 				relocateImages(direction, i);
 				// if (floor.getChildren().get(i).getLayoutX() > 32 * 30) {
 				// floor.getChildren().remove(floor.getChildren().get(i));
-				// }
+				// }s
 			}
 
 			break;
