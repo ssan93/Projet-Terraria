@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
@@ -39,6 +40,7 @@ public class Main extends Application {
 				c.stopAction();
 			});
 			primaryStage.setScene(scene);
+			primaryStage.setFullScreen(true);
 			// primaryStage.setFullScreen(true);
 			primaryStage.show();
 		} catch (Exception e) {
@@ -58,12 +60,13 @@ public class Main extends Application {
 			root = new BorderPane();
 			root = loader.load();
 			Controller c = loader.getController();
-						Scene scene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
-			//scene.getStylesheets().clear();
-			//scene.getStylesheets().add(getClass().getResource("vue/connect.css").toExternalForm());
+			Scene scene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
+			scene.getStylesheets().add("view/game/menu.css");
 			primaryStage.setScene(scene);
+			primaryStage.initStyle(StageStyle.TRANSPARENT);
+			primaryStage.setFullScreen(true);
 			primaryStage.show();
-			primaryStage.setResizable(false);
+			//primaryStage.setResizable(false);
 			c.getInGame().addListener((observable, oldValue, newValue) -> {
 				changeGame(primaryStage);
 			});
