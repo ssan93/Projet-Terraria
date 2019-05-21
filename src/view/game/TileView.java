@@ -7,12 +7,21 @@ import model.game.Tiles;
 public class TileView extends ImageView{
 
 	private Tiles tile;
-	private int layer; // 1 for ground , 2 for middleground
 	
 	public TileView() {
 		super();
 	}
 
+	/**
+	 * 
+	 * @param t Tiles
+	 */
+	public TileView(Tiles t) {
+		super();
+		this.tile = t;
+		this.setImage(new Image("view/resources/tiles/tile"+t.getCode()+".png"));
+	}
+	
 	public TileView(String url) {
 		super(url);
 	}
@@ -20,14 +29,4 @@ public class TileView extends ImageView{
 	public TileView(Image image) {
 		super(image);
 	}
-	
-	/**
-	 * 
-	 */
-	public TileView(Image image, Tiles t,int l) {
-		super(image);
-		this.layer = l;
-		this.tile = t;
-	}
-
 }
