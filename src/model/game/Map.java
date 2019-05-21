@@ -14,18 +14,18 @@ public class Map {
 
 	private static final int Largeur = 300, Hauteur = 100;
 
-	private String fichierDuSol, fichierDuMilieu, fichierDuBg;
+	private String fichierDuSol, fichierDuMilieu/*, fichierDuBg*/;
 
 	/**
 	 * 
-	 * @param carteSol
-	 * @param carteMilieu
-	 * @param carteBg
+	 * @param carteSol url ground file
+	 * @param carteMilieu mid file
+	 * 
 	 */
-	public Map(String carteSol, String carteMilieu, String carteBg) {
+	public Map(String carteSol, String carteMilieu/*, String carteBg*/) {
 		this.fichierDuSol = carteSol;
 		this.fichierDuMilieu = carteMilieu;
-		this.fichierDuBg = carteBg;
+//		this.fichierDuBg = carteBg;
 		this.tilesListSol = FXCollections.observableArrayList();
 		this.tilesListMid = FXCollections.observableArrayList();
 		/*
@@ -33,8 +33,8 @@ public class Map {
 		 * = new int[Hauteur][Largeur];//environnement : arbre, caillou,etc.. this.bg =
 		 * new int[Hauteur][Largeur];// background
 		 */
-		this.initialiseMap(this.sol, fichierDuSol, true);
-		this.initialiseMap(this.mid, fichierDuMilieu, false);
+		this.initialiseMap(/*this.sol,*/ fichierDuSol, true);
+		this.initialiseMap(/*this.mid,*/ fichierDuMilieu, false);
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class Map {
 	 * @param sol
 	 *            ground or mid
 	 */
-	public void initialiseMap(int[][] carte, String fichier, boolean sol) {
+	private void initialiseMap(/*int[][] carte,*/ String fichier, boolean sol) {
 
 		String ligne = "";
 		try {

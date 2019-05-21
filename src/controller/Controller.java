@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -35,7 +36,7 @@ public class Controller implements Initializable {
 	@FXML
 	private Pane charapane;
 
-	private Map tileSol = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv", "src/maps/carte3.txt");
+	private Map tileSol = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv"/*, "src/maps/carte3.txt"*/);
 	private MapView mv;
 	private Timeline loop;
 	private int temps;
@@ -44,7 +45,7 @@ public class Controller implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-//		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
+		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
 //		absolute_x = new SimpleIntegerProperty(0);
 //		absolute_y = new SimpleIntegerProperty(0);
 //		absolute_charactX = new SimpleIntegerProperty();
@@ -95,7 +96,7 @@ public class Controller implements Initializable {
 				floor.getChildren().get(i).relocate(
 						floor.getChildren().get(i).getLayoutX() + bill.getChrac().getSpeed(),
 						floor.getChildren().get(i).getLayoutY());
-				if (floor.getChildren().get(i).getLayoutX() > 32 * 30) {
+				if (floor.getChildren().get(i).getLayoutX() > 32 * 60) {
 					floor.getChildren().remove(floor.getChildren().get(i));
 				}
 			}
