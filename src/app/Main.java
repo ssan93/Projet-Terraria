@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -25,20 +24,19 @@ public class Main extends Application {
 			root = loader.load();
 			Controller c = loader.getController();
 			Scene scene = new Scene(root, root.getMaxWidth(), root.getMaxHeight());
-			
-			//quand une touche est pressé
+
+			// quand une touche est pressé
 			scene.setOnKeyPressed(e -> {
 				c.addKeyCode(e.getCode());
-				c.actions();
 			});
-			//quand une touche est relaché
+			// quand une touche est relaché
 			scene.setOnKeyReleased(e -> {
 				c.removeKeyCode(e.getCode());
 				c.stopAction();
 			});
 			primaryStage.setTitle("Last man in Vietnam");
 			primaryStage.setScene(scene);
-			// primaryStage.setFullScreen(true);
+			primaryStage.setFullScreen(true);
 			primaryStage.show();
 		} catch (Exception e) {
 			e.printStackTrace();

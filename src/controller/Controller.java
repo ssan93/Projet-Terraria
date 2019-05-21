@@ -6,10 +6,9 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -21,6 +20,8 @@ import model.game.Map;
 public class Controller implements Initializable {
 
 	private static final int gauche = -32, droite = 1952;
+
+//	private SimpleIntegerProperty absolute_x, absolute_y, absolute_charactX, absolute_charactY;
 
 	// liste observable ou liste simple ??
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
@@ -34,23 +35,26 @@ public class Controller implements Initializable {
 	@FXML
 	private Pane charapane;
 
+	private Map tileSol = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv", "src/maps/carte3.txt");
 	private MapView mv;
-
-	Map tileSol = new Map("src/maps/carte.txt", "src/maps/carte2.txt", "src/maps/carte3.txt");
-	int temps;
 	private Timeline loop;
-	BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
-	String oldAnim = "tactac";
+	private int temps;
+	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
+	private String oldAnim = "tactac";
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		background.getChildren().add(0,new ImageView(new Image("view/resources/tac.jpg")));
+//		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
+//		absolute_x = new SimpleIntegerProperty(0);
+//		absolute_y = new SimpleIntegerProperty(0);
+//		absolute_charactX = new SimpleIntegerProperty();
+//		absolute_charactY = new SimpleIntegerProperty();
+//		absolute_charactX.bind(bill.getChrac().getXProperty());
+//		absolute_charactY.bind(bill.getChrac().getYProperty());
 		mv = new MapView(tileSol);
-		// initAnimation();
-		// loop.play();
+		initAnimation();
+		loop.play();
 		bill.getChrac().setSpeed(4);
-		bill.getChrac().getXProperty().set(32 * 5);
-		bill.getChrac().getYProperty().set(32 * 11);
 		charapane.getChildren().add(bill.getImage());
 		floor.getChildren().addAll(mv.creerVue());
 	}
@@ -118,8 +122,8 @@ public class Controller implements Initializable {
 		loop.setCycleCount(Timeline.INDEFINITE);
 		System.out.println(temps);
 
-		KeyFrame kf = new KeyFrame(Duration.seconds(0.033), (ev -> {
-
+		KeyFrame kf = new KeyFrame(Duration.seconds(0.02083333333), (ev -> {
+			actions();
 			temps++;
 		}));
 		loop.getKeyFrames().add(kf);
