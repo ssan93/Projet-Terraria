@@ -273,8 +273,8 @@ public class Controller implements Initializable {
 
 		KeyFrame kf = new KeyFrame(Duration.millis(25), (ev -> {
 
-			if (floor.getChildren().get(30 * 20 - 30 * bill.getChrac().getY() / 32 + 2 + 13).getLayoutY() > 480
-					- 32 * 3) {
+			if (floor.getChildren().get(30 * 20 - 30 * bill.getChrac().getY() / 32 + 2 + 13).getLayoutY() > 476
+					+ 32 * 4) {
 				for (int i = 0; i < floor.getChildren().size(); i++) {
 					relocateImages("Down", i);
 				}
