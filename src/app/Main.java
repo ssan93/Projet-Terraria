@@ -41,7 +41,6 @@ public class Main extends Application {
 			});
 			primaryStage.setScene(scene);
 			primaryStage.setFullScreen(true);
-			// primaryStage.setFullScreen(true);
 			primaryStage.show();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -66,7 +65,6 @@ public class Main extends Application {
 			primaryStage.initStyle(StageStyle.TRANSPARENT);
 			primaryStage.setFullScreen(true);
 			primaryStage.show();
-			//primaryStage.setResizable(false);
 			c.getInGame().addListener((observable, oldValue, newValue) -> {
 				changeGame(primaryStage);
 			});
