@@ -37,7 +37,7 @@ public class MapView {
 			for (int y = 0; y < tabMilieu[x].length; y++) {
 				if (tabMilieu[x][y] != 0) {
 					Tiles t = new Tiles(x, y);
-					TileView tv = new TileView(Tiles.selectionTuile(tabMilieu[x][y]), t);
+					TileView tv = new TileView(Tiles.selectionTuile(tabMilieu[x][y]), t,2);
 					tv.relocate(y * 32, x * 32);
 					images.add(tv);
 
@@ -52,7 +52,7 @@ public class MapView {
 			for (int y = 0; y < tabSol[x].length; y++) {
 				if (tabSol[x][y] != 0) {
 					Tiles t = new Tiles(x, y);
-					TileView tv = new TileView(Tiles.selectionTuile(tabSol[x][y]), t);
+					TileView tv = new TileView(Tiles.selectionTuile(tabSol[x][y]), t,1);
 					tv.relocate(y * 32, x * 32);
 					images.add(tv);
 //					 ImageView img = new ImageView(Tiles.selectionTuile(t3[x][y]));

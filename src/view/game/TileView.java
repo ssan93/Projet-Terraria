@@ -7,6 +7,7 @@ import model.game.Tiles;
 public class TileView extends ImageView{
 
 	private Tiles tile;
+	private int layer; // 1 for ground , 2 for middleground
 	
 	public TileView() {
 		super();
@@ -20,8 +21,12 @@ public class TileView extends ImageView{
 		super(image);
 	}
 	
-	public TileView(Image image, Tiles t) {
+	/**
+	 * 
+	 */
+	public TileView(Image image, Tiles t,int l) {
 		super(image);
+		this.layer = l;
 		this.tile = t;
 	}
 

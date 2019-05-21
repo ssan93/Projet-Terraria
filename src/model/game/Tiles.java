@@ -2,7 +2,7 @@ package model.game;
 
 import javafx.scene.image.Image;
 
-public class Tiles extends Object{
+public class Tiles extends Objet{
 
 	public Tiles(int x, int y) {
 		super(x, y);

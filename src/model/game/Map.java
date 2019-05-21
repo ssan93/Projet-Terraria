@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 public class Map {
 
 	private int[][] sol, milieu, bg;
+	
 	private static final int Largeur = 300, Hauteur = 100;
 	
 
