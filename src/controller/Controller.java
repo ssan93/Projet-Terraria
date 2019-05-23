@@ -77,15 +77,15 @@ public class Controller implements Initializable {
 	public void removeImages(String direction) {
 		switch (direction) {
 		case "Right":
-
 			for (int i = 0; i < floor.getChildren().size(); i++) {
 
 				floor.getChildren().get(i).relocate(
 						floor.getChildren().get(i).getLayoutX() - bill.getChrac().getSpeed(),
 						floor.getChildren().get(i).getLayoutY());
-				if (floor.getChildren().get(i).getLayoutX() < -32) {
-					floor.getChildren().remove(floor.getChildren().get(i));
-				}
+				floor.getChildren().removeIf(n-> n.getLayoutX()<-32);
+//				if (floor.getChildren().get(i).getLayoutX() < -32) {
+//					floor.getChildren().remove(floor.getChildren().get(i));
+//				}
 
 			}
 			break;
