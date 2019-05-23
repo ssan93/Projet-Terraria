@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
@@ -40,7 +41,7 @@ public class Controller implements Initializable {
 	@FXML
 	private Pane charapane;
 
-	private Map tileSol = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv");
+	private Map mapPrincipale = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv");
 	private MapView mv;
 	private Timeline loop;
 
@@ -67,7 +68,7 @@ public class Controller implements Initializable {
 		// absolute_charactY = new SimpleIntegerProperty();
 		// absolute_charactX.bind(bill.getChrac().getXProperty());
 		// absolute_charactY.bind(bill.getChrac().getYProperty());
-		mv = new MapView(tileSol);
+		mv = new MapView(mapPrincipale);
 		initAnimation();
 		loop.play();
 		bill.getChrac().setSpeed(4);
@@ -89,7 +90,7 @@ public class Controller implements Initializable {
 			if (!stopSroll().equals("right stop")) {
 				bill.getChrac().animation("RunRight");
 				oldAnim = "RunRight";
-				removeImages("Right");
+				scroll("Right");
 				/*
 				 * departr += bill.getChrac().getSpeed(); if (departr % 960 / 32 == 29) {
 				 * tileSol = new Map("src/maps/carte.txt", "src/maps/carte2.txt",
@@ -99,7 +100,7 @@ public class Controller implements Initializable {
 				 * }
 				 */
 
-				addImages("Right");
+				//addImages("Right");
 			}
 		}
 
@@ -107,8 +108,8 @@ public class Controller implements Initializable {
 			if (!stopSroll().equals("left stop")) {
 				bill.getChrac().animation("RunLeft");
 				oldAnim = "RunLeft";
-				removeImages("Left");
-				addImages("Left");
+				scroll("Left");
+				//addImages("Left");
 			}
 
 		}
@@ -117,20 +118,29 @@ public class Controller implements Initializable {
 			if (!alreadyJumping()) {
 				bill.getChrac().animation("jumpRight");
 				oldAnim = "jumpRight";
-				removeImages("Up");
+				scroll("Up");
 			}
 
 		}
 	}
 
 	public void addImages(String direction) {
+		int deleteLign = 0;
+		int addLign = 60;
+		ObservableList<Tiles> Listsol = mapPrincipale.getTilesListSol();
 		switch (direction) {
 		case "Right":
-			
+			for(Tiles tile : Listsol) {
+				if(tile.getX()==addLign) {
+					Listsol.add(tile);
+				}
+					
+					
+			}
 			break;
 
 		case "Left":
-			countLeft -= bill.getChrac().getSpeed();
+			/*countLeft -= bill.getChrac().getSpeed();
 			departl += bill.getChrac().getSpeed();
 			int tileLeft = departl % 960 / 32;
 			if (tileLeft == 30)
@@ -148,7 +158,7 @@ public class Controller implements Initializable {
 			}
 			if (departr - bill.getChrac().getSpeed() >= 0)
 				departr -= bill.getChrac().getSpeed();
-
+*/
 			break;
 		}
 
@@ -177,7 +187,7 @@ public class Controller implements Initializable {
 		}
 	}
 
-	public void removeImages(String direction) {
+	public void scroll(String direction) {
 		switch (direction) {
 		case "Right":
 

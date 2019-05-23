@@ -25,20 +25,20 @@ public class MapView {
 		ArrayList<ImageView> images = new ArrayList<>();
 
 		ObservableList<Tiles> ListMid = m.getTilesListMid();
-		for (Tiles test : ListMid) {
-			if (test.getX() < 60 && test.getY() < 40) {
-				TileView tv = new TileView(test);
-				tv.relocate(test.getX() * 32, test.getY() * 32);
+		for (Tiles tile : ListMid) {
+			if (tile.getX() < 60 && tile.getY() < 40) {
+				TileView tv = new TileView(tile);
+				tv.relocate(tile.getX() * 32, tile.getY() * 32);
 				images.add(tv);
 
 			}
 		}
 
 		ObservableList<Tiles> ListSol = m.getTilesListSol();
-		for (Tiles test : ListSol) {
-			if (test.getX() < 60 && test.getY() < 40) {
-				TileView tv = new TileView(test);
-				tv.relocate(test.getX() * 32, test.getY() * 32);
+		for (Tiles tile : ListSol) {
+			if (tile.getX() < 60 && tile.getY() < 40) {
+				TileView tv = new TileView(tile);
+				tv.relocate(tile.getX() * 32, tile.getY() * 32);
 				images.add(tv);
 
 			}
@@ -46,5 +46,6 @@ public class MapView {
 
 		return images;
 	}
+	
 
 }
