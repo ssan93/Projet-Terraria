@@ -7,9 +7,11 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -18,6 +20,7 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import view.game.BillView;
 import view.game.MapView;
+import view.game.TileView;
 import model.game.Map;
 import model.game.Tiles;
 
@@ -58,6 +61,10 @@ public class Controller implements Initializable {
 	private int temps;
 	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
 	private String oldAnim = "tactac";
+	int deleteLign = 0;
+	int addLign = 60;
+	ObservableList<Tiles> viewAbleSol;
+	int relocated=0;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -69,10 +76,11 @@ public class Controller implements Initializable {
 		// absolute_charactX.bind(bill.getChrac().getXProperty());
 		// absolute_charactY.bind(bill.getChrac().getYProperty());
 		mv = new MapView(mapPrincipale);
+		viewAbleSol = mv.getListViewSol();
 		initAnimation();
 		loop.play();
 		bill.getChrac().setSpeed(4);
-
+		
 		/*
 		 * bill.getChrac().getXProperty().set(32 * 6);
 		 * bill.getChrac().getYProperty().set(32 * 7 - 12);
@@ -80,6 +88,36 @@ public class Controller implements Initializable {
 
 		charapane.getChildren().add(bill.getImage());
 		floor.getChildren().addAll(mv.creerVue());
+
+		viewAbleSol.addListener(new ListChangeListener<Tiles>() {
+			
+			@Override
+			public void onChanged(Change<? extends Tiles> c) {
+				
+				while (c.next()) {
+					if (c.wasAdded()) {
+						for (Tiles tileAdded : c.getAddedSubList()) {
+
+							ImageView img = new TileView(tileAdded);
+							
+							img.relocate(59 * 32-5, tileAdded.getY() * 32+relocated);
+							floor.getChildren().add(img);
+
+						}
+					}
+					if(c.wasRemoved()) {
+						for (Tiles tileRemoved : c.getRemoved()) {
+							for(int i=0;i<floor.getChildren().size();i++) {
+								if(floor.getChildren().get(i).getLayoutX()==tileRemoved.getX())
+									floor.getChildren().remove(floor.getChildren().get(i));
+							}
+						}
+					}
+				}
+
+			}
+
+		});
 
 		testCollision();
 
@@ -99,8 +137,16 @@ public class Controller implements Initializable {
 				 * 
 				 * }
 				 */
-
-				//addImages("Right");
+				countRight -= bill.getChrac().getSpeed();
+				if (countRight < 0) {
+					addImages("Right");
+					countRight += 32;
+					for (Tiles tile : viewAbleSol) {
+						if(tile.getX()== deleteLign)
+							viewAbleSol.remove(tile);
+					}
+					deleteLign++;
+				}
 			}
 		}
 
@@ -109,7 +155,7 @@ public class Controller implements Initializable {
 				bill.getChrac().animation("RunLeft");
 				oldAnim = "RunLeft";
 				scroll("Left");
-				//addImages("Left");
+				// addImages("Left");
 			}
 
 		}
@@ -125,40 +171,38 @@ public class Controller implements Initializable {
 	}
 
 	public void addImages(String direction) {
-		int deleteLign = 0;
-		int addLign = 60;
-		ObservableList<Tiles> Listsol = mapPrincipale.getTilesListSol();
+		ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
 		switch (direction) {
 		case "Right":
-			for(Tiles tile : Listsol) {
-				if(tile.getX()==addLign) {
-					Listsol.add(tile);
+			for (Tiles tile : ListSol) {
+
+				if (tile.getX() == addLign && tile.getY() < 40) {
+					viewAbleSol.add(tile);
+					
 				}
-					
-					
+				
 			}
+			
+			addLign++;
+
 			break;
 
 		case "Left":
-			/*countLeft -= bill.getChrac().getSpeed();
-			departl += bill.getChrac().getSpeed();
-			int tileLeft = departl % 960 / 32;
-			if (tileLeft == 30)
-				tileLeft = 0;
-			int tLeft[][] = tileSol.getMap(0);
-			if (countLeft <= 0) {
-				for (int x = 0; x < tLeft.length; x++) {
-					if (tLeft[x][tileLeft] != 0) {
-						ImageView img = new ImageView(Tiles.selectionTuile(tLeft[x][tileLeft]));
-						img.relocate(0, x * 32);
-						floor.getChildren().add(img);
-					}
-				}
-				countLeft += 32;
-			}
-			if (departr - bill.getChrac().getSpeed() >= 0)
-				departr -= bill.getChrac().getSpeed();
-*/
+			/*
+			 * countLeft -= bill.getChrac().getSpeed(); departl +=bill.getChrac().getSpeed(); 
+			 * int tileLeft = departl % 960 / 32; 
+			 * if (tileLeft == 30) tileLeft = 0; int tLeft[][] = tileSol.getMap(0);
+			 *  if (countLeft <= 0) {
+			 * for (int x = 0; x < tLeft.length; x++) { 
+			 * if (tLeft[x][tileLeft] != 0) {
+			 * ImageView img = new ImageView(Tiles.selectionTuile(tLeft[x][tileLeft]));
+			 * img.relocate(0, x * 32); 
+			 * floor.getChildren().add(img); } 
+			 * } countLeft += 32; 
+			 * }
+			 * if (departr - bill.getChrac().getSpeed() >= 0) departr -=
+			 * bill.getChrac().getSpeed();
+			 */
 			break;
 		}
 
@@ -183,6 +227,7 @@ public class Controller implements Initializable {
 		case "Down":
 			floor.getChildren().get(indiceFloor).relocate(floor.getChildren().get(indiceFloor).getLayoutX(),
 					floor.getChildren().get(indiceFloor).getLayoutY() - 4);
+			
 			break;
 		}
 	}
@@ -232,6 +277,7 @@ public class Controller implements Initializable {
 					floor.getChildren().get(i).relocate(floor.getChildren().get(i).getLayoutX(),
 							floor.getChildren().get(i).getLayoutY() + 4);
 				}
+				relocated+=4;
 				actions();
 				// System.out.println(
 				// floor.getChildren().get(30 * 20 - 30 * bill.getChrac().getY() / 32 + 2 +
@@ -292,6 +338,7 @@ public class Controller implements Initializable {
 				for (int i = 0; i < floor.getChildren().size(); i++) {
 					relocateImages("Down", i);
 				}
+				relocated-=4;
 			} else
 				jumping = false;
 
