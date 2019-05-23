@@ -9,7 +9,7 @@ import javafx.collections.ObservableList;
 
 public class Map {
 
-	private int[][] sol, mid, bg;
+//	private int[][] sol, mid, bg;
 	private ObservableList<Tiles> tilesListSol, tilesListMid;
 
 	private static final int Largeur = 300, Hauteur = 100;
@@ -70,6 +70,7 @@ public class Map {
 				}
 
 			} while (ligne != null);
+			br.close();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -80,23 +81,23 @@ public class Map {
 	 * @param map
 	 * @return sol or background
 	 */
-	public int[][] getMap(int map) {
-		if (map % 2 == 0)
-			return this.sol;
-		return this.bg;
-	}
-
-	public int[][] getMapSol() {
-		return this.sol;
-	}
-
-	public int[][] getMapMilieu() {
-		return this.mid;
-	}
-
-	public int[][] getMapBg() {
-		return this.bg;
-	}
+//	public int[][] getMap(int map) {
+//		if (map % 2 == 0)
+//			return this.sol;
+//		return this.bg;
+//	}
+//
+//	public int[][] getMapSol() {
+//		return this.sol;
+//	}
+//
+//	public int[][] getMapMilieu() {
+//		return this.mid;
+//	}
+//
+//	public int[][] getMapBg() {
+//		return this.bg;
+//	}
 
 	public ObservableList<Tiles> getTilesListSol() {
 		return tilesListSol;

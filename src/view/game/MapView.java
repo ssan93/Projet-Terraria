@@ -13,7 +13,6 @@ public class MapView {
 
 	public MapView(Map m) {
 		this.m = m;
-
 	}
 
 	public ArrayList<ImageView> creerVue() {
