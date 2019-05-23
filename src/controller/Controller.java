@@ -36,7 +36,7 @@ public class Controller implements Initializable {
 	@FXML
 	private Pane charapane;
 
-	private Map tileSol = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv"/*, "src/maps/carte3.txt"*/);
+	private Map mapPrincipal = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv"/*, "src/maps/carte3.txt"*/);
 	private MapView mv;
 	private Timeline loop;
 	private int temps;
@@ -52,7 +52,7 @@ public class Controller implements Initializable {
 //		absolute_charactY = new SimpleIntegerProperty();
 //		absolute_charactX.bind(bill.getChrac().getXProperty());
 //		absolute_charactY.bind(bill.getChrac().getYProperty());
-		mv = new MapView(tileSol);
+		mv = new MapView(mapPrincipal);
 		initAnimation();
 		loop.play();
 		bill.getChrac().setSpeed(4);
