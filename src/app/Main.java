@@ -69,7 +69,7 @@ public class Main extends Application {
 			primaryStage.show();
 			c.getInGame().addListener((observable, oldValue, newValue) -> {
 				changeGame(primaryStage);
-			});
+			});System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
