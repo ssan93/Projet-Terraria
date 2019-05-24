@@ -19,6 +19,7 @@ public class Controller implements Initializable {
 
 	// music
 	private MediaPlayer player;
+	private String actualMusic, oldMusic="";
 
 	@FXML
 	private Button play;
@@ -53,12 +54,20 @@ public class Controller implements Initializable {
 	public MediaPlayer randomMusic() {
 		//The actual list of musics for the munu
 		ArrayList<String> musics = new ArrayList<>();
-		musics.add("src/mgs.mp3");
-		musics.add("src/AHHHHH.mp3");
-		musics.add("src/menu.mp3");
-		musics.add("src/rip.wav");
+		musics.add("src/menu-musics/menu1.mp3");
+		musics.add("src/menu-musics/menu2.mp3");
+		musics.add("src/menu-musics/menu3.mp3");
+		musics.add("src/menu-musics/menu4.mp3");
+		musics.add("src/menu-musics/menu5.mp3");
+		
+		do {
+			actualMusic= musics.get((int) (Math.random() * 5));
+		}
+		while(oldMusic.equals(actualMusic));
+		oldMusic= actualMusic;
+
 		//Return a brand new MediaPlayer with a random music from the lists
-		return new MediaPlayer(new Media(new File(musics.get((int) (Math.random() * 4))).toURI().toString()));
+		return new MediaPlayer(new Media(new File(actualMusic).toURI().toString()));
 	}
 
 	public void play() {
