@@ -53,6 +53,8 @@ public class Controller implements Initializable {
 
 	int countRight = 32;
 	int countLeft = 32;
+	int countDown = 32;
+	int countUp = 32;
 
 	boolean jumping = false;
 
@@ -63,12 +65,12 @@ public class Controller implements Initializable {
 	int deleteLignRight = 59;
 	int addLignLeft = 299;
 	int addLignRight = 60;
+	int addLignBot = 33;
 	boolean deleteLeft = false;
-	boolean addLeft = false;
+	String add = "Left";
 	ObservableList<Tiles> viewAbleSol;
 	int relocated = 0;
-	Rectangle2D testr = new Rectangle2D(31*32, 403+6*32, 32, 32);
-	int test=31;
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
@@ -101,10 +103,21 @@ public class Controller implements Initializable {
 					if (c.wasAdded()) {
 						for (Tiles tileAdded : c.getAddedSubList()) {
 							ImageView img = new TileView(tileAdded);
-							if (addLeft)
+							switch(add) {
+							case "Left":
 								img.relocate(5, tileAdded.getY() * 32 + relocated);
-							else
+								break;
+							case "Right":
 								img.relocate(59 * 32 - 5, tileAdded.getY() * 32 + relocated);
+								break;
+							case "Down" : 
+								img.relocate(tileAdded.getX()*32, 33*32);
+								break;
+							}
+							
+								
+						
+								
 							floor.getChildren().add(img);
 
 						}
@@ -134,8 +147,7 @@ public class Controller implements Initializable {
 			oldAnim = "RunRight";
 			scroll("Right");
 			
-			System.out.println(bill.getChrac().getRectangle2D().intersects(test*32, 403+6*32, 32, 32));
-			test++;
+			
 			/*
 			 * departr += bill.getChrac().getSpeed(); if (departr % 960 / 32 == 29) {
 			 * tileSol = new Map("src/maps/carte.txt", "src/maps/carte2.txt",
@@ -195,11 +207,15 @@ public class Controller implements Initializable {
 
 	public void addImages(String direction) {
 		ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
+		ObservableList<Tiles> ListMid = mapPrincipale.getTilesListMid();
 		switch (direction) {
 		case "Right":
-			addLeft = false;
+			add = "Right";
+			for(Tiles tile : ListMid)
+				if (tile.getX() == addLignRight && tile.getY() < addLignBot+2)
+					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == addLignRight && tile.getY() < 40)
+				if (tile.getX() == addLignRight && tile.getY() < addLignBot+2)
 					viewAbleSol.add(tile);
 			addLignRight++;
 			addLignLeft++;
@@ -211,9 +227,12 @@ public class Controller implements Initializable {
 			break;
 
 		case "Left":
-			addLeft = true;
+			add = "Left";
+			for (Tiles tile : ListMid)
+				if (tile.getX() == addLignLeft && tile.getY() < addLignBot+2)
+					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == addLignLeft && tile.getY() < 40)
+				if (tile.getX() == addLignLeft && tile.getY() < addLignBot+2)
 					viewAbleSol.add(tile);
 			addLignLeft--;
 			addLignRight--;
@@ -232,6 +251,14 @@ public class Controller implements Initializable {
 			 * if (departr - bill.getChrac().getSpeed() >= 0) departr -=
 			 * bill.getChrac().getSpeed();
 			 */
+			break;
+		case "Down":
+			add="Down";
+			for (Tiles tile : ListSol)
+				if (tile.getX() < 60 && tile.getY() == addLignBot) {
+					viewAbleSol.add(tile);
+				}
+			addLignBot++;
 			break;
 		}
 
@@ -274,12 +301,22 @@ public class Controller implements Initializable {
 			countLeft += bill.getChrac().getSpeed();
 			if (countLeft > 32)
 				countLeft -= 32;
-			if (countRight < 0) {
+			if (countRight <= 0) {
 				addImages("Right");
 				deleteImages("Left");
 				countRight += 32;
 			}
 
+			break;
+		case "Down":
+			for (int i = 0; i < floor.getChildren().size(); i++) 
+				relocateImages("Down", i);
+			
+			countDown -= 4;
+			if(countDown <= 0) {
+				addImages("Down");
+				countDown += 32;
+			}
 			break;
 
 		case "Left":
@@ -291,7 +328,7 @@ public class Controller implements Initializable {
 
 			if (countRight > 32)
 				countRight -= 32;
-			if (countLeft < 0) {
+			if (countLeft <= 0) {
 
 				addImages("Left");
 				deleteImages("Right");
@@ -316,13 +353,18 @@ public class Controller implements Initializable {
 			});
 
 			loop2.getKeyFrames().add(new KeyFrame(Duration.millis(25), (ev -> {
+				
 
 				for (int i = 0; i < floor.getChildren().size(); i++) {
 
-					floor.getChildren().get(i).relocate(floor.getChildren().get(i).getLayoutX(),
-							floor.getChildren().get(i).getLayoutY() + 4);
+					relocateImages("Up", i);
+					countDown +=4;
+					countUp -=4;
+					
 
 				}
+				
+				
 				relocated += 4;
 				actions();
 				// System.out.println(
@@ -332,6 +374,7 @@ public class Controller implements Initializable {
 
 			loop2.play();
 			loop2.getOnFinished();
+			
 			break;
 		}
 
@@ -381,9 +424,7 @@ public class Controller implements Initializable {
 
 			if (floor.getChildren().get(30 * 20 - 30 * bill.getChrac().getY() / 32 + 2 + 13).getLayoutY() > 476
 					+ 32 * 4) {
-				/*for (int i = 0; i < floor.getChildren().size(); i++) {
-					relocateImages("Down", i);
-				}*/
+				scroll("Down");
 				relocated -= 4;
 			} else
 				jumping = false;
