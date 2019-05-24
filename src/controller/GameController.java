@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -24,6 +26,8 @@ public class GameController extends Controller{
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
 
 	@FXML
+	private ImageView heart;
+	@FXML
 	private AnchorPane background;
 
 	@FXML
@@ -39,12 +43,13 @@ public class GameController extends Controller{
 	private Timeline loop;
 	BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
 	String oldAnim = "tactac";
-
+	SimpleBooleanProperty isAlive;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		mv = new MapView(tileSol);
-		// initAnimation();
-		// loop.play();
+		isAlive=new SimpleBooleanProperty(true);
+		initAnimation();
+		loop.play();
 		bill.getChrac().setSpeed(4);
 		bill.getChrac().getXProperty().set(32 * 5);
 		bill.getChrac().getYProperty().set(32 * 11);
@@ -70,7 +75,7 @@ public class GameController extends Controller{
 			}
 		}
 	}
-
+	
 	public void removeImages(String direction) {
 		switch (direction) {
 		case "Right":
@@ -129,13 +134,31 @@ public class GameController extends Controller{
 		}
 	}
 
+	public void isAlive() {
+
+		bill.setLife(heart);
+		if(bill.getChrac().getHp()==0)
+			isAlive.set(false);
+		else
+			isAlive.set(true);
+
+	}
+	
+	public SimpleBooleanProperty getIsAlive() {
+		return this.isAlive;
+	}
+	
 	public void initAnimation() {
 		loop = new Timeline();
 		loop.setCycleCount(Timeline.INDEFINITE);
 		System.out.println(temps);
-
 		KeyFrame kf = new KeyFrame(Duration.seconds(0.033), (ev -> {
-
+		
+			if(temps%30==0 && bill.getChrac().getHp()>0) {
+				bill.getChrac().damage(5);
+				System.out.println(bill.getChrac().getHp());
+				isAlive();
+			}
 			temps++;
 		}));
 		loop.getKeyFrames().add(kf);

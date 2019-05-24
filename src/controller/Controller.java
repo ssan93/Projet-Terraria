@@ -5,13 +5,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
+import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -20,6 +18,7 @@ public class Controller implements Initializable {
 	// music
 	private MediaPlayer player;
 	private String actualMusic, oldMusic="";
+	
 
 	@FXML
 	private Button play;
@@ -34,11 +33,11 @@ public class Controller implements Initializable {
 
 	@FXML
 	void goOptions(ActionEvent event) {
-
 	}
 
 	@FXML
 	void playGame(ActionEvent event) {
+		player.stop();
 		inGame.set(true);
 	}
 
@@ -49,6 +48,14 @@ public class Controller implements Initializable {
 
 	public SimpleBooleanProperty getInGame() {
 		return inGame;
+	}
+	
+	public void setPlayerVolume(double soundValue) {
+		this.player.setBalance(soundValue);
+	}
+	
+	public double getPlayerVolume() {
+		return player.getBalance();
 	}
 
 	public MediaPlayer randomMusic() {
