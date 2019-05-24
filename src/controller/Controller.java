@@ -11,6 +11,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -66,7 +67,8 @@ public class Controller implements Initializable {
 	boolean addLeft = false;
 	ObservableList<Tiles> viewAbleSol;
 	int relocated = 0;
-
+	Rectangle2D testr = new Rectangle2D(31*32, 403+6*32, 32, 32);
+	int test=31;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
@@ -81,7 +83,7 @@ public class Controller implements Initializable {
 		initAnimation();
 		loop.play();
 		bill.getChrac().setSpeed(4);
-
+		
 		/*
 		 * bill.getChrac().getXProperty().set(32 * 6);
 		 * bill.getChrac().getYProperty().set(32 * 7 - 12);
@@ -128,9 +130,12 @@ public class Controller implements Initializable {
 		if (keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)) {
 			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
-			// bill.getChrac().move("RunRight");
+			//bill.getChrac().move("RunRight");
 			oldAnim = "RunRight";
 			scroll("Right");
+			
+			System.out.println(bill.getChrac().getRectangle2D().intersects(test*32, 403+6*32, 32, 32));
+			test++;
 			/*
 			 * departr += bill.getChrac().getSpeed(); if (departr % 960 / 32 == 29) {
 			 * tileSol = new Map("src/maps/carte.txt", "src/maps/carte2.txt",
@@ -376,9 +381,9 @@ public class Controller implements Initializable {
 
 			if (floor.getChildren().get(30 * 20 - 30 * bill.getChrac().getY() / 32 + 2 + 13).getLayoutY() > 476
 					+ 32 * 4) {
-				for (int i = 0; i < floor.getChildren().size(); i++) {
+				/*for (int i = 0; i < floor.getChildren().size(); i++) {
 					relocateImages("Down", i);
-				}
+				}*/
 				relocated -= 4;
 			} else
 				jumping = false;
