@@ -28,6 +28,7 @@ public class Main extends Application {
 			// quand une touche est pressé
 			scene.setOnKeyPressed(e -> {
 				c.addKeyCode(e.getCode());
+
 			});
 			// quand une touche est relaché
 			scene.setOnKeyReleased(e -> {

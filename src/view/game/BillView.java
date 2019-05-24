@@ -9,8 +9,9 @@ public class BillView extends CharacterView{
 
 	public BillView(String imagePerso) {
 		super(imagePerso);
-		this.charac=new Bill(768-64, 432-32, 9);
-		this.bind();
+		this.charac=new Bill(30*32, 403+6*32, 9);
+		this.imageViewCharac.relocate(704,403);
+//		this.bind();
 		this.animation();
 	}
 
@@ -29,6 +30,9 @@ public class BillView extends CharacterView{
 				}
 				if(newValue.equals("idleRight")) {
 					getImage().setImage(new Image("view/resources/personnages/right_static_bill.png"));
+				}
+				if(newValue.equals("jumpRight")) {
+					getImage().setImage(new Image("view/resources/personnages/right_jump_bill.gif"));
 				}
 			}
 		});

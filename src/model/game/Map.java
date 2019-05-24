@@ -24,7 +24,7 @@ public class Map {
 	 *            mid file
 	 * 
 	 */
-	public Map(String carteSol, String carteMilieu/* , String carteBg */) {
+	public Map(String carteSol, String carteMilieu) {
 		this.fichierDuSol = carteSol;
 		this.fichierDuMilieu = carteMilieu;
 		// this.fichierDuBg = carteBg;

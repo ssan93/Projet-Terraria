@@ -30,5 +30,9 @@ public class Character extends AnimatedObject {
 			this.x.set(this.x.get() - this.speed);
 		if (direction.equals("RunRight"))
 			this.x.set(this.x.get() + this.speed);
+		if (direction.equals("Jump"))
+			this.y.set(this.y.get() + 4);
+		if (direction.equals("Down"))
+			this.y.set(this.y.get() - 4);
 	}
 }

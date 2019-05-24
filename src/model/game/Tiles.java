@@ -24,6 +24,7 @@ public class Tiles extends Objet{
 	public int getCode() {
 		return code;
 	}
+	
 	public static Image selectionTuile(int i) {
 		return new Image("view/resources/tiles/tile"+i+".png");
 	}
