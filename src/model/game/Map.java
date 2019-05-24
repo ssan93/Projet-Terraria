@@ -9,7 +9,7 @@ import javafx.collections.ObservableList;
 
 public class Map {
 
-	private int[][] tabSol, mid, bg;
+	private int[][] tabSol, mid;
 	private ObservableList<Tiles> tilesListSol, tilesListMid;
 
 	private static final int Largeur = 300, Hauteur = 100;
@@ -31,9 +31,9 @@ public class Map {
 		this.tilesListSol = FXCollections.observableArrayList();
 		this.tilesListMid = FXCollections.observableArrayList();
 
-		this.tabSol = new int[Hauteur][Largeur];// sol : terre, pierre, mine this.milieu
-		this.mid = new int[Hauteur][Largeur];// environnement : arbre, caillou,etc.. this.bg =
-		this.bg = new int[Hauteur][Largeur];// background
+		this.tabSol = new int[Largeur][Hauteur];// sol : terre, pierre, mine this.milieu
+		this.mid = new int[Largeur][Hauteur];// environnement : arbre, caillou,etc.. this.bg =
+//		this.bg = new int[Hauteur][Largeur];// background
 
 		this.initialiseMap(/* this.sol, */ fichierDuSol, true);
 		this.initialiseMap(/* this.mid, */ fichierDuMilieu, false);
@@ -63,11 +63,11 @@ public class Map {
 						if (token != 0) {
 							if (sol) {
 								tilesListSol.add(new Tiles(x, y, token));
-								this.tabSol[y][x] = token;
+								this.tabSol[x][y] = token;
 							}
 							else {
 								tilesListMid.add(new Tiles(x, y, token));
-								this.mid[y][x] = token;
+								this.mid[x][y] = token;
 							}
 						}
 						x++;
@@ -93,9 +93,9 @@ public class Map {
 	// return this.bg;
 	// }
 	//
-	// public int[][] getMapSol() {
-	// return this.sol;
-	// }
+	 public int[][] getMapSol() {
+	 return this.tabSol;
+	 }
 	//
 	// public int[][] getMapMilieu() {
 	// return this.mid;

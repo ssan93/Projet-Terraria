@@ -27,12 +27,12 @@ public class Character extends AnimatedObject {
 
 	public void move(String direction) {
 		if (direction.equals("RunLeft"))
-			this.x.set(this.x.get() - this.speed);
+			this.x.set(this.x.get() - 1);
 		if (direction.equals("RunRight"))
-			this.x.set(this.x.get() + this.speed);
+			this.x.set(this.x.get() + 1);
 		if (direction.equals("Jump"))
-			this.y.set(this.y.get() + 4);
+			this.y.set(this.y.get() - 1);
 		if (direction.equals("Down"))
-			this.y.set(this.y.get() - 4);
+			this.y.set(this.y.get() + 1);
 	}
 }
