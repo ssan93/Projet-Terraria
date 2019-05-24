@@ -1,7 +1,6 @@
 package controller;
 
 import java.net.URL;
-
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
@@ -121,8 +120,6 @@ public class Controller implements Initializable {
 	public void initAnimation() {
 		loop = new Timeline();
 		loop.setCycleCount(Timeline.INDEFINITE);
-		System.out.println(temps);
-
 		KeyFrame kf = new KeyFrame(Duration.seconds(0.02083333333), (ev -> {
 			actions();
 			temps++;
