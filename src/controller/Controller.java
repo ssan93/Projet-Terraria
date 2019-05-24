@@ -108,16 +108,10 @@ public class Controller implements Initializable {
 						}
 					}
 					if (c.wasRemoved()) {
-						for (int i = 0; i < floor.getChildren().size(); i++) {
-							if (deleteLeft) {
-								if (floor.getChildren().get(i).getLayoutX() < -32) {
-									floor.getChildren().remove(i);
-								}
-							} else {
-								if (floor.getChildren().get(i).getLayoutX() > 32 * 60) {
-									floor.getChildren().remove(i);
-								}
-							}
+						if (deleteLeft) {
+							floor.getChildren().removeIf(img -> img.getLayoutX() < -32);
+						} else {
+							floor.getChildren().removeIf(img -> img.getLayoutX() > 60 * 32);
 						}
 					}
 				}
@@ -145,7 +139,7 @@ public class Controller implements Initializable {
 			 * 
 			 * }
 			 */
-			
+
 		}
 		// }
 
@@ -155,7 +149,6 @@ public class Controller implements Initializable {
 			// bill.getChrac().move("RunLeft");
 			oldAnim = "RunLeft";
 			scroll("Left");
-			
 
 		}
 
@@ -170,7 +163,7 @@ public class Controller implements Initializable {
 
 		}
 	}
-	
+
 	public void relocateImages(String direction, int indiceFloor) {
 		switch (direction) {
 		case "Right":
@@ -238,80 +231,70 @@ public class Controller implements Initializable {
 		}
 
 	}
-	
-	
-	
+
 	public void deleteImages(String direction) {
 		switch (direction) {
-		case "Right" :
-			
+		case "Right":
+
 			deleteLeft = false;
-			for (int i = 0; i < viewAbleSol.size(); i++) 
-				if (viewAbleSol.get(i).getX() == deleteLignRight) 
-					viewAbleSol.remove(i);		
+			for (int i = 0; i < viewAbleSol.size(); i++)
+				if (viewAbleSol.get(i).getX() == deleteLignRight)
+					viewAbleSol.remove(i);
 			deleteLignRight--;
 			deleteLignLeft--;
-			
+
 			break;
-			
-		case "Left" :
-			
+
+		case "Left":
+
 			deleteLeft = true;
 			for (int i = 0; i < viewAbleSol.size(); i++)
-				if (viewAbleSol.get(i).getX() == deleteLignLeft) 
+				if (viewAbleSol.get(i).getX() == deleteLignLeft)
 					viewAbleSol.remove(i);
 			deleteLignLeft++;
 			deleteLignRight++;
-			
+
 			break;
 		}
 	}
-	
-	
-
-	
 
 	public void scroll(String direction) {
 		switch (direction) {
 		case "Right":
 
-			for (int i = 0; i < floor.getChildren().size(); i++) 
+			for (int i = 0; i < floor.getChildren().size(); i++)
 				relocateImages(direction, i);
-				
-				countRight -= bill.getChrac().getSpeed();
-				countLeft += bill.getChrac().getSpeed();
-				if (countLeft > 32)
-					countLeft -= 32;
-				if (countRight < 0) {
-					addImages("Right");
-					deleteImages("Left");
-					countRight += 32;
-				}
 
-
-			
+			countRight -= bill.getChrac().getSpeed();
+			countLeft += bill.getChrac().getSpeed();
+			if (countLeft > 32)
+				countLeft -= 32;
+			if (countRight < 0) {
+				addImages("Right");
+				deleteImages("Left");
+				countRight += 32;
+			}
 
 			break;
 
 		case "Left":
-			for (int i = floor.getChildren().size() - 1; i >= 0; i--) 
+			for (int i = floor.getChildren().size() - 1; i >= 0; i--)
 				relocateImages(direction, i);
-				
-				countLeft -= bill.getChrac().getSpeed();
-				countRight += bill.getChrac().getSpeed();
-				
-				if (countRight > 32)
-					countRight -= 32;
-				if (countLeft < 0) {
-					
-					addImages("Left");
-					deleteImages("Right");
-					countLeft += 32;
-				}
-				// if (floor.getChildren().get(i).getLayoutX() > 32 * 30) {
-				// floor.getChildren().remove(floor.getChildren().get(i));
-				// }s
-			
+
+			countLeft -= bill.getChrac().getSpeed();
+			countRight += bill.getChrac().getSpeed();
+
+			if (countRight > 32)
+				countRight -= 32;
+			if (countLeft < 0) {
+
+				addImages("Left");
+				deleteImages("Right");
+				countLeft += 32;
+			}
+			// if (floor.getChildren().get(i).getLayoutX() > 32 * 30) {
+			// floor.getChildren().remove(floor.getChildren().get(i));
+			// }s
 
 			break;
 
@@ -333,7 +316,7 @@ public class Controller implements Initializable {
 
 					floor.getChildren().get(i).relocate(floor.getChildren().get(i).getLayoutX(),
 							floor.getChildren().get(i).getLayoutY() + 4);
-					
+
 				}
 				relocated += 4;
 				actions();
