@@ -24,8 +24,6 @@ public class GestionCollision {
 	 * @return true si il y a rien en dessous du personnage.
 	 */
 	public boolean verifUnder(Character ch) {
-		System.out.println(ch.getX() +"\t"+ch.getY());
-		System.out.println(map.getMapSol()[ch.getX()][ch.getY()+1]);
 		return (map.getMapSol()[ch.getX()-1][ch.getY()+2] == 0 && map.getMapSol()[ch.getX()][ch.getY()+2] == 0);
 	}
 	/**
