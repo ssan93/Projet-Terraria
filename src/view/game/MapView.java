@@ -20,6 +20,11 @@ public class MapView {
 		this.m = m;
 	}
 
+	
+	/**
+	 * Initialise la vue de la map à utiliser au début du chargement de la map
+	 * @return l'arraylist d'image de la map
+	 */
 	public ArrayList<ImageView> creerVue() {
 
 		ArrayList<ImageView> images = new ArrayList<>();
@@ -30,7 +35,6 @@ public class MapView {
 				TileView tv = new TileView(tile);
 				tv.relocate(tile.getX() * 32, tile.getY() * 32);
 				images.add(tv);
-
 			}
 		}
 
@@ -46,9 +50,19 @@ public class MapView {
 		}
 		return images;
 	}
+	
+	/**
+	 * 
+	 * @return la liste d'image du sol
+	 */
 	public ObservableList<Tiles> getListViewSol(){
 		return this.viewAbleSol;
 	}
+	
+	/**
+	 * 
+	 * @return la liste d'image de l'environnement
+	 */
 	public ObservableList<Tiles> getListViewMid(){
 		return this.viewAbleMid;
 	}

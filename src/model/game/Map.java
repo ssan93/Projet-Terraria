@@ -27,16 +27,14 @@ public class Map {
 	public Map(String carteSol, String carteMilieu) {
 		this.fichierDuSol = carteSol;
 		this.fichierDuMilieu = carteMilieu;
-		// this.fichierDuBg = carteBg;
 		this.tilesListSol = FXCollections.observableArrayList();
 		this.tilesListMid = FXCollections.observableArrayList();
 
 		this.tabSol = new int[Largeur][Hauteur];// sol : terre, pierre, mine this.milieu
 		this.mid = new int[Largeur][Hauteur];// environnement : arbre, caillou,etc.. this.bg =
-//		this.bg = new int[Hauteur][Largeur];// background
 
-		this.initialiseMap(/* this.sol, */ fichierDuSol, true);
-		this.initialiseMap(/* this.mid, */ fichierDuMilieu, false);
+		this.initialiseMap(fichierDuSol, true);
+		this.initialiseMap(fichierDuMilieu, false);
 	}
 
 	/**
@@ -82,27 +80,11 @@ public class Map {
 		}
 	}
 
-	/**
-	 * 
-	 * @param map
-	 * @return sol or background
-	 */
-	// public int[][] getMap(int map) {
-	// if (map % 2 == 0)
-	// return this.sol;
-	// return this.bg;
-	// }
-	//
 	 public int[][] getMapSol() {
 	 return this.tabSol;
 	 }
-	//
 	// public int[][] getMapMilieu() {
 	// return this.mid;
-	// }
-	//
-	// public int[][] getMapBg() {
-	// return this.bg;
 	// }
 
 	public ObservableList<Tiles> getTilesListSol() {

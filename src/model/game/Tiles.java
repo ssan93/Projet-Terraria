@@ -21,12 +21,21 @@ public class Tiles extends Objet{
 		this.code = c;
 	}
 	
+	/**
+	 * 
+	 * @return le code de l'image
+	 */
 	public int getCode() {
 		return code;
 	}
 	
-	public static Image selectionTuile(int i) {
-		return new Image("view/resources/tiles/tile"+i+".png");
+	/**
+	 * 
+	 * @param c code
+	 * @return l'amige qui correspond au code
+	 */
+	public static Image selectionTuile(int c) {
+		return new Image("view/resources/tiles/tile"+c+".png");
 	}
 	
 }

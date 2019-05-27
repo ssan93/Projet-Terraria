@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,9 +24,7 @@ import model.game.Tiles;
 
 public class Controller implements Initializable {
 
-	private static final int gauche = -32, droite = 1952;
-
-	private SimpleIntegerProperty absolute_x, absolute_y, absolute_charactX, absolute_charactY;
+//	private SimpleIntegerProperty absolute_x, absolute_y, absolute_charactX, absolute_charactY;
 
 	private GestionCollision detecteur;
 
@@ -75,10 +72,10 @@ public class Controller implements Initializable {
 		detecteur = new GestionCollision(mapPrincipale);
 		// absolute_x = new SimpleIntegerProperty(0);
 		// absolute_y = new SimpleIntegerProperty(0);
-		absolute_charactX = new SimpleIntegerProperty();
-		absolute_charactY = new SimpleIntegerProperty();
-		absolute_charactX.bind(bill.getChrac().getXProperty());
-		absolute_charactY.bind(bill.getChrac().getYProperty());
+//		absolute_charactX = new SimpleIntegerProperty();
+//		absolute_charactY = new SimpleIntegerProperty();
+//		absolute_charactX.bind(bill.getChrac().getXProperty());
+//		absolute_charactY.bind(bill.getChrac().getYProperty());
 		mv = new MapView(mapPrincipale);
 		viewAbleSol = mv.getListViewSol();
 		initAnimation();
@@ -512,6 +509,7 @@ public class Controller implements Initializable {
 			else
 				jumping = false;
 
+			
 			
 			actions();
 			temps++;
