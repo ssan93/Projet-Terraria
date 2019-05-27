@@ -2,8 +2,9 @@
 package model.game;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.Rectangle2D;
 
-public abstract class Objet {
+public class Objet {
 
 	protected SimpleIntegerProperty x, y;
 	protected int id;
@@ -14,7 +15,7 @@ public abstract class Objet {
 		this.y = new SimpleIntegerProperty(y);
 		this.id = ++lastId;
 	}
-
+	
 	public int getId() {
 		return id;
 	}
@@ -33,5 +34,8 @@ public abstract class Objet {
 
 	public SimpleIntegerProperty getYProperty() {
 		return this.y;
+	}
+	public Rectangle2D getRectangle2D() {
+		return new Rectangle2D(getX(), getY(), 0, 0);
 	}
 }

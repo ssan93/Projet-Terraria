@@ -18,5 +18,5 @@ public class AnimatedObject extends Objet{
 	public void animation(String newAnim) {
 		anim.set(newAnim);
 	}
-
+	
 }

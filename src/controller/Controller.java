@@ -1,27 +1,32 @@
 package controller;
 
 import java.net.URL;
-
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import view.game.BillView;
 import view.game.MapView;
+import view.game.TileView;
+import model.game.GestionCollision;
 import model.game.Map;
+import model.game.Tiles;
 
 public class Controller implements Initializable {
 
-
-//	private SimpleIntegerProperty absolute_x, absolute_y, absolute_charactX, absolute_charactY;
-
-	// liste observable ou liste simple ??
+	// private SimpleIntegerProperty absolute_x, absolute_y, absolute_charactX,
+	// absolute_charactY;
+	private GestionCollision detecteur;
 
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
 
@@ -34,123 +39,163 @@ public class Controller implements Initializable {
 	@FXML
 	private Pane charapane;
 
-	private Map tileSol = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv", "src/maps/carte3.txt");
+	private Map mapPrincipale = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv");
 	private MapView mv;
-	private Timeline loop;
+	private Timeline loop, loop2;
+	private int countX = 32, countY = 32, relocated = 0;
+	private String delete, add;
+	private int addLignLeft = 299, addLignRight = 60, addLignTop = 0, addLignBot = 33;
+	private int deleteLignX = 0, deleteLignY = 0;
+	private boolean jumping = false, falling = true;
 
-	private Timeline loop2;
-
-	int countRight = 32;
-	int countLeft = 32;
-	int departl = 0;
-	int tailleCarte = 13 * 32;
-	int departr = tailleCarte;
-
-
-	boolean jumping = false;
-
-	private int temps;
+	private long temps;
 	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
 	private String oldAnim = "tactac";
 
+	ObservableList<Tiles> viewAbleSol;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-//		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
-//		absolute_x = new SimpleIntegerProperty(0);
-//		absolute_y = new SimpleIntegerProperty(0);
-//		absolute_charactX = new SimpleIntegerProperty();
-//		absolute_charactY = new SimpleIntegerProperty();
-//		absolute_charactX.bind(bill.getChrac().getXProperty());
-//		absolute_charactY.bind(bill.getChrac().getYProperty());
-		mv = new MapView(tileSol);
+		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
+		detecteur = new GestionCollision(mapPrincipale);
+		// absolute_x = new SimpleIntegerProperty(0);
+		// absolute_y = new SimpleIntegerProperty(0);
+		// absolute_charactX = new SimpleIntegerProperty();
+		// absolute_charactY = new SimpleIntegerProperty();
+		// absolute_charactX.bind(bill.getChrac().getXProperty());
+		// absolute_charactY.bind(bill.getChrac().getYProperty());
+		mv = new MapView(mapPrincipale);
+		viewAbleSol = mv.getListViewSol();
 		initAnimation();
 		loop.play();
 		bill.getChrac().setSpeed(4);
 
-		/*bill.getChrac().getXProperty().set(32 * 6);
-		bill.getChrac().getYProperty().set(32 * 7 - 12);*/
-
 		charapane.getChildren().add(bill.getImage());
 		floor.getChildren().addAll(mv.creerVue());
 
-		testCollision();
+		viewAbleSol.addListener(new ListChangeListener<Tiles>() {
+
+			@Override
+			public void onChanged(Change<? extends Tiles> c) {
+
+				while (c.next()) {
+					if (c.wasAdded()) {
+						for (Tiles tileAdded : c.getAddedSubList()) {
+							ImageView img = new TileView(tileAdded);
+							switch (add) {
+							case "Left":
+								img.relocate(5, tileAdded.getY() * 32 + relocated);
+								break;
+							case "Right":
+								img.relocate(59 * 32 - 5, tileAdded.getY() * 32 + relocated);
+								break;
+							case "Up":
+								img.relocate(tileAdded.getX() * 32, 0);
+								break;
+							case "Down":
+								img.relocate(tileAdded.getX() * 32, 33 * 32);
+								break;
+							}
+							floor.getChildren().add(img);
+						}
+					}
+					if (c.wasRemoved()) {
+						switch (delete) {
+						case "Left":
+							floor.getChildren().removeIf(img -> img.getLayoutX() < -32);
+							break;
+						case "Right":
+							floor.getChildren().removeIf(img -> img.getLayoutX() > 60 * 32);
+							break;
+						case "Up":
+							floor.getChildren().removeIf(img -> img.getLayoutY() < 0);
+							break;
+						case "Down":
+							floor.getChildren().removeIf(img -> img.getLayoutY() > 33 * 32);
+							break;
+						}
+
+					}
+				}
+
+			}
+
+		});
 
 	}
 
 	public void actions() {
-		if (keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)) {
-			if (!stopSroll().equals("right stop")) {
-				bill.getChrac().animation("RunRight");
-				oldAnim = "RunRight";
-				removeImages("Right");
-				/*
-				 * departr += bill.getChrac().getSpeed(); if (departr % 960 / 32 == 29) {
-				 * tileSol = new Map("src/maps/carte.txt", "src/maps/carte2.txt",
-				 * "src/maps/carte3.txt"); mv = new MapView(tileSol);
-				 * floor.getChildren().addAll(mv.creerVue()); departr = 13 * 32;
-				 * 
-				 * }
-				 */
+		if ((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT))
+				&& detecteur.verifRight(bill.getChrac())) {
+			// if (!stopSroll().equals("right stop")) {
+			bill.getChrac().animation("RunRight");
 
-				// addImages("Right");
-			}
-		}
-
-		if (keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)) {
-			if (!stopSroll().equals("left stop")) {
-				bill.getChrac().animation("RunLeft");
-				oldAnim = "RunLeft";
-				removeImages("Left");
-				// addImages("Left");
-			}
+			oldAnim = "RunRight";
+			scroll("Right");
 
 		}
+		if ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT))
+				&& detecteur.verifLeft(bill.getChrac())) {
+			// if (!stopSroll().equals("left stop")) {
+			bill.getChrac().animation("RunLeft");
 
-		if (keyPressed.contains(KeyCode.SPACE)) {
-			if (!alreadyJumping()) {
-				bill.getChrac().animation("jumpRight");
-				oldAnim = "jumpRight";
-				removeImages("Up");
-			}
+			oldAnim = "RunLeft";
+			scroll("Left");
 
+		}
+		if (!alreadyJumping() && keyPressed.contains(KeyCode.SPACE)) {
+			bill.getChrac().animation("jumpRight");
+			oldAnim = "jumpRight";
+			scroll("Up");
 		}
 	}
 
-	/*
-	 * public void addImages(String direction) { switch (direction) { case "Right":
-	 * 
-	 * countRight -= bill.getChrac().getSpeed(); departr +=
-	 * bill.getChrac().getSpeed(); int tileRight = departr % 960 / 32; if (tileRight
-	 * == 30) tileRight = 0;
-	 * 
-	 * int tRight[][] = tileSol.getMap(0); if (countRight <= 0) { for (int x = 0; x
-	 * < tRight.length; x++) { if (tRight[x][tileRight] != 0) { ImageView img = new
-	 * ImageView(Tiles.selectionTuile(tRight[x][tileRight])); img.relocate(29 * 32,
-	 * x * 32); floor.getChildren().add(img); } } countRight += 32; } if (departl -
-	 * bill.getChrac().getSpeed() >= 0) departl -= bill.getChrac().getSpeed();
-	 * 
-	 * break;
-	 * 
-	 * case "Left": countLeft -= bill.getChrac().getSpeed(); departl +=
-	 * bill.getChrac().getSpeed(); int tileLeft = departl % 960 / 32; if (tileLeft
-	 * == 30) tileLeft = 0; int tLeft[][] = tileSol.getMap(0); if (countLeft <= 0) {
-	 * for (int x = 0; x < tLeft.length; x++) { if (tLeft[x][tileLeft] != 0) {
-	 * ImageView img = new ImageView(Tiles.selectionTuile(tLeft[x][tileLeft]));
-	 * img.relocate(0, x * 32); floor.getChildren().add(img); } } countLeft += 32; }
-	 * if (departr - bill.getChrac().getSpeed() >= 0) departr -=
-	 * bill.getChrac().getSpeed();
-	 * 
-	 * break; }
-	 * 
-	 * }
-	 */
+	public void scroll(String direction) {
+		switch (direction) {
+		case "Right":
+
+			for (int i = 0; i < floor.getChildren().size(); i++)
+				relocateImages(direction, i);
+			CountAddDelete("Right");
+			break;
+
+		case "Left":
+			for (int i = floor.getChildren().size() - 1; i >= 0; i--)
+				relocateImages(direction, i);
+			CountAddDelete("Left");
+			// if (floor.getChildren().get(i).getLayoutX() > 32 * 30) {
+			// floor.getChildren().remove(floor.getChildren().get(i));
+			// }s
+
+			break;
+
+		case "Up":
+
+			loop2 = new Timeline();
+			loop2.setCycleCount(16);
+			loop2.setOnFinished(ev -> falling = true);
+			loop2.getKeyFrames().add(new KeyFrame(Duration.millis(25), (ev -> jumping = true)));
+			loop2.play();
+
+			break;
+		case "Down":
+			relocated -= bill.getChrac().getSpeed();
+			for (int i = 0; i < floor.getChildren().size(); i++)
+				relocateImages("Down", i);
+			CountAddDelete("Down");
+
+			break;
+		}
+
+	}
+
 	public void relocateImages(String direction, int indiceFloor) {
 		switch (direction) {
 		case "Right":
 			floor.getChildren().get(indiceFloor).relocate(
 					floor.getChildren().get(indiceFloor).getLayoutX() - bill.getChrac().getSpeed(),
 					floor.getChildren().get(indiceFloor).getLayoutY());
+
 			break;
 		case "Left":
 			floor.getChildren().get(indiceFloor).relocate(
@@ -159,76 +204,167 @@ public class Controller implements Initializable {
 			break;
 		case "Up":
 			floor.getChildren().get(indiceFloor).relocate(floor.getChildren().get(indiceFloor).getLayoutX(),
-					floor.getChildren().get(indiceFloor).getLayoutY() + 4);
+					floor.getChildren().get(indiceFloor).getLayoutY() + bill.getChrac().getSpeed());
 			break;
-		case "Down":
+		case "Down":// 108
 			floor.getChildren().get(indiceFloor).relocate(floor.getChildren().get(indiceFloor).getLayoutX(),
-					floor.getChildren().get(indiceFloor).getLayoutY() - 4);
+					floor.getChildren().get(indiceFloor).getLayoutY() - bill.getChrac().getSpeed());
+
 			break;
 		}
 	}
 
-	public void removeImages(String direction) {
-		switch (direction) {
+	public void CountAddDelete(String Direction) {
+		switch (Direction) {
 		case "Right":
-
-			for (int i = 0; i < floor.getChildren().size(); i++) {
-
-				relocateImages(direction, i);
-				// if (floor.getChildren().get(i).getLayoutX() < -32) {
-				// floor.getChildren().remove(floor.getChildren().get(i));
-				// }
-
+			countX -= bill.getChrac().getSpeed();
+			if (countX < 0) {
+				bill.getChrac().move("RunRight");
+				addImages("Right");
+				deleteImages("Left");
+				countX += 32;
 			}
+			break;
+
+		case "Left":
+			countX += bill.getChrac().getSpeed();
+			if (32-countX < 0) {
+				bill.getChrac().move("RunLeft");
+				addImages("Left");
+				deleteImages("Right");
+				countX -= 32;
+			}
+			break;
+
+		case "Up":
+
+			countY -= bill.getChrac().getSpeed();		
+			if(countY < 0) {
+				bill.getChrac().move("Up");
+				addImages("Up");
+				// deleteImages("Down");
+				countY +=32;
+			}
+			break;
+		case "Down":
+			countY += bill.getChrac().getSpeed();
+			if(64-countY < 0) {
+				bill.getChrac().move("Down");
+				addImages("Down");
+				deleteImages("Up");
+				countY -= 32;
+			}
+
+			break;
+		}
+	}
+
+	public void addImages(String direction) {
+		ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
+		ObservableList<Tiles> ListMid = mapPrincipale.getTilesListMid();
+		switch (direction) {
+
+		case "Right":
+			add = "Right";
+
+			for (Tiles tile : ListMid)
+				if (tile.getX() == addLignRight && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+					viewAbleSol.add(tile);
+			for (Tiles tile : ListSol)
+				if (tile.getX() == addLignRight && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+					viewAbleSol.add(tile);
+			addLignRight++;
+			addLignLeft++;
+			if (addLignRight == 300)
+				addLignRight = 0;
+			if (addLignLeft == 300)
+				addLignLeft = 0;
 
 			break;
 
 		case "Left":
-			for (int i = floor.getChildren().size() - 1; i >= 0; i--) {
-
-				relocateImages(direction, i);
-				// if (floor.getChildren().get(i).getLayoutX() > 32 * 30) {
-				// floor.getChildren().remove(floor.getChildren().get(i));
-				// }s
-			}
+			add = "Left";
+			for (Tiles tile : ListMid)
+				if (tile.getX() == addLignLeft && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+					viewAbleSol.add(tile);
+			for (Tiles tile : ListSol)
+				if (tile.getX() == addLignLeft && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+					viewAbleSol.add(tile);
+			addLignLeft--;
+			addLignRight--;
+			if (addLignLeft == -1)
+				addLignLeft = 299;
+			if (addLignRight == -1)
+				addLignRight = 299;
 
 			break;
 
 		case "Up":
-			loop.pause();
-			jumping = true;
-
-			loop2 = new Timeline();
-			loop2.setCycleCount(16);
-
-			loop2.setOnFinished(ev -> {
-				loop.play();
-
-			});
-
-			loop2.getKeyFrames().add(new KeyFrame(Duration.millis(25), (ev -> {
-
-				for (int i = 0; i < floor.getChildren().size(); i++) {
-
-					floor.getChildren().get(i).relocate(floor.getChildren().get(i).getLayoutX(),
-							floor.getChildren().get(i).getLayoutY() + 4);
+			add = "Up";
+			for (Tiles tile : ListSol)
+				if (tile.getX() < 60 && tile.getY() == addLignTop) {
+					viewAbleSol.add(tile);
 				}
-				actions();
-				// System.out.println(
-				// floor.getChildren().get(30 * 20 - 30 * bill.getChrac().getY() / 32 + 2 +
-				// 13).getLayoutY());
-			})));
-
-			loop2.play();
-			loop2.getOnFinished();
 			break;
+
+		case "Down":
+			add = "Down";
+			for (Tiles tile : ListSol)
+				if (tile.getX() < 60 && tile.getY() == addLignBot) {
+					viewAbleSol.add(tile);
+				}
+			addLignBot++;
+
+			break;
+
 		}
+		/*
+		 * countLeft -= bill.getChrac().getSpeed(); departl
+		 * +=bill.getChrac().getSpeed(); int tileLeft = departl % 960 / 32; if (tileLeft
+		 * == 30) tileLeft = 0; int tLeft[][] = tileSol.getMap(0); if (countLeft <= 0) {
+		 * for (int x = 0; x < tLeft.length; x++) { if (tLeft[x][tileLeft] != 0) {
+		 * ImageView img = new ImageView(Tiles.selectionTuile(tLeft[x][tileLeft]));
+		 * img.relocate(0, x * 32); floor.getChildren().add(img); } } countLeft += 32; }
+		 * if (departr - bill.getChrac().getSpeed() >= 0) departr -=
+		 * bill.getChrac().getSpeed();
+		 */
 
 	}
+	/*
+	 * countLeft -= bill.getChrac().getSpeed(); departl
+	 * +=bill.getChrac().getSpeed(); int tileLeft = departl % 960 / 32; if (tileLeft
+	 * == 30) tileLeft = 0; int tLeft[][] = tileSol.getMap(0); if (countLeft <= 0) {
+	 * for (int x = 0; x < tLeft.length; x++) { if (tLeft[x][tileLeft] != 0) {
+	 * ImageView img = new ImageView(Tiles.selectionTuile(tLeft[x][tileLeft]));
+	 * img.relocate(0, x * 32); floor.getChildren().add(img); } } countLeft += 32; }
+	 * if (departr - bill.getChrac().getSpeed() >= 0) departr -=
+	 * bill.getChrac().getSpeed();
+	 */
 
-	public void testCollision() {
-		int tile = bill.getChrac().getY() / 32 + 2;
-		floor.getChildren().get(30 * 20 - 30 * tile + 13);
+	public void deleteImages(String direction) {
+		switch (direction) {
+		case "Right":
+			delete = "Right";
+			viewAbleSol.removeIf(f -> f.getX() == deleteLignX + 59);
+			deleteLignX--;
+			break;
+
+		case "Left":
+			delete = "Left";
+			viewAbleSol.removeIf(f -> f.getX() == deleteLignX);
+			deleteLignX++;
+			break;
+		case "Up":
+			delete = "Up";
+			viewAbleSol.removeIf(f -> f.getX() == deleteLignY);
+			deleteLignY++;
+			break;
+		case "Down":
+			delete = "Down";
+			viewAbleSol.removeIf(f -> f.getX() == deleteLignY + 32);
+			deleteLignY++;
+			break;
+		}
 	}
 
 	public boolean alreadyJumping() {
@@ -240,7 +376,6 @@ public class Controller implements Initializable {
 		if (floor.getChildren().get(1).getLayoutX() == charapane.getLayoutX() + bill.getChrac().getX() + 64) {
 			return "left stop";
 		}
-		// System.out.println(floor.getChildren().size());
 
 		if (floor.getChildren().get(floor.getChildren().size() - 1).getLayoutX() == charapane.getLayoutX()
 				+ bill.getChrac().getX() + 32) {
@@ -264,19 +399,22 @@ public class Controller implements Initializable {
 
 	public void initAnimation() {
 		loop = new Timeline();
+		temps = 0;
 		loop.setCycleCount(Timeline.INDEFINITE);
-
-
 		KeyFrame kf = new KeyFrame(Duration.millis(25), (ev -> {
 
-			if (floor.getChildren().get(30 * 20 - 30 * bill.getChrac().getY() / 32 + 2 + 13).getLayoutY() > 476
-					+ 32 * 4) {
-				for (int i = 0; i < floor.getChildren().size(); i++) {
-					relocateImages("Down", i);
-				}
-			} else
+			if (jumping && !falling) {
+				// actions();
+				for (int i = 0; i < floor.getChildren().size(); i++)
+					relocateImages("Up", i);
+				relocated += bill.getChrac().getSpeed();
+				CountAddDelete("Up");
+			} else if (detecteur.verifUnder(bill.getChrac()))
+				scroll("Down");
+			else {
 				jumping = false;
-
+				falling = false;
+			}
 			actions();
 			temps++;
 		}));
