@@ -115,13 +115,9 @@ public class Controller implements Initializable {
 	}
 
 	public void actions() {
-		if (keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)) {
+		if ((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)) && detecteur.verifRight(bill.getChrac())) {
 			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
-			if (temps * Duration.millis(25).toMillis() % 40 == 0) {
-				System.out.println(temps / 40);
-				bill.getChrac().move("RunRight");
-			}
 
 			oldAnim = "RunRight";
 			scroll("Right");
@@ -138,13 +134,10 @@ public class Controller implements Initializable {
 		}
 		// }
 
-		if (keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)) {
+		if ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)) && detecteur.verifLeft(bill.getChrac())) {
 			// if (!stopSroll().equals("left stop")) {
 			bill.getChrac().animation("RunLeft");
-			if (temps * Duration.millis(25).toMillis() % 40 == 0) {
-				System.out.println(temps / 40);
-				bill.getChrac().move("RunLeft");
-			}
+			
 			oldAnim = "RunLeft";
 			scroll("Left");
 
@@ -263,6 +256,7 @@ public class Controller implements Initializable {
 			if (countLeft > 32)
 				countLeft -= 32;
 			if (countRight < 0) {
+				bill.getChrac().move("RunRight");
 				addImages("Right");
 				deleteImages("Left");
 				countRight += 32;
@@ -280,6 +274,7 @@ public class Controller implements Initializable {
 			if (countRight > 32)
 				countRight -= 32;
 			if (countLeft < 0) {
+				bill.getChrac().move("RunLeft");
 				addImages("Left");
 				deleteImages("Right");
 				countLeft += 32;
@@ -291,34 +286,35 @@ public class Controller implements Initializable {
 			break;
 
 		case "Up":
-			loop.pause();
+//			loop.pause();
 			jumping = true;
+			
 
-			loop2 = new Timeline();
-			loop2.setCycleCount(16);
-
-			loop2.setOnFinished(ev -> {loop.play();
+//			loop2 = new Timeline();
+//			loop2.setCycleCount(16);
+//
+//			loop2.setOnFinished(ev -> {loop.play();
 			bill.getChrac().move("Up");
 			temps=0;
-			});
-
-			loop2.getKeyFrames().add(new KeyFrame(Duration.millis(25), (ev -> {
-
-				for (int i = 0; i < floor.getChildren().size(); i++) {
-					floor.getChildren().get(i).relocate(floor.getChildren().get(i).getLayoutX(),
-							floor.getChildren().get(i).getLayoutY() + 4);
-				}
-				relocated += bill.getChrac().getSpeed();
-				
-					
-				actions();
-				// System.out.println(
-				// floor.getChildren().get(30 * 20 - 30 * bill.getChrac().getY() / 32 + 2 +
-				// 13).getLayoutY());
-			})));
-
-			loop2.play();
-			loop2.getOnFinished();
+//			});
+//
+//			loop2.getKeyFrames().add(new KeyFrame(Duration.millis(25), (ev -> {
+//
+//				for (int i = 0; i < floor.getChildren().size(); i++) {
+//					floor.getChildren().get(i).relocate(floor.getChildren().get(i).getLayoutX(),
+//							floor.getChildren().get(i).getLayoutY() + 4);
+//				}
+//				relocated += bill.getChrac().getSpeed();
+//				
+//					
+//				actions();
+//				// System.out.println(
+//				// floor.getChildren().get(30 * 20 - 30 * bill.getChrac().getY() / 32 + 2 +
+//				// 13).getLayoutY());
+//			})));
+//
+//			loop2.play();
+//			loop2.getOnFinished();
 			break;
 		}
 
@@ -376,6 +372,7 @@ public class Controller implements Initializable {
 							floor.getChildren().get(i).getLayoutY() + 4);
 				}
 				relocated += bill.getChrac().getSpeed();
+				jumping=false;
 			}
 			actions();
 			temps++;
