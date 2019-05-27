@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -17,11 +15,9 @@ import javafx.util.Duration;
 import view.game.BillView;
 import view.game.MapView;
 import model.game.Map;
-import model.game.Tiles;
 
 public class Controller implements Initializable {
 
-	private static final int gauche = -32, droite = 1952;
 
 //	private SimpleIntegerProperty absolute_x, absolute_y, absolute_charactX, absolute_charactY;
 
