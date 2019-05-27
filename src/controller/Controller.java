@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.SimpleIntegerProperty;
+
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,9 +25,9 @@ import model.game.Tiles;
 
 public class Controller implements Initializable {
 
-	private static final int gauche = -32, droite = 1952;
 
-	private SimpleIntegerProperty absolute_x, absolute_y, absolute_charactX, absolute_charactY;
+
+//	private SimpleIntegerProperty absolute_x, absolute_y, absolute_charactX, absolute_charactY;
 
 	private GestionCollision detecteur;
 
@@ -45,29 +45,20 @@ public class Controller implements Initializable {
 	private Map mapPrincipale = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv");
 	private MapView mv;
 	private Timeline loop, loop2;
-
-	int countRight = 32;
-	int countLeft = 32;
-	int countDown = 32;
-	int countUp = 32;
-
+	
+	private int countRight = 32, countLeft = 32, countDown = 32, countUp = 32, relocated = 0,countX=32;
+	private String delete, add;
+	private int addLignLeft = 299, addLignRight = 60, addLignTop = 0, addLignBot = 33;
+	private int deleteLignX=0, deleteLignY=0;
 	boolean jumping = false;
 
 	private long temps;
 	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
 	private String oldAnim = "tactac";
-	int deleteLignLeft = 0;
-	int deleteLignRight = 59;
-	int deleteLignTop=0;
-	int deleteLignBot=32;
-	int addLignLeft = 299;
-	int addLignRight = 60;
-	int addLignTop = 0;
-	int addLignBot = 33;
-	String delete;
-	String add;
+	
+	
 	ObservableList<Tiles> viewAbleSol;
-	int relocated = 0;
+	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -75,10 +66,10 @@ public class Controller implements Initializable {
 		detecteur = new GestionCollision(mapPrincipale);
 		// absolute_x = new SimpleIntegerProperty(0);
 		// absolute_y = new SimpleIntegerProperty(0);
-		absolute_charactX = new SimpleIntegerProperty();
-		absolute_charactY = new SimpleIntegerProperty();
-		absolute_charactX.bind(bill.getChrac().getXProperty());
-		absolute_charactY.bind(bill.getChrac().getYProperty());
+//		absolute_charactX = new SimpleIntegerProperty();
+//		absolute_charactY = new SimpleIntegerProperty();
+//		absolute_charactX.bind(bill.getChrac().getXProperty());
+//		absolute_charactY.bind(bill.getChrac().getYProperty());
 		mv = new MapView(mapPrincipale);
 		viewAbleSol = mv.getListViewSol();
 		initAnimation();
@@ -250,7 +241,7 @@ public class Controller implements Initializable {
 					floor.getChildren().get(indiceFloor).getLayoutX() + bill.getChrac().getSpeed(),
 					floor.getChildren().get(indiceFloor).getLayoutY());
 			break;
-		case "Up":
+		case "Up":	
 			floor.getChildren().get(indiceFloor).relocate(
 					floor.getChildren().get(indiceFloor).getLayoutX(),	
 					floor.getChildren().get(indiceFloor).getLayoutY() + bill.getChrac().getSpeed());
@@ -299,7 +290,7 @@ public class Controller implements Initializable {
 			if(countUp < 0) {
 				bill.getChrac().move("Up");
 				addImages("Up");
-				deleteImages("Down");
+			//	deleteImages("Down");
 				countUp +=32;
 			}
 
@@ -409,64 +400,28 @@ public class Controller implements Initializable {
 		switch (direction) {
 		case "Right":
 			delete = "Right";
-			viewAbleSol.removeIf(f -> f.getX() == deleteLignRight);
-
-			deleteLignRight--;
-			deleteLignLeft--;
-
+			viewAbleSol.removeIf(f -> f.getX() == deleteLignX+59);
+			deleteLignX--;
 			break;
 
 		case "Left":
-
 			delete = "Left";
-			viewAbleSol.removeIf(f -> f.getX() == deleteLignLeft);
-			deleteLignLeft++;
-			deleteLignRight++;
-
+			viewAbleSol.removeIf(f -> f.getX() == deleteLignX);
+			deleteLignX++;
+			break;
+		case "Up":
+			delete = "Up";
+			viewAbleSol.removeIf(f -> f.getX() == deleteLignY);
+			deleteLignY++;
+			break;
+		case "Down":
+			delete = "Down";
+			viewAbleSol.removeIf(f -> f.getX() == deleteLignY+32);
+			deleteLignY++;
 			break;
 		}
 	}
 
-	
-	
-	/*public void CountAddDelete(BillView bill, String Direction) {
-		int countDirection = this.countRight;
-		int countOppositeDirection = this.countLeft;
-		String OppositeDirection = "Left";
-		switch(Direction) {
-		case "Right":
-			countDirection = this.countRight;
-			countOppositeDirection = this.countLeft;
-			OppositeDirection = "Left";
-			break;
-		case "Left":
-			countDirection = this.countLeft;
-			countOppositeDirection = this.countRight;
-			OppositeDirection = "Right";
-			break;
-		
-		case "Up":
-			countDirection = this.countUp;
-			countOppositeDirection = this.countDown;
-			OppositeDirection = "Down";	
-			break;
-		case "Down":
-			countDirection = this.countDown;
-			countOppositeDirection = this.countUp;
-			OppositeDirection = "Up";
-			break;
-		}
-		countDirection -= bill.getChrac().getSpeed();
-		countOppositeDirection -= bill.getChrac().getSpeed();
-		if (countDirection <= 0) {
-			addImages(Direction);
-			deleteImages(OppositeDirection);
-			countDirection=+32;
-		}
-		if (countOppositeDirection > 32)
-			countOppositeDirection -= 32;
-	}*/
-	
 
 	public boolean alreadyJumping() {
 		return jumping;

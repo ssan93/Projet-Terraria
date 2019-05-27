@@ -30,7 +30,6 @@ public class MapView {
 				TileView tv = new TileView(tile);
 				tv.relocate(tile.getX() * 32, tile.getY() * 32);
 				images.add(tv);
-
 			}
 		}
 
