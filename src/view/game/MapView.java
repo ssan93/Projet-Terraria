@@ -11,7 +11,6 @@ import model.game.Tiles;
 public class MapView {
 
 	private ObservableList<Tiles> viewAbleSol,viewAbleMid;//34*60
-
 	private Map m;
 	public static int test = 0;
 
@@ -19,13 +18,11 @@ public class MapView {
 		viewAbleSol = FXCollections.observableArrayList();
 		viewAbleMid = FXCollections.observableArrayList();
 		this.m = m;
-
 	}
 
 	public ArrayList<ImageView> creerVue() {
 
 		ArrayList<ImageView> images = new ArrayList<>();
-
 		ObservableList<Tiles> ListMid = m.getTilesListMid();
 		for (Tiles tile : ListMid) {
 			if (tile.getX() < 60 && tile.getY() < 40) {
@@ -47,7 +44,6 @@ public class MapView {
 
 			}
 		}
-
 		return images;
 	}
 	public ObservableList<Tiles> getListViewSol(){
