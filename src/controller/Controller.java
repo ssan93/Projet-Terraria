@@ -24,7 +24,8 @@ import model.game.Tiles;
 
 public class Controller implements Initializable {
 
-//	private SimpleIntegerProperty absolute_x, absolute_y, absolute_charactX, absolute_charactY;
+	// private SimpleIntegerProperty absolute_x, absolute_y, absolute_charactX,
+	// absolute_charactY;
 
 	private GestionCollision detecteur;
 
@@ -43,28 +44,17 @@ public class Controller implements Initializable {
 	private MapView mv;
 	private Timeline loop, loop2;
 
-	int countRight = 32;
-	int countLeft = 32;
-	int countDown = 32;
-	int countUp = 32;
-
-	boolean jumping = false;
+	private int countRight = 32, countLeft = 4, countDown = 32, countUp = 32, relocated = 0, countX = 32;
+	private String delete, add;
+	private int addLignLeft = 299, addLignRight = 60, addLignTop = 0, addLignBot = 33;
+	private int deleteLignX = 0, deleteLignY = 0;
+	boolean jumping = false, falling = true;
 
 	private long temps;
 	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
 	private String oldAnim = "tactac";
-	int deleteLignLeft = 0;
-	int deleteLignRight = 59;
-	int deleteLignTop=0;
-	int deleteLignBot=32;
-	int addLignLeft = 299;
-	int addLignRight = 60;
-	int addLignTop = 0;
-	int addLignBot = 33;
-	String delete;
-	String add;
+
 	ObservableList<Tiles> viewAbleSol;
-	int relocated = 0;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -72,10 +62,10 @@ public class Controller implements Initializable {
 		detecteur = new GestionCollision(mapPrincipale);
 		// absolute_x = new SimpleIntegerProperty(0);
 		// absolute_y = new SimpleIntegerProperty(0);
-//		absolute_charactX = new SimpleIntegerProperty();
-//		absolute_charactY = new SimpleIntegerProperty();
-//		absolute_charactX.bind(bill.getChrac().getXProperty());
-//		absolute_charactY.bind(bill.getChrac().getYProperty());
+		// absolute_charactX = new SimpleIntegerProperty();
+		// absolute_charactY = new SimpleIntegerProperty();
+		// absolute_charactX.bind(bill.getChrac().getXProperty());
+		// absolute_charactY.bind(bill.getChrac().getYProperty());
 		mv = new MapView(mapPrincipale);
 		viewAbleSol = mv.getListViewSol();
 		initAnimation();
@@ -94,39 +84,39 @@ public class Controller implements Initializable {
 					if (c.wasAdded()) {
 						for (Tiles tileAdded : c.getAddedSubList()) {
 							ImageView img = new TileView(tileAdded);
-							switch(add) {
+							switch (add) {
 							case "Left":
 								img.relocate(5, tileAdded.getY() * 32 + relocated);
 								break;
 							case "Right":
 								img.relocate(59 * 32 - 5, tileAdded.getY() * 32 + relocated);
 								break;
-							case "Up" :
-								img.relocate(tileAdded.getX()*32, 0);
+							case "Up":
+								img.relocate(tileAdded.getX() * 32, 0);
 								break;
-							case "Down" : 
-								img.relocate(tileAdded.getX()*32, 33*32);
+							case "Down":
+								img.relocate(tileAdded.getX() * 32, 33 * 32);
 								break;
 							}
 							floor.getChildren().add(img);
 						}
 					}
 					if (c.wasRemoved()) {
-						switch(delete) {
+						switch (delete) {
 						case "Left":
 							floor.getChildren().removeIf(img -> img.getLayoutX() < -32);
 							break;
 						case "Right":
 							floor.getChildren().removeIf(img -> img.getLayoutX() > 60 * 32);
 							break;
-						case "Up" :
+						case "Up":
 							floor.getChildren().removeIf(img -> img.getLayoutY() < 0);
 							break;
-						case "Down" : 
+						case "Down":
 							floor.getChildren().removeIf(img -> img.getLayoutY() > 33 * 32);
 							break;
 						}
-						
+
 					}
 				}
 
@@ -135,18 +125,16 @@ public class Controller implements Initializable {
 		});
 
 	}
-	
-	
 
 	public void actions() {
-		if ((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)) && detecteur.verifRight(bill.getChrac())) {
+		if ((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT))
+				&& detecteur.verifRight(bill.getChrac())) {
 			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
 
 			oldAnim = "RunRight";
 			scroll("Right");
-			
-			
+
 			/*
 			 * departr += bill.getChrac().getSpeed(); if (departr % 960 / 32 == 29) {
 			 * tileSol = new Map("src/maps/carte.txt", "src/maps/carte2.txt",
@@ -159,10 +147,11 @@ public class Controller implements Initializable {
 		}
 		// }
 
-		if ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)) && detecteur.verifLeft(bill.getChrac())) {
+		if ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT))
+				&& detecteur.verifLeft(bill.getChrac())) {
 			// if (!stopSroll().equals("left stop")) {
 			bill.getChrac().animation("RunLeft");
-			
+
 			oldAnim = "RunLeft";
 			scroll("Left");
 
@@ -170,17 +159,13 @@ public class Controller implements Initializable {
 
 		// }
 
-		if (keyPressed.contains(KeyCode.SPACE)) {
-			if (!alreadyJumping()) {
-				bill.getChrac().animation("jumpRight");
-				bill.getChrac().move("Jump");
-				oldAnim = "jumpRight";
-				scroll("Up");
-			}
-
+		if (!alreadyJumping() && keyPressed.contains(KeyCode.SPACE)) {
+			bill.getChrac().animation("jumpRight");
+			oldAnim = "jumpRight";
+			scroll("Up");
 		}
 	}
-	
+
 	public void scroll(String direction) {
 		switch (direction) {
 		case "Right":
@@ -189,7 +174,6 @@ public class Controller implements Initializable {
 				relocateImages(direction, i);
 			CountAddDelete("Right");
 			break;
-		
 
 		case "Left":
 			for (int i = floor.getChildren().size() - 1; i >= 0; i--)
@@ -202,33 +186,20 @@ public class Controller implements Initializable {
 			break;
 
 		case "Up":
-			
-			loop.pause();
-			jumping = true;
 
 			loop2 = new Timeline();
 			loop2.setCycleCount(16);
-
-			loop2.setOnFinished(ev -> {loop.play();});
-
-			loop2.getKeyFrames().add(new KeyFrame(Duration.millis(25), (ev -> {
-				for (int i = 0; i < floor.getChildren().size(); i++) 
-					relocateImages("Up", i);		
-				relocated += bill.getChrac().getSpeed();
-				CountAddDelete("Up");	
-				actions();
-			})));
-
+			loop2.setOnFinished(ev -> falling = true);
+			loop2.getKeyFrames().add(new KeyFrame(Duration.millis(25), (ev -> jumping = true)));
 			loop2.play();
-			loop2.getOnFinished();
-			
+
 			break;
 		case "Down":
 			relocated -= bill.getChrac().getSpeed();
-			for (int i = 0; i < floor.getChildren().size(); i++) 
+			for (int i = 0; i < floor.getChildren().size(); i++)
 				relocateImages("Down", i);
 			CountAddDelete("Down");
-			
+
 			break;
 		}
 
@@ -248,18 +219,17 @@ public class Controller implements Initializable {
 					floor.getChildren().get(indiceFloor).getLayoutY());
 			break;
 		case "Up":
-			floor.getChildren().get(indiceFloor).relocate(
-					floor.getChildren().get(indiceFloor).getLayoutX(),	
+			floor.getChildren().get(indiceFloor).relocate(floor.getChildren().get(indiceFloor).getLayoutX(),
 					floor.getChildren().get(indiceFloor).getLayoutY() + bill.getChrac().getSpeed());
 			break;
 		case "Down":// 108
-			floor.getChildren().get(indiceFloor).relocate(
-					floor.getChildren().get(indiceFloor).getLayoutX(),
+			floor.getChildren().get(indiceFloor).relocate(floor.getChildren().get(indiceFloor).getLayoutX(),
 					floor.getChildren().get(indiceFloor).getLayoutY() - bill.getChrac().getSpeed());
 
 			break;
 		}
 	}
+
 	public void CountAddDelete(String Direction) {
 		switch (Direction) {
 		case "Right":
@@ -289,44 +259,44 @@ public class Controller implements Initializable {
 			break;
 
 		case "Up":
-			countUp -=4;
-			countDown +=4;
+			countUp -= 4;
+			countDown += 4;
 			if (countDown > 32)
 				countDown -= 32;
-			if(countUp < 0) {
+			if (countUp < 0) {
 				bill.getChrac().move("Up");
 				addImages("Up");
-				deleteImages("Down");
-				countUp +=32;
+				// deleteImages("Down");
+				countUp += 32;
 			}
 
 			break;
 		case "Down":
 			countDown -= 4;
-			countUp += 4 ;
+			countUp += 4;
 			if (countUp > 32)
 				countUp -= 32;
-			
-			if(countDown < 0) {
+
+			if (countDown < 0) {
 				bill.getChrac().move("Down");
 				addImages("Down");
 				deleteImages("Up");
 				countDown += 32;
 			}
-			
+
 			break;
 		}
 	}
-	
+
 	public void addImages(String direction) {
 		ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
 		ObservableList<Tiles> ListMid = mapPrincipale.getTilesListMid();
 		switch (direction) {
-		
+
 		case "Right":
 			add = "Right";
-			
-			for(Tiles tile : ListMid)
+
+			for (Tiles tile : ListMid)
 				if (tile.getX() == addLignRight && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
@@ -344,7 +314,7 @@ public class Controller implements Initializable {
 		case "Left":
 			add = "Left";
 			for (Tiles tile : ListMid)
-				if (tile.getX() == addLignLeft && addLignTop <= tile.getY() && tile.getY() <= addLignBot )
+				if (tile.getX() == addLignLeft && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
 				if (tile.getX() == addLignLeft && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
@@ -357,17 +327,17 @@ public class Controller implements Initializable {
 				addLignRight = 299;
 
 			break;
-			
+
 		case "Up":
-			add = "Up" ;
+			add = "Up";
 			for (Tiles tile : ListSol)
 				if (tile.getX() < 60 && tile.getY() == addLignTop) {
 					viewAbleSol.add(tile);
-				}			
+				}
 			break;
-			
+
 		case "Down":
-			add="Down";
+			add = "Down";
 			for (Tiles tile : ListSol)
 				if (tile.getX() < 60 && tile.getY() == addLignBot) {
 					viewAbleSol.add(tile);
@@ -387,83 +357,44 @@ public class Controller implements Initializable {
 		 * if (departr - bill.getChrac().getSpeed() >= 0) departr -=
 		 * bill.getChrac().getSpeed();
 		 */
-		
 
-		}
-		/*
-		 * countLeft -= bill.getChrac().getSpeed(); departl
-		 * +=bill.getChrac().getSpeed(); int tileLeft = departl % 960 / 32; if (tileLeft
-		 * == 30) tileLeft = 0; int tLeft[][] = tileSol.getMap(0); if (countLeft <= 0) {
-		 * for (int x = 0; x < tLeft.length; x++) { if (tLeft[x][tileLeft] != 0) {
-		 * ImageView img = new ImageView(Tiles.selectionTuile(tLeft[x][tileLeft]));
-		 * img.relocate(0, x * 32); floor.getChildren().add(img); } } countLeft += 32; }
-		 * if (departr - bill.getChrac().getSpeed() >= 0) departr -=
-		 * bill.getChrac().getSpeed();
-		 */
-	
+	}
+	/*
+	 * countLeft -= bill.getChrac().getSpeed(); departl
+	 * +=bill.getChrac().getSpeed(); int tileLeft = departl % 960 / 32; if (tileLeft
+	 * == 30) tileLeft = 0; int tLeft[][] = tileSol.getMap(0); if (countLeft <= 0) {
+	 * for (int x = 0; x < tLeft.length; x++) { if (tLeft[x][tileLeft] != 0) {
+	 * ImageView img = new ImageView(Tiles.selectionTuile(tLeft[x][tileLeft]));
+	 * img.relocate(0, x * 32); floor.getChildren().add(img); } } countLeft += 32; }
+	 * if (departr - bill.getChrac().getSpeed() >= 0) departr -=
+	 * bill.getChrac().getSpeed();
+	 */
 
 	public void deleteImages(String direction) {
 		switch (direction) {
 		case "Right":
 			delete = "Right";
-			viewAbleSol.removeIf(f -> f.getX() == deleteLignRight);
-
-			deleteLignRight--;
-			deleteLignLeft--;
-
+			viewAbleSol.removeIf(f -> f.getX() == deleteLignX + 59);
+			deleteLignX--;
 			break;
 
 		case "Left":
-
 			delete = "Left";
-			viewAbleSol.removeIf(f -> f.getX() == deleteLignLeft);
-			deleteLignLeft++;
-			deleteLignRight++;
-
+			viewAbleSol.removeIf(f -> f.getX() == deleteLignX);
+			deleteLignX++;
+			break;
+		case "Up":
+			delete = "Up";
+			viewAbleSol.removeIf(f -> f.getX() == deleteLignY);
+			deleteLignY++;
+			break;
+		case "Down":
+			delete = "Down";
+			viewAbleSol.removeIf(f -> f.getX() == deleteLignY + 32);
+			deleteLignY++;
 			break;
 		}
 	}
-
-	
-	
-	/*public void CountAddDelete(BillView bill, String Direction) {
-		int countDirection = this.countRight;
-		int countOppositeDirection = this.countLeft;
-		String OppositeDirection = "Left";
-		switch(Direction) {
-		case "Right":
-			countDirection = this.countRight;
-			countOppositeDirection = this.countLeft;
-			OppositeDirection = "Left";
-			break;
-		case "Left":
-			countDirection = this.countLeft;
-			countOppositeDirection = this.countRight;
-			OppositeDirection = "Right";
-			break;
-		
-		case "Up":
-			countDirection = this.countUp;
-			countOppositeDirection = this.countDown;
-			OppositeDirection = "Down";	
-			break;
-		case "Down":
-			countDirection = this.countDown;
-			countOppositeDirection = this.countUp;
-			OppositeDirection = "Up";
-			break;
-		}
-		countDirection -= bill.getChrac().getSpeed();
-		countOppositeDirection -= bill.getChrac().getSpeed();
-		if (countDirection <= 0) {
-			addImages(Direction);
-			deleteImages(OppositeDirection);
-			countDirection=+32;
-		}
-		if (countOppositeDirection > 32)
-			countOppositeDirection -= 32;
-	}*/
-	
 
 	public boolean alreadyJumping() {
 		return jumping;
@@ -501,16 +432,18 @@ public class Controller implements Initializable {
 		loop.setCycleCount(Timeline.INDEFINITE);
 		KeyFrame kf = new KeyFrame(Duration.millis(25), (ev -> {
 
-				
-				
-			if (detecteur.verifUnder(bill.getChrac())) 
+			if (jumping && !falling) {
+				// actions();
+				for (int i = 0; i < floor.getChildren().size(); i++)
+					relocateImages("Up", i);
+				relocated += bill.getChrac().getSpeed();
+				CountAddDelete("Up");
+			} else if (detecteur.verifUnder(bill.getChrac()))
 				scroll("Down");
-				
-			else
+			else {
 				jumping = false;
-
-			
-			
+				falling = false;
+			}
 			actions();
 			temps++;
 		}));
