@@ -31,7 +31,7 @@ public class Character extends AnimatedObject {
 		if (direction.equals("RunRight"))
 			this.x.set(this.x.get() + 1);
 		if (direction.equals("Jump"))
-			this.y.set(this.y.get() - 1);
+			this.y.set(this.y.get() - 2);
 		if (direction.equals("Down"))
 			this.y.set(this.y.get() + 1);
 	}

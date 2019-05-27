@@ -44,16 +44,14 @@ public class Controller implements Initializable {
 
 	private Map mapPrincipale = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv");
 	private MapView mv;
-	private Timeline loop;
-
-	private Timeline loop2;
+	private Timeline loop, loop2;
 
 	int countRight = 32;
 	int countLeft = 32;
 
 	boolean jumping = false;
 
-	private int temps;
+	private long temps;
 	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
 	private String oldAnim = "tactac";
 	int deleteLignLeft = 0;
@@ -73,8 +71,8 @@ public class Controller implements Initializable {
 		// absolute_y = new SimpleIntegerProperty(0);
 		absolute_charactX = new SimpleIntegerProperty();
 		absolute_charactY = new SimpleIntegerProperty();
-		absolute_charactX.bindBidirectional(bill.getChrac().getXProperty());
-		absolute_charactY.bindBidirectional(bill.getChrac().getYProperty());
+		absolute_charactX.bind(bill.getChrac().getXProperty());
+		absolute_charactY.bind(bill.getChrac().getYProperty());
 		mv = new MapView(mapPrincipale);
 		viewAbleSol = mv.getListViewSol();
 		initAnimation();
@@ -120,8 +118,10 @@ public class Controller implements Initializable {
 		if (keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)) {
 			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
-			if (bill.getImage().getLayoutX() % bill.getChrac().getSpeed() == 0)
+			if (temps * Duration.millis(25).toMillis() % 40 == 0) {
+				System.out.println(temps / 40);
 				bill.getChrac().move("RunRight");
+			}
 
 			oldAnim = "RunRight";
 			scroll("Right");
@@ -141,7 +141,10 @@ public class Controller implements Initializable {
 		if (keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)) {
 			// if (!stopSroll().equals("left stop")) {
 			bill.getChrac().animation("RunLeft");
-			bill.getChrac().move("RunLeft");
+			if (temps * Duration.millis(25).toMillis() % 40 == 0) {
+				System.out.println(temps / 40);
+				bill.getChrac().move("RunLeft");
+			}
 			oldAnim = "RunLeft";
 			scroll("Left");
 
@@ -177,7 +180,7 @@ public class Controller implements Initializable {
 			floor.getChildren().get(indiceFloor).relocate(floor.getChildren().get(indiceFloor).getLayoutX(),
 					floor.getChildren().get(indiceFloor).getLayoutY() + bill.getChrac().getSpeed());
 			break;
-		case "Down"://108
+		case "Down":// 108
 			floor.getChildren().get(indiceFloor).relocate(floor.getChildren().get(indiceFloor).getLayoutX(),
 					floor.getChildren().get(indiceFloor).getLayoutY() - bill.getChrac().getSpeed());
 
@@ -286,7 +289,6 @@ public class Controller implements Initializable {
 			// }s
 
 			break;
-		
 
 		case "Up":
 			loop.pause();
@@ -295,20 +297,20 @@ public class Controller implements Initializable {
 			loop2 = new Timeline();
 			loop2.setCycleCount(16);
 
-			loop2.setOnFinished(ev -> {
-				loop.play();
-
+			loop2.setOnFinished(ev -> {loop.play();
+			bill.getChrac().move("Up");
+			temps=0;
 			});
 
 			loop2.getKeyFrames().add(new KeyFrame(Duration.millis(25), (ev -> {
 
 				for (int i = 0; i < floor.getChildren().size(); i++) {
-
 					floor.getChildren().get(i).relocate(floor.getChildren().get(i).getLayoutX(),
 							floor.getChildren().get(i).getLayoutY() + 4);
-
 				}
 				relocated += bill.getChrac().getSpeed();
+				
+					
 				actions();
 				// System.out.println(
 				// floor.getChildren().get(30 * 20 - 30 * bill.getChrac().getY() / 32 + 2 +
@@ -355,6 +357,7 @@ public class Controller implements Initializable {
 
 	public void initAnimation() {
 		loop = new Timeline();
+		temps = 0;
 		loop.setCycleCount(Timeline.INDEFINITE);
 		KeyFrame kf = new KeyFrame(Duration.millis(25), (ev -> {
 			if (detecteur.verifUnder(bill.getChrac())) {
@@ -362,10 +365,18 @@ public class Controller implements Initializable {
 					relocateImages("Down", i);
 				}
 				relocated -= bill.getChrac().getSpeed();
-//				bill.getChrac().move("Down");
+				if (temps * Duration.millis(25).toMillis() % 40 == 0)
+					bill.getChrac().move("Down");
 			} else
 				jumping = false;
 
+			if(jumping) {
+				for (int i = 0; i < floor.getChildren().size(); i++) {
+					floor.getChildren().get(i).relocate(floor.getChildren().get(i).getLayoutX(),
+							floor.getChildren().get(i).getLayoutY() + 4);
+				}
+				relocated += bill.getChrac().getSpeed();
+			}
 			actions();
 			temps++;
 		}));
