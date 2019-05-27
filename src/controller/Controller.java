@@ -48,7 +48,7 @@ public class Controller implements Initializable {
 	private String delete, add;
 	private int addLignLeft = 299, addLignRight = 60, addLignTop = 0, addLignBot = 33;
 	private int deleteLignX = 0, deleteLignY = 0;
-	boolean jumping = false, falling = true;
+	private boolean jumping = false, falling = true;
 
 	private long temps;
 	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
@@ -135,18 +135,7 @@ public class Controller implements Initializable {
 			oldAnim = "RunRight";
 			scroll("Right");
 
-			/*
-			 * departr += bill.getChrac().getSpeed(); if (departr % 960 / 32 == 29) {
-			 * tileSol = new Map("src/maps/carte.txt", "src/maps/carte2.txt",
-			 * "src/maps/carte3.txt"); mv = new MapView(tileSol);
-			 * floor.getChildren().addAll(mv.creerVue()); departr = 13 * 32;
-			 * 
-			 * }
-			 */
-
 		}
-		// }
-
 		if ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT))
 				&& detecteur.verifLeft(bill.getChrac())) {
 			// if (!stopSroll().equals("left stop")) {
@@ -156,9 +145,6 @@ public class Controller implements Initializable {
 			scroll("Left");
 
 		}
-
-		// }
-
 		if (!alreadyJumping() && keyPressed.contains(KeyCode.SPACE)) {
 			bill.getChrac().animation("jumpRight");
 			oldAnim = "jumpRight";
