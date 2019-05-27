@@ -3,6 +3,7 @@ package view.game;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import model.game.Bill;
 
 public class BillView extends CharacterView{
@@ -38,6 +39,11 @@ public class BillView extends CharacterView{
 				}
 			}
 		});
+	}
+	
+	public void setLife(ImageView heart) {
+		if(charac.getHp()%5==0)
+			heart.setImage(new Image("view/resources/personnages/heart/" +charac.getHp()+"pv.png"));
 	}
 
 

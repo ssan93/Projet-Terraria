@@ -2,11 +2,12 @@ package model.game;
 
 public class Character extends AnimatedObject {
 
-	private int speed;
+	private int speed, hp;
 
-	public Character(int x, int y, int speed) {
+	public Character(int x, int y, int speed, int hp) {
 		super(x, y);
 		this.speed = speed;
+		this.hp=hp;
 	}
 
 	@Override
@@ -42,5 +43,17 @@ public class Character extends AnimatedObject {
 			this.y.set(this.y.get() + 1);
 		
 		
+	}
+	
+	public int getHp() {
+		return this.hp;
+	}
+	
+	public void setHp(int hp) {
+		this.hp=hp;
+	}
+	
+	public void damage(int dp) {
+		this.hp-=dp;
 	}
 }
