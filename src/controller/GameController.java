@@ -44,9 +44,9 @@ public class GameController extends Controller {
 	private Map mapPrincipale = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv");
 	private MapView mv;
 	private Timeline loop, loop2;
-	private int countX = 32, countY = 32, relocated = 0;
+	private int countX = 32, countY = 0, relocated = 0;
 	private String delete, add;
-	private int addLignLeft = 299, addLignRight = 60, addLignTop = 0, addLignBot = 33;
+	private int addLignTop = 0, addLignBot = 33, addLignX = 299;
 	private int deleteLignX = 0, deleteLignY = 0;
 	private boolean jumping = false, falling = true;
 
@@ -266,10 +266,10 @@ public class GameController extends Controller {
 			break;
 		case "Down":
 			countY += bill.getChrac().getSpeed();
-			if(64-countY < 0) {
+			if(32-countY < 0) {
 				bill.getChrac().move("Down");
 				addImages("Down");
-				deleteImages("Up");
+				//deleteImages("Up");
 				countY -= 32;
 			}
 
@@ -286,34 +286,26 @@ public class GameController extends Controller {
 			add = "Right";
 
 			for (Tiles tile : ListMid)
-				if (tile.getX() == addLignRight && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+				if (tile.getX() == (addLignX + 61)%300 && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == addLignRight && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+				if (tile.getX() == (addLignX + 61)%300 && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
-			addLignRight++;
-			addLignLeft++;
-			if (addLignRight == 300)
-				addLignRight = 0;
-			if (addLignLeft == 300)
-				addLignLeft = 0;
+			addLignX++;
+
 
 			break;
 
 		case "Left":
 			add = "Left";
 			for (Tiles tile : ListMid)
-				if (tile.getX() == addLignLeft && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+				if (tile.getX() == addLignX%300 && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == addLignLeft && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+				if (tile.getX() == addLignX%300 && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
-			addLignLeft--;
-			addLignRight--;
-			if (addLignLeft == -1)
-				addLignLeft = 299;
-			if (addLignRight == -1)
-				addLignRight = 299;
+			addLignX--;
+
 
 			break;
 
@@ -422,7 +414,7 @@ public class GameController extends Controller {
 		KeyFrame kf = new KeyFrame(Duration.millis(25), (ev -> {
 
 			if(temps%40==0 && bill.getChrac().getHp()>0) {
-				bill.getChrac().damage(5);
+				bill.getChrac().damage(2);
 				System.out.println(bill.getChrac().getHp());
 				isAlive();
 			}
