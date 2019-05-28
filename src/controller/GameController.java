@@ -59,7 +59,7 @@ public class GameController extends Controller {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
-		isAlive=new SimpleBooleanProperty(true);
+		isAlive = new SimpleBooleanProperty(true);
 		detecteur = new GestionCollision(mapPrincipale);
 		// absolute_x = new SimpleIntegerProperty(0);
 		// absolute_y = new SimpleIntegerProperty(0);
@@ -126,21 +126,20 @@ public class GameController extends Controller {
 		});
 
 	}
-	
+
 	public void isAlive() {
 
 		bill.setLife(heart);
-		if(bill.getChrac().getHp()==0)
+		if (bill.getChrac().getHp() == 0)
 			isAlive.set(false);
 		else
 			isAlive.set(true);
 
 	}
-	
+
 	public SimpleBooleanProperty getIsAlive() {
 		return this.isAlive;
 	}
-
 
 	public void actions() {
 		if ((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT))
@@ -161,9 +160,9 @@ public class GameController extends Controller {
 			scroll("Left");
 
 		}
-		if (!alreadyJumping() && keyPressed.contains(KeyCode.SPACE)) {
-			bill.getChrac().animation("jumpRight");
-			oldAnim = "jumpRight";
+		if (!jumping && keyPressed.contains(KeyCode.SPACE)) {
+			bill.getChrac().animation(oldAnim.contains("Right") ? "jumpRight" : "jumpLeft");
+			oldAnim = oldAnim.contains("Right") ? "jumpRight" : "jumpLeft";
 			scroll("Up");
 		}
 	}
@@ -188,12 +187,20 @@ public class GameController extends Controller {
 			break;
 
 		case "Up":
-
-			loop2 = new Timeline();
-			loop2.setCycleCount(16);
-			loop2.setOnFinished(ev -> falling = true);
-			loop2.getKeyFrames().add(new KeyFrame(Duration.millis(25), (ev -> jumping = true)));
-			loop2.play();
+			jumping = true;
+			for (int i = 0; i < floor.getChildren().size(); i++)
+				relocateImages("Up", i);
+			relocated += bill.getChrac().getSpeed();
+			CountAddDelete("Up");
+			
+			// loop2 = new Timeline();
+			// loop2.setCycleCount(16);
+			// loop2.setOnFinished(ev -> {falling = true;
+			// jumping=false;
+			// });
+			// loop2.getKeyFrames().add(new KeyFrame(Duration.millis(25), (ev -> jumping =
+			// true)));
+			// loop2.play();
 
 			break;
 		case "Down":
@@ -232,6 +239,11 @@ public class GameController extends Controller {
 		}
 	}
 
+	/**
+	 * gere l'ajout et la suppression des images au bord co
+	 * 
+	 * @param Direction
+	 */
 	public void CountAddDelete(String Direction) {
 		switch (Direction) {
 		case "Right":
@@ -246,7 +258,7 @@ public class GameController extends Controller {
 
 		case "Left":
 			countX += bill.getChrac().getSpeed();
-			if (32-countX < 0) {
+			if (32 - countX < 0) {
 				bill.getChrac().move("RunLeft");
 				addImages("Left");
 				deleteImages("Right");
@@ -256,17 +268,17 @@ public class GameController extends Controller {
 
 		case "Up":
 
-			countY -= bill.getChrac().getSpeed();		
-			if(countY < 0) {
+			countY -= bill.getChrac().getSpeed();
+			if (countY < 0) {
 				bill.getChrac().move("Up");
 				addImages("Up");
 				// deleteImages("Down");
-				countY +=32;
+				countY += 32;
 			}
 			break;
 		case "Down":
 			countY += bill.getChrac().getSpeed();
-			if(64-countY < 0) {
+			if (64 - countY < 0) {
 				bill.getChrac().move("Down");
 				addImages("Down");
 				deleteImages("Up");
@@ -277,6 +289,11 @@ public class GameController extends Controller {
 		}
 	}
 
+	/**
+	 * ajoute les images au bord correspondant
+	 * 
+	 * @param direction
+	 */
 	public void addImages(String direction) {
 		ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
 		ObservableList<Tiles> ListMid = mapPrincipale.getTilesListMid();
@@ -385,10 +402,6 @@ public class GameController extends Controller {
 		}
 	}
 
-	public boolean alreadyJumping() {
-		return jumping;
-	}
-
 	public String stopSroll() {
 
 		if (floor.getChildren().get(1).getLayoutX() == charapane.getLayoutX() + bill.getChrac().getX() + 64) {
@@ -421,25 +434,23 @@ public class GameController extends Controller {
 		loop.setCycleCount(Timeline.INDEFINITE);
 		KeyFrame kf = new KeyFrame(Duration.millis(25), (ev -> {
 
-			if(temps%40==0 && bill.getChrac().getHp()>0) {
-				bill.getChrac().damage(5);
-				System.out.println(bill.getChrac().getHp());
+			if (temps % 40 == 0 && bill.getChrac().getHp() > 0) {
+				// bill.getChrac().damage(5);
+				// System.out.println(bill.getChrac().getHp());
 				isAlive();
 			}
-			if (jumping && !falling) {
-				// actions();
-				for (int i = 0; i < floor.getChildren().size(); i++)
-					relocateImages("Up", i);
-				relocated += bill.getChrac().getSpeed();
-				CountAddDelete("Up");
-			} else if (detecteur.verifUnder(bill.getChrac()))
+			if (jumping && !falling && temps !=19) {
+				scroll("Up");
+				temps++;
+			} else if (detecteur.verifUnder(bill.getChrac())) {
+				falling = true;
 				scroll("Down");
-			else {
+				temps = 0;
+			} else {
 				jumping = false;
 				falling = false;
 			}
 			actions();
-			temps++;
 		}));
 		loop.getKeyFrames().add(kf);
 	}

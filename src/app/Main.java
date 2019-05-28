@@ -12,8 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -91,7 +89,7 @@ public class Main extends Application {
 			//player = new MediaPlayer(new Media(new File("src/view/game/intro.mp4").toURI().toString()));
 			//player.play();
 			primaryStage.setScene(scene);
-			primaryStage.initStyle(StageStyle.TRANSPARENT);
+//			primaryStage.initStyle(StageStyle.TRANSPARENT);
 			primaryStage.setFullScreen(true);
 			primaryStage.show();
 			c.getInGame().addListener((observable, oldValue, newValue) -> {
