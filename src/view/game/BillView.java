@@ -2,8 +2,10 @@ package view.game;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import model.game.Bill;
 
 public class BillView extends CharacterView {
@@ -14,7 +16,6 @@ public class BillView extends CharacterView {
 		this.charac = new Bill(30, 16, 9);
 		this.imageViewCharac.relocate(708, 400);
 		// this.imageViewCharac.layoutXProperty().bind(charac.getXProperty());
-
 		this.animation();
 	}
 

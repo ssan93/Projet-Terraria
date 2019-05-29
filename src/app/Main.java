@@ -30,12 +30,13 @@ public class Main extends Application {
 
 			// quand une touche est pressé
 			scene.setOnKeyPressed(e -> {
-				c.addKeyCode(e.getCode());
+				c.addKeyCode(e.getCode());e.consume();
 			});
 			// quand une touche est relaché
 			scene.setOnKeyReleased(e -> {
 				c.removeKeyCode(e.getCode());
 				c.stopAction();
+				e.consume();
 			});
 			primaryStage.setTitle("Last man in Vietnam");
 			primaryStage.setScene(scene);
