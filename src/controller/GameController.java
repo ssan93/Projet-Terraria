@@ -240,7 +240,8 @@ public class GameController extends Controller {
 	}
 
 	/**
-	 * gere l'ajout et la suppression des images au bord co
+	 * gere l'ajout et la suppression des images au bord correspondant et bouge le
+	 * personnage au bon moment niveau modele
 	 * 
 	 * @param Direction
 	 */

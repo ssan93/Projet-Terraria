@@ -22,7 +22,7 @@ public class Main extends Application {
 			FXMLLoader loader = new FXMLLoader();
 			URL url = new File("src/view/game/view.fxml").toURI().toURL();
 			loader.setLocation(url);
-//			System.out.println(loader.getLocation());
+			// System.out.println(loader.getLocation());
 			AnchorPane root = new AnchorPane();
 			root = loader.load();
 			GameController c = loader.getController();
@@ -54,8 +54,8 @@ public class Main extends Application {
 			FXMLLoader loader = new FXMLLoader();
 			URL url = new File("src/view/game/menu.fxml").toURI().toURL();
 			loader.setLocation(url);
-			//System.out.println(loader.getLocation());
-			Pane root=new Pane();
+			// System.out.println(loader.getLocation());
+			Pane root = new Pane();
 			root = new BorderPane();
 			root = loader.load();
 			Controller c = loader.getController();
@@ -79,17 +79,18 @@ public class Main extends Application {
 			FXMLLoader loader = new FXMLLoader();
 			URL url = new File("src/view/game/menu.fxml").toURI().toURL();
 			loader.setLocation(url);
-//			System.out.println(loader.getLocation());
+			// System.out.println(loader.getLocation());
 			root = new BorderPane();
 			root = loader.load();
 			Controller c = loader.getController();
 			Scene scene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
 			scene.getStylesheets().add("view/game/menu.css");
-			//0MediaPlayer player;
-			//player = new MediaPlayer(new Media(new File("src/view/game/intro.mp4").toURI().toString()));
-			//player.play();
+			// 0MediaPlayer player;
+			// player = new MediaPlayer(new Media(new
+			// File("src/view/game/intro.mp4").toURI().toString()));
+			// player.play();
 			primaryStage.setScene(scene);
-//			primaryStage.initStyle(StageStyle.TRANSPARENT);
+			// primaryStage.initStyle(StageStyle.TRANSPARENT);
 			primaryStage.setFullScreen(true);
 			primaryStage.show();
 			c.getInGame().addListener((observable, oldValue, newValue) -> {
