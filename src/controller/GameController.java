@@ -266,7 +266,8 @@ public class GameController extends Controller {
 			break;
 		case "Down":
 			countY += bill.getChrac().getSpeed();
-			if(32-countY < 0) {
+			System.out.println(countY);
+			if(32-countY <= 0) {
 				bill.getChrac().move("Down");
 				addImages("Down");
 				//deleteImages("Up");
@@ -315,6 +316,7 @@ public class GameController extends Controller {
 				if (tile.getX() < 60 && tile.getY() == addLignTop) {
 					viewAbleSol.add(tile);
 				}
+			addLignBot--;
 			break;
 
 		case "Down":
@@ -415,7 +417,7 @@ public class GameController extends Controller {
 
 			if(temps%40==0 && bill.getChrac().getHp()>0) {
 				bill.getChrac().damage(2);
-				System.out.println(bill.getChrac().getHp());
+				//System.out.println(bill.getChrac().getHp());
 				isAlive();
 			}
 			if (jumping && !falling) {
@@ -424,9 +426,11 @@ public class GameController extends Controller {
 					relocateImages("Up", i);
 				relocated += bill.getChrac().getSpeed();
 				CountAddDelete("Up");
+				
 			} else if (detecteur.verifUnder(bill.getChrac()))
 				scroll("Down");
 			else {
+				
 				jumping = false;
 				falling = false;
 			}
