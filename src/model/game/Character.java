@@ -1,5 +1,7 @@
 package model.game;
 
+import javafx.geometry.Rectangle2D;
+
 public class Character extends AnimatedObject {
 
 	private int speed, hp;
@@ -26,14 +28,14 @@ public class Character extends AnimatedObject {
 	public void move(String direction) {
 		switch (direction) {
 		case "RunLeft":
+			this.x.set(this.x.get() - 1);
 			if (this.getX() <= 0)
 				this.x.set(299);
-			this.x.set(this.x.get() - 1);
 			break;
 		case "RunRight":
-			if (this.getX() > 299)
-				this.x.set(0);
 			this.x.set(this.x.get() + 1);
+			if (this.getX() > 299)
+				this.x.set(1);
 			break;
 		case "Up":
 			this.y.set(this.y.get() - 1);
@@ -59,6 +61,10 @@ public class Character extends AnimatedObject {
 		// this.y.set(this.y.get() - 1);
 		// if (direction.equals("Down"))
 		// this.y.set(this.y.get() + 1);
+	}
+
+	public Rectangle2D getRectangle2D() {
+		return new Rectangle2D(getX(), getY(), 27, 50);
 	}
 
 	public int getHp() {

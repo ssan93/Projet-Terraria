@@ -36,6 +36,6 @@ public class Objet {
 		return this.y;
 	}
 	public Rectangle2D getRectangle2D() {
-		return new Rectangle2D(getX(), getY(), 0, 0);
+		return new Rectangle2D(getX(), getY(), 32, 32);
 	}
 }

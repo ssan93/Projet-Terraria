@@ -44,7 +44,7 @@ public class GameController extends Controller {
 	private Map mapPrincipale = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv");
 	private MapView mv;
 	private Timeline loop, loop2;
-	private int countX = 32, countY = 32, relocated = 0;
+	private int countX = 32, countY = 0, relocated = 0;
 	private String delete, add;
 	private int addLignLeft = 299, addLignRight = 60, addLignTop = 0, addLignBot = 33;
 	private int deleteLignX = 0, deleteLignY = 0;
@@ -278,7 +278,7 @@ public class GameController extends Controller {
 			break;
 		case "Down":
 			countY += bill.getChrac().getSpeed();
-			if (64 - countY < 0) {
+			if (32 - countY < 0) {
 				bill.getChrac().move("Down");
 				addImages("Down");
 				deleteImages("Up");
