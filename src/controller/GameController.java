@@ -31,6 +31,7 @@ public class GameController extends Controller {
 	private radioChatter ra = new radioChatter();
 	private GestionCollision detecteur;
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
+	private boolean allowMouv= false;
 
 	@FXML
 	private Label radio;
@@ -145,6 +146,7 @@ public class GameController extends Controller {
 			radio.setOpacity(0);
 			ok.setOpacity(0);
 			codec.setOpacity(0);
+			allowMouv=true;
 		}
 	}
 
@@ -153,7 +155,7 @@ public class GameController extends Controller {
 	}
 
 	public void actions() {
-		if ((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT))
+		if (allowMouv &&((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)))
 				&& detecteur.verifRight(bill.getChrac())) {
 			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
@@ -162,7 +164,7 @@ public class GameController extends Controller {
 			scroll("Right");
 
 		}
-		if ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT))
+		if (allowMouv&&((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)))
 				&& detecteur.verifLeft(bill.getChrac())) {
 			// if (!stopSroll().equals("left stop")) {
 			bill.getChrac().animation("RunLeft");
@@ -171,7 +173,7 @@ public class GameController extends Controller {
 			scroll("Left");
 
 		}
-		if (!jumping && keyPressed.contains(KeyCode.SPACE)) {
+		if (!jumping && keyPressed.contains(KeyCode.SPACE)&& allowMouv) {
 			bill.getChrac().animation(oldAnim.contains("Right") ? "jumpRight" : "jumpLeft");
 			oldAnim = oldAnim.contains("Right") ? "jumpRight" : "jumpLeft";
 			scroll("Up");
