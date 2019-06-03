@@ -24,8 +24,6 @@ import model.game.Tiles;
 
 public class GameController extends Controller {
 
-	// private SimpleIntegerProperty absolute_x, absolute_y, absolute_charactX,
-	// absolute_charactY;
 
 	private GestionCollision detecteur;
 
@@ -43,7 +41,7 @@ public class GameController extends Controller {
 	SimpleBooleanProperty isAlive;
 	private Map mapPrincipale = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv");
 	private MapView mv;
-	private Timeline loop, loop2;
+	private Timeline loop;
 	private int countX = 32, countY = 0, relocated = 0;
 	private String delete, add;
 	private int addLignTop = 0, addLignBot = 33, addLignX = 299;
@@ -58,15 +56,10 @@ public class GameController extends Controller {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		TileView.inizImages();
 		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
 		isAlive = new SimpleBooleanProperty(true);
 		detecteur = new GestionCollision(mapPrincipale);
-		// absolute_x = new SimpleIntegerProperty(0);
-		// absolute_y = new SimpleIntegerProperty(0);
-		// absolute_charactX = new SimpleIntegerProperty();
-		// absolute_charactY = new SimpleIntegerProperty();
-		// absolute_charactX.bind(bill.getChrac().getXProperty());
-		// absolute_charactY.bind(bill.getChrac().getYProperty());
 		mv = new MapView(mapPrincipale);
 		viewAbleSol = mv.getListViewSol();
 		initAnimation();
