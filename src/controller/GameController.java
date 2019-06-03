@@ -24,8 +24,6 @@ import model.game.Tiles;
 
 public class GameController extends Controller {
 
-	// private SimpleIntegerProperty absolute_x, absolute_y, absolute_charactX,
-	// absolute_charactY;
 
 	private GestionCollision detecteur;
 
@@ -58,15 +56,10 @@ public class GameController extends Controller {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		TileView.inizImages();
 		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
 		isAlive = new SimpleBooleanProperty(true);
 		detecteur = new GestionCollision(mapPrincipale);
-		// absolute_x = new SimpleIntegerProperty(0);
-		// absolute_y = new SimpleIntegerProperty(0);
-		// absolute_charactX = new SimpleIntegerProperty();
-		// absolute_charactY = new SimpleIntegerProperty();
-		// absolute_charactX.bind(bill.getChrac().getXProperty());
-		// absolute_charactY.bind(bill.getChrac().getYProperty());
 		mv = new MapView(mapPrincipale);
 		viewAbleSol = mv.getListViewSol();
 		initAnimation();
@@ -302,6 +295,16 @@ public class GameController extends Controller {
 
 		case "Right":
 			add = "Right";
+			/*	for(int y = addLignTop; y <= addLignBot; y++) {
+			if(mapMid[(addLignX + 61) % 300][y]!=0) {
+				Tiles t = new Tiles ((addLignX + 61) % 300,y,mapMid[(addLignX + 61) % 300][y]);
+				viewAbleSol.add(t);
+				}
+			if(mapSol[(addLignX + 61) % 300][y]!=0) {
+			Tiles t = new Tiles ((addLignX + 61) % 300,y,mapSol[(addLignX + 61) % 300][y]);
+			viewAbleSol.add(t);
+			}
+		}*/
 
 			for (Tiles tile : ListMid)
 				if (tile.getX() == (addLignX + 61) % 300 && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
