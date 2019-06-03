@@ -233,8 +233,7 @@ public class GameController extends Controller {
 	}
 
 	/**
-	 * gere l'ajout et la suppression des images au bord correspondant et bouge le
-	 * personnage au bon moment niveau modele
+	 * gere l'ajout et la suppression des images au bord co
 	 * 
 	 * @param Direction
 	 */
@@ -272,7 +271,7 @@ public class GameController extends Controller {
 			break;
 		case "Down":
 			countY += bill.getChrac().getSpeed();
-			if (32 - countY < 0) {
+			if (32 - countY <= 0) {
 				bill.getChrac().move("Down");
 				addImages("Down");
 				// deleteImages("Up");
@@ -295,16 +294,6 @@ public class GameController extends Controller {
 
 		case "Right":
 			add = "Right";
-			/*	for(int y = addLignTop; y <= addLignBot; y++) {
-			if(mapMid[(addLignX + 61) % 300][y]!=0) {
-				Tiles t = new Tiles ((addLignX + 61) % 300,y,mapMid[(addLignX + 61) % 300][y]);
-				viewAbleSol.add(t);
-				}
-			if(mapSol[(addLignX + 61) % 300][y]!=0) {
-			Tiles t = new Tiles ((addLignX + 61) % 300,y,mapSol[(addLignX + 61) % 300][y]);
-			viewAbleSol.add(t);
-			}
-		}*/
 
 			for (Tiles tile : ListMid)
 				if (tile.getX() == (addLignX + 61) % 300 && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
