@@ -12,7 +12,7 @@ public class Map {
 	private int[][] tabSol, mid;
 	private ObservableList<Tiles> tilesListSol, tilesListMid;
 
-	private static final int Largeur = 300, Hauteur = 100;
+	public static final int Largeur = 300, Hauteur = 100;
 
 	private String fichierDuSol, fichierDuMilieu/* , fichierDuBg */;
 

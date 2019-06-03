@@ -25,7 +25,7 @@ public class GestionCollision {
 	 */
 	public boolean verifUnder(Character ch) {
 		//System.out.println(ch.getX() +"\t"+ch.getY());
-		return (map.getMapSol()[ch.getX()-1][ch.getY()+2] == 0 && map.getMapSol()[ch.getX()][ch.getY()+2] == 0);
+		return map.getMapSol()[ch.getX()][ch.getY()+2] == 0;
 	}
 	
 	
@@ -35,7 +35,7 @@ public class GestionCollision {
 	 * @return true si il y a rien a droite
 	 */
 	public boolean verifRight(Character ch) {
-		return (map.getMapSol()[ch.getX()][ch.getY()] == 0 && map.getMapSol()[ch.getX()][ch.getY()+1] == 0);
+		return (map.getMapSol()[ch.getX()+1][ch.getY()] == 0 && map.getMapSol()[ch.getX()+1][ch.getY()+1] == 0);
 	}
 	/**
 	 * 
@@ -45,8 +45,5 @@ public class GestionCollision {
 	public boolean verifLeft(Character ch) {
 		return (map.getMapSol()[ch.getX()-1][ch.getY()] == 0 && map.getMapSol()[ch.getX()-1][ch.getY()+1] == 0);
 	}	
-	public static boolean collide(Objet environnement, Objet character) {
-		return environnement.getRectangle2D().intersects(character.getRectangle2D());
-	}
 
 }

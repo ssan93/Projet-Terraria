@@ -233,7 +233,7 @@ public class GameController extends Controller {
 	}
 
 	/**
-	 * gere l'ajout et la suppression des images au bord co
+	 * gere l'ajout et la suppression des images au bord et fait bouger le perso(modele) au bon moment
 	 * 
 	 * @param Direction
 	 */
@@ -241,7 +241,7 @@ public class GameController extends Controller {
 		switch (Direction) {
 		case "Right":
 			countX -= bill.getChrac().getSpeed();
-			if (countX < 0) {
+			if (countX < -24) {
 				bill.getChrac().move("RunRight");
 				addImages("Right");
 				deleteImages("Left");
@@ -251,7 +251,7 @@ public class GameController extends Controller {
 
 		case "Left":
 			countX += bill.getChrac().getSpeed();
-			if (32 - countX < 0) {
+			if (32 < countX) {
 				bill.getChrac().move("RunLeft");
 				addImages("Left");
 				deleteImages("Right");
@@ -271,7 +271,7 @@ public class GameController extends Controller {
 			break;
 		case "Down":
 			countY += bill.getChrac().getSpeed();
-			if (32 - countY <= 0) {
+			if (32 <= countY) {
 				bill.getChrac().move("Down");
 				addImages("Down");
 				// deleteImages("Up");
@@ -337,28 +337,7 @@ public class GameController extends Controller {
 			break;
 
 		}
-		/*
-		 * countLeft -= bill.getChrac().getSpeed(); departl
-		 * +=bill.getChrac().getSpeed(); int tileLeft = departl % 960 / 32; if (tileLeft
-		 * == 30) tileLeft = 0; int tLeft[][] = tileSol.getMap(0); if (countLeft <= 0) {
-		 * for (int x = 0; x < tLeft.length; x++) { if (tLeft[x][tileLeft] != 0) {
-		 * ImageView img = new ImageView(Tiles.selectionTuile(tLeft[x][tileLeft]));
-		 * img.relocate(0, x * 32); floor.getChildren().add(img); } } countLeft += 32; }
-		 * if (departr - bill.getChrac().getSpeed() >= 0) departr -=
-		 * bill.getChrac().getSpeed();
-		 */
-
 	}
-	/*
-	 * countLeft -= bill.getChrac().getSpeed(); departl
-	 * +=bill.getChrac().getSpeed(); int tileLeft = departl % 960 / 32; if (tileLeft
-	 * == 30) tileLeft = 0; int tLeft[][] = tileSol.getMap(0); if (countLeft <= 0) {
-	 * for (int x = 0; x < tLeft.length; x++) { if (tLeft[x][tileLeft] != 0) {
-	 * ImageView img = new ImageView(Tiles.selectionTuile(tLeft[x][tileLeft]));
-	 * img.relocate(0, x * 32); floor.getChildren().add(img); } } countLeft += 32; }
-	 * if (departr - bill.getChrac().getSpeed() >= 0) departr -=
-	 * bill.getChrac().getSpeed();
-	 */
 
 	public void deleteImages(String direction) {
 		switch (direction) {
@@ -386,18 +365,19 @@ public class GameController extends Controller {
 		}
 	}
 
-	public String stopSroll() {
-
-		if (floor.getChildren().get(1).getLayoutX() == charapane.getLayoutX() + bill.getChrac().getX() + 64) {
-			return "left stop";
-		}
-
-		if (floor.getChildren().get(floor.getChildren().size() - 1).getLayoutX() == charapane.getLayoutX()
-				+ bill.getChrac().getX() + 32) {
-			return "right stop";
-		}
-		return "";
-	}
+//	public String stopSroll() {
+//
+//		if (floor.getChildren().get(1).getLayoutX() == charapane.getLayoutX() + bill.getChrac().getX() + 64) {
+//			return "left stop";
+//		}
+//
+//		if (floor.getChildren().get(floor.getChildren().size() - 1).getLayoutX() == charapane.getLayoutX()
+//				+ bill.getChrac().getX() + 32) {
+//			return "right stop";
+//		}
+//		stopAction();
+//		return "";
+//	}
 
 	public void stopAction() {
 		switch (oldAnim) {
