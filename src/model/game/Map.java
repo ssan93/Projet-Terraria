@@ -83,6 +83,9 @@ public class Map {
 	 public int[][] getMapSol() {
 	 return this.tabSol;
 	 }
+	 public int[][] getMapMid() {
+		 return this.mid;
+		 }
 	// public int[][] getMapMilieu() {
 	// return this.mid;
 	// }

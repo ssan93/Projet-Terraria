@@ -58,6 +58,7 @@ public class GameController extends Controller {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		TileView.inizImages();
 		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
 		isAlive = new SimpleBooleanProperty(true);
 		detecteur = new GestionCollision(mapPrincipale);
@@ -273,13 +274,13 @@ public class GameController extends Controller {
 			if (countY < 0) {
 				bill.getChrac().move("Up");
 				addImages("Up");
-				// deleteImages("Down");
+				 deleteImages("Down");
 				countY += 32;
 			}
 			break;
 		case "Down":
 			countY += bill.getChrac().getSpeed();
-			if (32 - countY <= 0) {
+			if (32 - countY < 0) {
 				bill.getChrac().move("Down");
 				addImages("Down");
 				// deleteImages("Up");
@@ -298,11 +299,29 @@ public class GameController extends Controller {
 	public void addImages(String direction) {
 		ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
 		ObservableList<Tiles> ListMid = mapPrincipale.getTilesListMid();
+		int [][] mapMid = mapPrincipale.getMapMid();
+		int [][] mapSol = mapPrincipale.getMapSol();
 		switch (direction) {
+		
 
 		case "Right":
 			add = "Right";
-
+			
+			
+			
+			
+			/*	for(int y = addLignTop; y <= addLignBot; y++) {
+					if(mapMid[(addLignX + 61) % 300][y]!=0) {
+						Tiles t = new Tiles ((addLignX + 61) % 300,y,mapMid[(addLignX + 61) % 300][y]);
+						viewAbleSol.add(t);
+						}
+					if(mapSol[(addLignX + 61) % 300][y]!=0) {
+					Tiles t = new Tiles ((addLignX + 61) % 300,y,mapSol[(addLignX + 61) % 300][y]);
+					viewAbleSol.add(t);
+					}
+				}*/
+				
+			
 			for (Tiles tile : ListMid)
 				if (tile.getX() == (addLignX + 61) % 300 && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
@@ -340,6 +359,17 @@ public class GameController extends Controller {
 				if (tile.getX() < 60 && tile.getY() == addLignBot) {
 					viewAbleSol.add(tile);
 				}
+			/*for(int x = 0; x < 60; x++) {
+				if(mapMid[x][addLignBot]!=0) {
+					Tiles t = new Tiles (x,addLignBot,mapMid[x][addLignBot]);
+					viewAbleSol.add(t);
+					}
+				if(mapSol[x][addLignBot]!=0) {
+					Tiles t = new Tiles (x,addLignBot,mapSol[x][addLignBot]);
+					viewAbleSol.add(t);
+					}
+			}*/
+			
 			addLignBot++;
 
 			break;
