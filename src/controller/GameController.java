@@ -8,7 +8,10 @@ import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -30,9 +33,14 @@ public class GameController extends Controller {
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
 
 	@FXML
+	private Label radio;
+	@FXML
+	private Button ok;
+
+	@FXML
 	private AnchorPane background;
 	@FXML
-	private ImageView heart;
+	private ImageView heart, codec;
 	@FXML
 	private Pane floor;
 
@@ -56,6 +64,7 @@ public class GameController extends Controller {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		changeRdi(null);
 		TileView.inizImages();
 		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
 		isAlive = new SimpleBooleanProperty(true);
@@ -110,12 +119,9 @@ public class GameController extends Controller {
 							floor.getChildren().removeIf(img -> img.getLayoutY() > 33 * 32);
 							break;
 						}
-
 					}
 				}
-
 			}
-
 		});
 
 	}
@@ -128,6 +134,18 @@ public class GameController extends Controller {
 		else
 			isAlive.set(true);
 
+	}
+	@FXML
+	void changeRdi(ActionEvent event) {
+		String buff=ra.getCall();
+		if(!buff.equals("endoffile"))
+			radio.setText(buff);
+		else {
+			ok.setDisable(true);
+			radio.setOpacity(0);
+			ok.setOpacity(0);
+			codec.setOpacity(0);
+		}
 	}
 
 	public SimpleBooleanProperty getIsAlive() {
