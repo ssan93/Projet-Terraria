@@ -32,6 +32,10 @@ public class Main extends Application {
 			scene.setOnKeyPressed(e -> {
 				c.addKeyCode(e.getCode());
 			});
+			scene.setOnMouseClicked(e -> {
+				c.test(e);	
+			});
+			
 			// quand une touche est relaché
 			scene.setOnKeyReleased(e -> {
 				c.removeKeyCode(e.getCode());

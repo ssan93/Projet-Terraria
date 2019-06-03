@@ -3,6 +3,8 @@ package controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import app.MouseEvent;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -476,6 +478,18 @@ public class GameController extends Controller {
 
 	public void removeKeyCode(KeyCode k) {
 		keyPressed.remove(k);
+	}
+	public void test(javafx.scene.input.MouseEvent k) {
+		ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
+		ObservableList<Tiles> ListMid = mapPrincipale.getTilesListMid();
+		System.out.println(k.getX());
+		System.out.println(k.getY());
+		delete="mouse";
+		
+		System.out.println(ListSol.size());
+		ListSol.removeIf(f -> f.getX() == (int)k.getX()/32 && f.getY() == (int)k.getY()/32);
+		System.out.println(ListSol.size());
+		floor.getChildren().removeIf(img -> img.getLayoutY() >= k.getY()-32 && img.getLayoutY() < k.getY() && img.getLayoutX() >= k.getX()-32 && img.getLayoutX() < k.getX());
 	}
 
 }
