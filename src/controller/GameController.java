@@ -21,12 +21,12 @@ import view.game.TileView;
 import model.game.GestionCollision;
 import model.game.Map;
 import model.game.Tiles;
+import model.game.radioChatter;
 
 public class GameController extends Controller {
 
-
+	private radioChatter ra = new radioChatter();
 	private GestionCollision detecteur;
-
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
 
 	@FXML
