@@ -1,9 +1,7 @@
 package app;
 
 import java.io.File;
-
 import java.net.URL;
-
 import controller.GameController;
 import controller.Controller;
 import javafx.application.Application;
@@ -13,7 +11,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
