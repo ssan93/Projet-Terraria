@@ -15,7 +15,6 @@ public class BillView extends CharacterView {
 
 		this.charac = new Bill(30, 16, 9);
 		this.imageViewCharac.relocate(708, 400);
-		// this.imageViewCharac.layoutXProperty().bind(charac.getXProperty());
 		this.animation();
 	}
 

@@ -8,16 +8,6 @@ public class GestionCollision {
 		this.map = m;
 	}
 
-	// public boolean collisionMap(AnimatedObject ch) {
-	// switch (ch.getAnimation().get()) {
-	// case "Right":
-	//
-	// break;
-	//
-	// default:
-	// break;
-	// }
-	// }
 	/**
 	 * 
 	 * @param ch
