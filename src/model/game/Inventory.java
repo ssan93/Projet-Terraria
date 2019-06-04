@@ -13,6 +13,8 @@ public class Inventory {
 	}
 
 	public void addToInventory(String object, int quantity) {
+		
+		
 		int contain = this.contains(object);
 		if (contain != -1)
 			IL.get(contain).addQuantity(quantity);

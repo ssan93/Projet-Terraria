@@ -8,12 +8,15 @@ import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import view.game.BillView;
@@ -27,12 +30,27 @@ import model.game.Tiles;
 
 public class GameController extends Controller {
 
-
 	private GestionCollision detecteur;
 
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
-	
+
 	private Inventory inventaire;
+
+	@FXML
+	private Pane effect;
+
+	@FXML
+	private Pane inventoryContainer;
+
+
+	@FXML
+	private GridPane layoutInventory;
+
+	@FXML
+	private Button utiliser;
+
+	@FXML
+	private Button jeter;
 
 	@FXML
 	private AnchorPane background;
@@ -52,7 +70,6 @@ public class GameController extends Controller {
 	private int addLignTop = 0, addLignBot = 33, addLignX = 299;
 	private int deleteLignX = 0, deleteLignY = 0;
 	private boolean jumping = false, falling = true;
-
 	private long temps;
 	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
 	private String oldAnim = "tactac";
@@ -61,6 +78,8 @@ public class GameController extends Controller {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		effect.visibleProperty().bind(inventoryContainer.visibleProperty());
+		inventoryContainer.setVisible(false);
 		TileView.inizImages();
 		inventaire = new Inventory();
 		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
@@ -131,32 +150,40 @@ public class GameController extends Controller {
 			public void onChanged(Change<? extends Node> c) {
 				// TODO Auto-generated method stub
 				while (c.next()) {
-					if(c.wasRemoved()) {
-						TileView t = (TileView)c.getRemoved().get(0);
+					if (c.wasRemoved()) {
 					}
 				}
 			}
 
-
 		});
-		
+
 		inventaire.addListener(new ListChangeListener<InventoryItem>() {
 
 			@Override
 			public void onChanged(Change<? extends InventoryItem> c) {
 				while (c.next()) {
-					if(c.wasAdded()) {
-						
+					if (c.wasAdded()) {
+//						layoutInventory.add(child, columnIndex, rowIndex);
 					}
 					if (c.wasRemoved()) {
-						
+
 					}
 				}
 			}
-			
+
+		});
+
+		inventoryContainer.visibleProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue) {
+				inventoryContainer.setVisible(true);
+				loop.pause();
+			} else {
+				inventoryContainer.setVisible(false);
+				loop.play();
+			}
 		});
 	}
-	
+
 	public void isAlive() {
 
 		bill.setLife(heart);
@@ -195,6 +222,7 @@ public class GameController extends Controller {
 			oldAnim = oldAnim.contains("Right") ? "jumpRight" : "jumpLeft";
 			scroll("Up");
 		}
+
 	}
 
 	public void scroll(String direction) {
@@ -270,7 +298,8 @@ public class GameController extends Controller {
 	}
 
 	/**
-	 * gere l'ajout et la suppression des images au bord et fait bouger le perso(modele) au bon moment
+	 * gere l'ajout et la suppression des images au bord et fait bouger le
+	 * perso(modele) au bon moment
 	 * 
 	 * @param Direction
 	 */
@@ -402,21 +431,26 @@ public class GameController extends Controller {
 		}
 	}
 
-//	public String stopSroll() {
-//
-//		if (floor.getChildren().get(1).getLayoutX() == charapane.getLayoutX() + bill.getChrac().getX() + 64) {
-//			return "left stop";
-//		}
-//
-//		if (floor.getChildren().get(floor.getChildren().size() - 1).getLayoutX() == charapane.getLayoutX()
-//				+ bill.getChrac().getX() + 32) {
-//			return "right stop";
-//		}
-//		stopAction();
-//		return "";
-//	}
+	// public String stopSroll() {
+	//
+	// if (floor.getChildren().get(1).getLayoutX() == charapane.getLayoutX() +
+	// bill.getChrac().getX() + 64) {
+	// return "left stop";
+	// }
+	//
+	// if (floor.getChildren().get(floor.getChildren().size() - 1).getLayoutX() ==
+	// charapane.getLayoutX()
+	// + bill.getChrac().getX() + 32) {
+	// return "right stop";
+	// }
+	// stopAction();
+	// return "";
+	// }
 
 	public void stopAction() {
+		
+		
+		
 		switch (oldAnim) {
 		case "RunRight":
 			bill.getChrac().animation("idleRight");
@@ -429,7 +463,7 @@ public class GameController extends Controller {
 		}
 	}
 
-	public void initAnimation() {
+	private void initAnimation() {
 		loop = new Timeline();
 		temps = 0;
 		loop.setCycleCount(Timeline.INDEFINITE);
@@ -463,6 +497,20 @@ public class GameController extends Controller {
 
 	public void removeKeyCode(KeyCode k) {
 		keyPressed.remove(k);
+	}
+
+	public Pane getInventoryContainer() {
+		return inventoryContainer;
+	}
+	
+	@FXML
+	void drop(ActionEvent event) {
+
+	}
+
+	@FXML
+	void use(ActionEvent event) {
+
 	}
 
 }
