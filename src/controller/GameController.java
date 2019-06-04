@@ -157,7 +157,6 @@ public class GameController extends Controller {
 	public void actions() {
 		if (allowMouv &&((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)))
 				&& detecteur.verifRight(bill.getChrac())) {
-			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
 
 			oldAnim = "RunRight";
@@ -166,7 +165,6 @@ public class GameController extends Controller {
 		}
 		if (allowMouv&&((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)))
 				&& detecteur.verifLeft(bill.getChrac())) {
-			// if (!stopSroll().equals("left stop")) {
 			bill.getChrac().animation("RunLeft");
 
 			oldAnim = "RunLeft";
@@ -188,15 +186,11 @@ public class GameController extends Controller {
 				relocateImages(direction, i);
 			CountAddDelete("Right");
 			break;
-
+			
 		case "Left":
 			for (int i = floor.getChildren().size() - 1; i >= 0; i--)
 				relocateImages(direction, i);
 			CountAddDelete("Left");
-			// if (floor.getChildren().get(i).getLayoutX() > 32 * 30) {
-			// floor.getChildren().remove(floor.getChildren().get(i));
-			// }s
-
 			break;
 
 		case "Up":
@@ -205,17 +199,8 @@ public class GameController extends Controller {
 				relocateImages("Up", i);
 			relocated += bill.getChrac().getSpeed();
 			CountAddDelete("Up");
-
-			// loop2 = new Timeline();
-			// loop2.setCycleCount(16);
-			// loop2.setOnFinished(ev -> {falling = true;
-			// jumping=false;
-			// });
-			// loop2.getKeyFrames().add(new KeyFrame(Duration.millis(25), (ev -> jumping =
-			// true)));
-			// loop2.play();
-
 			break;
+	
 		case "Down":
 			relocated -= bill.getChrac().getSpeed();
 			for (int i = 0; i < floor.getChildren().size(); i++)
@@ -285,7 +270,6 @@ public class GameController extends Controller {
 			if (countY < 0) {
 				bill.getChrac().move("Up");
 				addImages("Up");
-				// deleteImages("Down");
 				countY += 32;
 			}
 			break;
@@ -294,7 +278,6 @@ public class GameController extends Controller {
 			if (32 - countY <= 0) {
 				bill.getChrac().move("Down");
 				addImages("Down");
-				// deleteImages("Up");
 				countY -= 32;
 			}
 
@@ -357,29 +340,8 @@ public class GameController extends Controller {
 			break;
 
 		}
-		/*
-		 * countLeft -= bill.getChrac().getSpeed(); departl
-		 * +=bill.getChrac().getSpeed(); int tileLeft = departl % 960 / 32; if (tileLeft
-		 * == 30) tileLeft = 0; int tLeft[][] = tileSol.getMap(0); if (countLeft <= 0) {
-		 * for (int x = 0; x < tLeft.length; x++) { if (tLeft[x][tileLeft] != 0) {
-		 * ImageView img = new ImageView(Tiles.selectionTuile(tLeft[x][tileLeft]));
-		 * img.relocate(0, x * 32); floor.getChildren().add(img); } } countLeft += 32; }
-		 * if (departr - bill.getChrac().getSpeed() >= 0) departr -=
-		 * bill.getChrac().getSpeed();
-		 */
-
 	}
-	/*
-	 * countLeft -= bill.getChrac().getSpeed(); departl
-	 * +=bill.getChrac().getSpeed(); int tileLeft = departl % 960 / 32; if (tileLeft
-	 * == 30) tileLeft = 0; int tLeft[][] = tileSol.getMap(0); if (countLeft <= 0) {
-	 * for (int x = 0; x < tLeft.length; x++) { if (tLeft[x][tileLeft] != 0) {
-	 * ImageView img = new ImageView(Tiles.selectionTuile(tLeft[x][tileLeft]));
-	 * img.relocate(0, x * 32); floor.getChildren().add(img); } } countLeft += 32; }
-	 * if (departr - bill.getChrac().getSpeed() >= 0) departr -=
-	 * bill.getChrac().getSpeed();
-	 */
-
+	
 	public void deleteImages(String direction) {
 		switch (direction) {
 		case "Right":
@@ -439,8 +401,6 @@ public class GameController extends Controller {
 		KeyFrame kf = new KeyFrame(Duration.millis(25), (ev -> {
 
 			if (temps % 40 == 0 && bill.getChrac().getHp() > 0) {
-				// bill.getChrac().damage(2);
-				// System.out.println(bill.getChrac().getHp());
 				isAlive();
 			}
 			if (jumping && !falling && temps != 19) {

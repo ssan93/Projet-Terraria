@@ -58,7 +58,7 @@ public class Controller implements Initializable {
 	}
 
 	public MediaPlayer randomMusic() {
-		//The actual list of musics for the munu
+		//The actual list of musics for the menu
 		ArrayList<String> musics = new ArrayList<>();
 		musics.add("src/menu-musics/menu1.mp3");
 		musics.add("src/menu-musics/menu2.mp3");
