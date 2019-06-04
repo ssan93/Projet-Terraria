@@ -4,13 +4,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import app.MouseEvent;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -70,7 +72,13 @@ public class GameController extends Controller {
 
 		charapane.getChildren().add(bill.getImage());
 		floor.getChildren().addAll(mv.creerVue());
+		addListen();
+		
 
+	}
+	
+	
+	public void addListen() {
 		viewAbleSol.addListener(new ListChangeListener<Tiles>() {
 
 			@Override
@@ -111,7 +119,11 @@ public class GameController extends Controller {
 						case "Down":
 							floor.getChildren().removeIf(img -> img.getLayoutY() > 33 * 32);
 							break;
+						case "mouse":
+							
+							break;
 						}
+						
 
 					}
 				}
@@ -119,9 +131,32 @@ public class GameController extends Controller {
 			}
 
 		});
+		floor.getChildren().addListener(new ListChangeListener<Node>() {
 
+			@Override
+			public void onChanged(Change<? extends Node> c) {
+				// TODO Auto-generated method stub
+				while(c.next()) {
+					if (c.wasRemoved()) {
+						if(delete == "mouse") {
+							for( Node t : c.getRemoved()) {
+								if(t instanceof TileView) {
+									ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
+									int[][] tabSol = mapPrincipale.getMapSol();
+ 									TileView tView = (TileView)t;
+ 									Tiles tile = tView.getTile();
+									ListSol.remove(tile);
+									tabSol[tile.getX()][tile.getY()]=0;
+									
+								}
+							}
+						}
+					}
+				}
+			}
+			
+		});
 	}
-
 	public void isAlive() {
 
 		bill.setLife(heart);
@@ -293,8 +328,8 @@ public class GameController extends Controller {
 	public void addImages(String direction) {
 		ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
 		ObservableList<Tiles> ListMid = mapPrincipale.getTilesListMid();
-		int [][] mapMid = mapPrincipale.getMapMid();
-		int [][] mapSol = mapPrincipale.getMapSol();
+		/*int [][] mapMid = mapPrincipale.getMapMid();
+		int [][] mapSol = mapPrincipale.getMapSol();*/
 		switch (direction) {
 		
 
@@ -480,16 +515,26 @@ public class GameController extends Controller {
 		keyPressed.remove(k);
 	}
 	public void test(javafx.scene.input.MouseEvent k) {
-		ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
-		ObservableList<Tiles> ListMid = mapPrincipale.getTilesListMid();
-		System.out.println(k.getX());
-		System.out.println(k.getY());
 		delete="mouse";
-		
-		System.out.println(ListSol.size());
-		ListSol.removeIf(f -> f.getX() == (int)k.getX()/32 && f.getY() == (int)k.getY()/32);
-		System.out.println(ListSol.size());
-		floor.getChildren().removeIf(img -> img.getLayoutY() >= k.getY()-32 && img.getLayoutY() < k.getY() && img.getLayoutX() >= k.getX()-32 && img.getLayoutX() < k.getX());
+		if(k.isPrimaryButtonDown())
+			floor.getChildren().removeIf(img -> img.getLayoutY() >= k.getY()-32 && img.getLayoutY() < k.getY() && img.getLayoutX() >= k.getX()-32 && img.getLayoutX() < k.getX());
+		/*case "mouse":
+								ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
+								int[][] tabSol = mapPrincipale.getMapSol();
+								ListSol.remove(tile);
+								tabSol[tile.getX()][tile.getY()]=0;
+								System.out.println(tile.getX() + "  "+ tile.getY());
+								floor.getChildren().removeIf(img -> (int)img.getLayoutX()/32== tile.getX() && (int)img.getLayoutY()/32 == tile.getY()-1);
+								break;
+								public void test(javafx.scene.input.MouseEvent k) {
+									delete="mouse";
+									System.out.println(viewAbleSol.size());
+								//	System.out.println((int)k.getX()/32+"  "+(int)k.getY()/32);
+									if(k.isPrimaryButtonDown())
+										viewAbleSol.removeIf(img -> img.getY() == (int)k.getY()/32);
+									System.out.println(viewAbleSol.size());
+
+							}*/
 	}
 
 }

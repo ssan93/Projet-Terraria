@@ -32,7 +32,7 @@ public class Main extends Application {
 			scene.setOnKeyPressed(e -> {
 				c.addKeyCode(e.getCode());
 			});
-			scene.setOnMouseClicked(e -> {
+			scene.setOnMousePressed(e -> {
 				c.test(e);	
 			});
 			
