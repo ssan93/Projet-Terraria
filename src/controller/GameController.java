@@ -142,12 +142,41 @@ public class GameController extends Controller {
 							for( Node t : c.getRemoved()) {
 								if(t instanceof TileView) {
 									ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
+									ObservableList<Tiles> ListMid = mapPrincipale.getTilesListMid();
 									int[][] tabSol = mapPrincipale.getMapSol();
+									int[][] tabMid = mapPrincipale.getMapMid();
  									TileView tView = (TileView)t;
  									Tiles tile = tView.getTile();
 									ListSol.remove(tile);
+									viewAbleSol.remove(tile);
 									tabSol[tile.getX()][tile.getY()]=0;
+									/*if(tabMid[tile.getX()][tile.getY()]!=0) {
+										for(Tiles tileMid : ListMid) {
+											if (tileMid.getX() == tile.getX() && tileMid.getY() == tile.getY()) {
+												TileView tv = new TileView(tileMid);
+												tv.relocate(tileMid.getX()*32, tileMid.getY() * 32);
+												floor.getChildren().add(tv);
+											}
+										}
+										
+										
+									}*/
 									
+								}
+							}
+						}
+					}
+					if(c.wasAdded()) {
+						if(add == "mouse") {
+							for( Node t : c.getAddedSubList()) {
+								if(t instanceof TileView) {
+									ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
+ 									TileView tView = (TileView)t;
+ 									Tiles tile = tView.getTile();
+									ListSol.add(tile);
+									//viewAbleSol.add(tile);
+									System.out.println(tile.getX()+"  "+tile.getY());
+									mapPrincipale.setTileSol(tile.getX(), tile.getY(), 1);
 								}
 							}
 						}
@@ -190,7 +219,7 @@ public class GameController extends Controller {
 			scroll("Left");
 
 		}
-		if (!jumping && keyPressed.contains(KeyCode.SPACE)) {
+		if (!jumping && keyPressed.contains(KeyCode.SPACE) && detecteur.verifTop(bill.getChrac())) {
 			bill.getChrac().animation(oldAnim.contains("Right") ? "jumpRight" : "jumpLeft");
 			oldAnim = oldAnim.contains("Right") ? "jumpRight" : "jumpLeft";
 			scroll("Up");
@@ -484,13 +513,12 @@ public class GameController extends Controller {
 		temps = 0;
 		loop.setCycleCount(Timeline.INDEFINITE);
 		KeyFrame kf = new KeyFrame(Duration.millis(25), (ev -> {
-
 			if (temps % 40 == 0 && bill.getChrac().getHp() > 0) {
 				// bill.getChrac().damage(2);
 				// System.out.println(bill.getChrac().getHp());
 				isAlive();
 			}
-			if (jumping && !falling && temps != 19) {
+			if (jumping && !falling && temps != 19 && detecteur.verifTop(bill.getChrac())) {
 				scroll("Up");
 				temps++;
 			} else if (detecteur.verifUnder(bill.getChrac())) {
@@ -516,8 +544,15 @@ public class GameController extends Controller {
 	}
 	public void test(javafx.scene.input.MouseEvent k) {
 		delete="mouse";
+		add="mouse";
 		if(k.isPrimaryButtonDown())
 			floor.getChildren().removeIf(img -> img.getLayoutY() >= k.getY()-32 && img.getLayoutY() < k.getY() && img.getLayoutX() >= k.getX()-32 && img.getLayoutX() < k.getX());
+		if(k.isSecondaryButtonDown()) {
+			Tiles t = new Tiles ((int)k.getX()/32,(int)k.getY()/32,1);
+			TileView tv = new TileView(t);
+			tv.relocate(t.getX()*32, t.getY() * 32-4);
+			floor.getChildren().add(tv);
+			}
 		/*case "mouse":
 								ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
 								int[][] tabSol = mapPrincipale.getMapSol();

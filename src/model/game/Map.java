@@ -92,6 +92,10 @@ public class Map {
 	 public void removeTile(int x , int y) {
 		 this.tabSol[x][y]=0;
 	 }
+	 public void setTileSol(int x , int y, int value) {
+		 this.tabSol[x][y]=value;
+	 }
+	 
 
 	public ObservableList<Tiles> getTilesListSol() {
 		return tilesListSol;
