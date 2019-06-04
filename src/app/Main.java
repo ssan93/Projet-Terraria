@@ -22,11 +22,11 @@ public class Main extends Application {
 			FXMLLoader loader = new FXMLLoader();
 			URL url = new File("src/view/game/view.fxml").toURI().toURL();
 			loader.setLocation(url);
-			// System.out.println(loader.getLocation());
 			AnchorPane root = new AnchorPane();
 			root = loader.load();
 			GameController c = loader.getController();
 			Scene scene = new Scene(root, root.getMaxWidth(), root.getMaxHeight());
+			scene.getStylesheets().add("view/game/menu.css");
 
 			// quand une touche est pressé
 			scene.setOnKeyPressed(e -> {
@@ -55,7 +55,6 @@ public class Main extends Application {
 			FXMLLoader loader = new FXMLLoader();
 			URL url = new File("src/view/game/menu.fxml").toURI().toURL();
 			loader.setLocation(url);
-			// System.out.println(loader.getLocation());
 			Pane root = new Pane();
 			root = new BorderPane();
 			root = loader.load();

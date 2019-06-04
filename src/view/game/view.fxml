@@ -21,8 +21,8 @@
                   <Image url="@../../../../../Pictures/radio.png" />
                </image>
             </ImageView>
-            <Label fx:id="radio" layoutX="14.0" layoutY="121.0" prefHeight="134.0" prefWidth="408.0" textFill="#40c365" />
-            <Button fx:id="ok" layoutX="185.0" layoutY="82.0" mnemonicParsing="false" onAction="#changeRdi" text="ok" />
+            <Label fx:id="radio" layoutX="14.0" layoutY="121.0" prefHeight="139.0" prefWidth="408.0" style="-fx-background-color: black;" textAlignment="CENTER" textFill="#40c365" />
+            <Button id="rdio" fx:id="ok" layoutX="387.0" layoutY="235.0" mnemonicParsing="false" onAction="#changeRdi" prefHeight="25.0" prefWidth="35.0" style="-fx-background-color: #009c5c; -fx-border-width: 0px;" text="OK" textFill="WHITE" />
          </children>
       </Pane>
 	</children>

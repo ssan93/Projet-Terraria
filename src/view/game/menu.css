@@ -6,6 +6,11 @@
 	-fx-border-width: 0;
 }
 
+#rdio{
+	-fx-border-width: 0;
+	-fx-border-radius: 0;
+}
+
 #jouer{
 	-fx-background-image :url('../../../src/view/game/jouerA.jpg');
 }
