@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -19,6 +20,8 @@ import view.game.BillView;
 import view.game.MapView;
 import view.game.TileView;
 import model.game.GestionCollision;
+import model.game.Inventory;
+import model.game.InventoryItem;
 import model.game.Map;
 import model.game.Tiles;
 
@@ -28,6 +31,8 @@ public class GameController extends Controller {
 	private GestionCollision detecteur;
 
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
+	
+	private Inventory inventaire;
 
 	@FXML
 	private AnchorPane background;
@@ -35,10 +40,10 @@ public class GameController extends Controller {
 	private ImageView heart;
 	@FXML
 	private Pane floor;
-
 	@FXML
 	private Pane charapane;
-	SimpleBooleanProperty isAlive;
+
+	private SimpleBooleanProperty isAlive;
 	private Map mapPrincipale = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv");
 	private MapView mv;
 	private Timeline loop;
@@ -57,6 +62,7 @@ public class GameController extends Controller {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		TileView.inizImages();
+		inventaire = new Inventory();
 		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
 		isAlive = new SimpleBooleanProperty(true);
 		detecteur = new GestionCollision(mapPrincipale);
@@ -65,10 +71,12 @@ public class GameController extends Controller {
 		initAnimation();
 		loop.play();
 		bill.getChrac().setSpeed(4);
-
 		charapane.getChildren().add(bill.getImage());
 		floor.getChildren().addAll(mv.creerVue());
+		addListen();
+	}
 
+	public void addListen() {
 		viewAbleSol.addListener(new ListChangeListener<Tiles>() {
 
 			@Override
@@ -117,9 +125,38 @@ public class GameController extends Controller {
 			}
 
 		});
+		floor.getChildren().addListener(new ListChangeListener<Node>() {
 
+			@Override
+			public void onChanged(Change<? extends Node> c) {
+				// TODO Auto-generated method stub
+				while (c.next()) {
+					if(c.wasRemoved()) {
+						TileView t = (TileView)c.getRemoved().get(0);
+					}
+				}
+			}
+
+
+		});
+		
+		inventaire.addListener(new ListChangeListener<InventoryItem>() {
+
+			@Override
+			public void onChanged(Change<? extends InventoryItem> c) {
+				while (c.next()) {
+					if(c.wasAdded()) {
+						
+					}
+					if (c.wasRemoved()) {
+						
+					}
+				}
+			}
+			
+		});
 	}
-
+	
 	public void isAlive() {
 
 		bill.setLife(heart);
@@ -241,7 +278,7 @@ public class GameController extends Controller {
 		switch (Direction) {
 		case "Right":
 			countX -= bill.getChrac().getSpeed();
-			if (countX < -24) {
+			if (countX < 0) {
 				bill.getChrac().move("RunRight");
 				addImages("Right");
 				deleteImages("Left");
@@ -271,7 +308,7 @@ public class GameController extends Controller {
 			break;
 		case "Down":
 			countY += bill.getChrac().getSpeed();
-			if (32 <= countY) {
+			if (32 < countY) {
 				bill.getChrac().move("Down");
 				addImages("Down");
 				// deleteImages("Up");

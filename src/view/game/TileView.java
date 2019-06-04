@@ -28,14 +28,6 @@ public class TileView extends ImageView{
 		super();
 		this.tile = t;
 		this.setImage(images.get(t.getCode()-1));
-		this.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent event) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
 	}
 	
 	public static void inizImages(){
