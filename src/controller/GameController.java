@@ -18,6 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import javafx.util.Duration;
 import view.game.BillView;
 import view.game.MapView;
@@ -37,11 +38,13 @@ public class GameController extends Controller {
 	private Inventory inventaire;
 
 	@FXML
+	private TilePane tpane;
+
+	@FXML
 	private Pane effect;
 
 	@FXML
 	private Pane inventoryContainer;
-
 
 	@FXML
 	private GridPane layoutInventory;
@@ -93,6 +96,11 @@ public class GameController extends Controller {
 		charapane.getChildren().add(bill.getImage());
 		floor.getChildren().addAll(mv.creerVue());
 		addListen();
+		inventaire.addToInventory("M16", 1);
+		inventaire.addToInventory("cuivre", 5);
+		inventaire.addToInventory("plastique", 1);
+		inventaire.addToInventory("metal", 5);
+		inventaire.addToInventory("pioche", 1);
 	}
 
 	public void addListen() {
@@ -159,14 +167,22 @@ public class GameController extends Controller {
 
 		inventaire.addListener(new ListChangeListener<InventoryItem>() {
 
+			int lastColumn = 0, lastRow = 0;
+
 			@Override
 			public void onChanged(Change<? extends InventoryItem> c) {
 				while (c.next()) {
 					if (c.wasAdded()) {
-//						layoutInventory.add(child, columnIndex, rowIndex);
+						layoutInventory.add(new ImageView(
+								"view/resources/Inventaire/" + c.getAddedSubList().get(0).getName() + "_Inv.png"),
+								lastRow, lastColumn);
+						if (lastRow == 3) {
+							lastColumn++;
+							lastRow = 0;
+						} else
+							lastRow++;
 					}
 					if (c.wasRemoved()) {
-
 					}
 				}
 			}
@@ -448,9 +464,7 @@ public class GameController extends Controller {
 	// }
 
 	public void stopAction() {
-		
-		
-		
+
 		switch (oldAnim) {
 		case "RunRight":
 			bill.getChrac().animation("idleRight");
@@ -502,7 +516,7 @@ public class GameController extends Controller {
 	public Pane getInventoryContainer() {
 		return inventoryContainer;
 	}
-	
+
 	@FXML
 	void drop(ActionEvent event) {
 
@@ -511,6 +525,17 @@ public class GameController extends Controller {
 	@FXML
 	void use(ActionEvent event) {
 
+	}
+
+	public void clickGrid(javafx.scene.input.MouseEvent event) {
+		double x = event.getSceneX(), y = event.getSceneY();
+		Node clickedNode = event.getPickResult().getIntersectedNode();
+		if (clickedNode != layoutInventory) {
+			// click on descendant node
+			Integer colIndex = GridPane.getColumnIndex(clickedNode);
+			Integer rowIndex = GridPane.getRowIndex(clickedNode);
+			System.out.println("Mouse clicked cell: " + colIndex + " And: " + rowIndex);
+		}
 	}
 
 }

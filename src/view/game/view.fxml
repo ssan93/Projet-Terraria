@@ -33,7 +33,7 @@
       </Pane>
       <Pane id="inventoryContainer" fx:id="inventoryContainer" prefHeight="1082.0" prefWidth="1922.0">
          <children>
-            <GridPane id="grid" fx:id="layoutInventory" alignment="CENTER" gridLinesVisible="true" layoutX="1000.0" layoutY="250.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="512.0" prefWidth="512.0">
+            <GridPane id="grid" fx:id="layoutInventory" alignment="CENTER" gridLinesVisible="true" layoutX="1000.0" layoutY="250.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#clickGrid" prefHeight="512.0" prefWidth="512.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

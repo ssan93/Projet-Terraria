@@ -14,7 +14,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
@@ -40,6 +39,10 @@ public class Main extends Application {
 				c.removeKeyCode(e.getCode());
 				c.stopAction();
 				e.consume();
+			});
+			scene.setOnMousePressed(e -> {
+				if (c.getInventoryContainer().isVisible() && e.isPrimaryButtonDown())
+					c.clickGrid(e);
 			});
 			primaryStage.setTitle("Last man in Vietnam");
 			primaryStage.setScene(scene);
