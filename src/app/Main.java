@@ -8,6 +8,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -81,16 +83,27 @@ public class Main extends Application {
 
 		MediaPlayer player = new MediaPlayer( new Media(getClass().getResource("../view/game/intro.mp4").toExternalForm()));
         MediaView mediaView = new MediaView(player);
+        Label info = new Label("espace pour passer");
         mediaView.setFitWidth(1600);
         mediaView.setFitHeight(950);
         root.getChildren().add( mediaView);
+        root.getChildren().add(info);
+        info.setLayoutX(1400);
+        info.setLayoutY(880);
         Scene scene = new Scene(root, 1024, 768);
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
         primaryStage.show();
         player.play();
-        player.setOnEndOfMedia(() -> {
+        scene.setOnKeyPressed(e -> {
+			if(e.getCode()== KeyCode.SPACE) {
+				player.stop(); 
+				changeMenu(primaryStage);
+			}
+		});
+       player.setOnEndOfMedia(() -> {
         	changeMenu(primaryStage);
+        	System.out.println("fin");
         });
 	}
 
