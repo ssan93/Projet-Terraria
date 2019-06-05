@@ -6,10 +6,14 @@ import controller.GameController;
 import controller.Controller;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -27,7 +31,8 @@ public class Main extends Application {
 
 			// quand une touche est pressé
 			scene.setOnKeyPressed(e -> {
-				c.addKeyCode(e.getCode());e.consume();
+				c.addKeyCode(e.getCode());
+				e.consume();
 			});
 			// quand une touche est relaché
 			scene.setOnKeyReleased(e -> {
@@ -69,28 +74,24 @@ public class Main extends Application {
 		}
 	}
 
+	//src/view/game/intro.mp4
 	@Override
 	public void start(Stage primaryStage) {
-		BorderPane root;
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			URL url = new File("src/view/game/menu.fxml").toURI().toURL();
-			loader.setLocation(url);
-			root = new BorderPane();
-			root = loader.load();
-			Controller c = loader.getController();
-			Scene scene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
-			scene.getStylesheets().add("view/game/menu.css");
-			primaryStage.setScene(scene);
-			primaryStage.setFullScreen(true);
-			primaryStage.show();
-			c.getInGame().addListener((observable, oldValue, newValue) -> {
-				double soundValue = 13;
-				changeGame(primaryStage, soundValue);
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Pane root = new Pane();
+
+		MediaPlayer player = new MediaPlayer( new Media(getClass().getResource("../view/game/intro.mp4").toExternalForm()));
+        MediaView mediaView = new MediaView(player);
+        mediaView.setFitWidth(1600);
+        mediaView.setFitHeight(950);
+        root.getChildren().add( mediaView);
+        Scene scene = new Scene(root, 1024, 768);
+        primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
+        primaryStage.show();
+        player.play();
+        player.setOnEndOfMedia(() -> {
+        	changeMenu(primaryStage);
+        });
 	}
 
 	public static void main(String[] args) {
