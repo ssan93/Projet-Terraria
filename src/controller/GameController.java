@@ -9,16 +9,20 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import view.game.BillView;
 import view.game.MapView;
@@ -36,9 +40,6 @@ public class GameController extends Controller {
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
 
 	private Inventory inventaire;
-
-	@FXML
-	private TilePane tpane;
 
 	@FXML
 	private Pane effect;
@@ -96,11 +97,11 @@ public class GameController extends Controller {
 		charapane.getChildren().add(bill.getImage());
 		floor.getChildren().addAll(mv.creerVue());
 		addListen();
+		inventaire.addToInventory("pioche", 1);
 		inventaire.addToInventory("M16", 1);
 		inventaire.addToInventory("cuivre", 5);
 		inventaire.addToInventory("plastique", 1);
 		inventaire.addToInventory("metal", 5);
-		inventaire.addToInventory("pioche", 1);
 	}
 
 	public void addListen() {
@@ -173,9 +174,19 @@ public class GameController extends Controller {
 			public void onChanged(Change<? extends InventoryItem> c) {
 				while (c.next()) {
 					if (c.wasAdded()) {
-						layoutInventory.add(new ImageView(
-								"view/resources/Inventaire/" + c.getAddedSubList().get(0).getName() + "_Inv.png"),
-								lastRow, lastColumn);
+						ImageView img = new ImageView(
+								"view/resources/Inventaire/" + c.getAddedSubList().get(0).getName() + "_Inv.png");
+						img.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
+							@Override
+							public void handle(MouseEvent event) {
+								boolean in = event.getEventType().equals(MouseEvent.MOUSE_EXITED) ? false :true;
+								if (in)
+									img.setEffect(new DropShadow(35, 0, 0, Color.CORNFLOWERBLUE));
+								else
+									img.setEffect(null);
+							}
+						});
+						layoutInventory.add(img, lastRow, lastColumn);
 						if (lastRow == 3) {
 							lastColumn++;
 							lastRow = 0;
@@ -528,8 +539,8 @@ public class GameController extends Controller {
 	}
 
 	public void clickGrid(javafx.scene.input.MouseEvent event) {
-		double x = event.getSceneX(), y = event.getSceneY();
 		Node clickedNode = event.getPickResult().getIntersectedNode();
+		System.out.println(clickedNode);
 		if (clickedNode != layoutInventory) {
 			// click on descendant node
 			Integer colIndex = GridPane.getColumnIndex(clickedNode);
