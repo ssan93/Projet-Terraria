@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -17,6 +18,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import view.game.BillView;
 import view.game.MapView;
@@ -78,7 +81,7 @@ public class GameController extends Controller {
 
 		charapane.getChildren().add(bill.getImage());
 		floor.getChildren().addAll(mv.creerVue());
-
+		play();
 		viewAbleSol.addListener(new ListChangeListener<Tiles>() {
 
 			@Override
@@ -127,6 +130,18 @@ public class GameController extends Controller {
 
 	}
 
+	public void play() {
+		//the player is set with a random music
+		this.player = new MediaPlayer(new Media(new File("src/menu-musics/wind.mp3").toURI().toString()));
+		player.play();
+		player.setOnEndOfMedia(new Runnable() {
+			@Override
+			public void run() {
+				play();
+			}
+		});
+	}
+	
 	public void isAlive() {
 
 		bill.setLife(heart);

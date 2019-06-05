@@ -15,7 +15,7 @@ import javafx.scene.media.MediaPlayer;
 public class Controller implements Initializable {
 
 	// music
-	private MediaPlayer player;
+	 protected MediaPlayer player;
 	private String actualMusic, oldMusic="";
 	
 
