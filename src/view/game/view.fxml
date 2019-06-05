@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
@@ -10,12 +11,11 @@
 
 <AnchorPane fx:id="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameController">
 	<children>
-		<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="200.0" />
 		<Pane fx:id="floor" maxHeight="1144.0" maxWidth="2040.0" minHeight="1144.0" minWidth="2040.0" prefHeight="1144.0" prefWidth="2040.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-		<Pane fx:id="charapane" prefHeight="864.0" prefWidth="1536.0" AnchorPane.leftAnchor="192.0" AnchorPane.topAnchor="108.0" />
-		 <Pane layoutX="10.0" layoutY="10.0" prefHeight="1080.0" prefWidth="2040.0">
+		<Pane fx:id="charapane" layoutX="932.0" layoutY="508.0" prefHeight="64.0" prefWidth="32.0" />
+		 <Pane layoutX="1056.0" layoutY="10.0" prefHeight="62.0" prefWidth="862.0">
          <children>
-            <ImageView fx:id="heart" fitHeight="32.0" fitWidth="400.0" layoutX="1200.0" />
+            <ImageView fx:id="heart" fitHeight="32.0" fitWidth="400.0" layoutX="214.0" layoutY="22.0" />
          </children>
       </Pane>
 	</children>

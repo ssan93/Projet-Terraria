@@ -9,12 +9,12 @@ import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
@@ -137,15 +137,14 @@ public class GameController extends Controller {
 							for (Node t : c.getRemoved()) {
 								if (t instanceof TileView) {
 									ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
-									
+
 									int[][] tabSol = mapPrincipale.getMapSol();
-						
+
 									TileView tView = (TileView) t;
 									Tiles tile = tView.getTile();
 									ListSol.remove(tile);
 									viewAbleSol.remove(tile);
 									tabSol[tile.getX()][tile.getY()] = 0;
-									
 
 								}
 							}
@@ -518,42 +517,43 @@ public class GameController extends Controller {
 		keyPressed.remove(k);
 	}
 
-	public void test(javafx.scene.input.MouseEvent k) {
-//		System.out.println(bill.getChrac().getX() - 30 + (int) k.getX() / 32 + "  "
-//				+ (bill.getChrac().getY() - 16 + (int) k.getY() / 32));
+	public void test(MouseEvent k) {
 		delete = "mouse";
-		
-		int coordX = bill.getChrac().getX() - 30 + (int) k.getX() / 32;
+		Node clicked = k.getPickResult().getIntersectedNode();
+		int[][] tabSol = mapPrincipale.getMapSol();
+		int coordX = bill.getChrac().getX() - 31 + (int) k.getX() / 32;
 		int coordY = bill.getChrac().getY() - 16 + (int) k.getY() / 32;
+		if(Math.abs(30-(int)k.getX()/32)<=3 && Math.abs(16-(int)k.getY()/32)<=4) {
+		if (coordX < 0)
+			coordX += 300;
+		else if (coordX >= 300)
+			coordX -= 300;
+
 		if (k.isPrimaryButtonDown()) {
-			add="background";
-			floor.getChildren().removeIf(img -> img.getLayoutY() >= k.getY() - 32 && img.getLayoutY() < k.getY()
-					&& img.getLayoutX() >= k.getX() - 32 && img.getLayoutX() < k.getX());
-			ObservableList<Tiles> ListMid = mapPrincipale.getTilesListMid();
-			int[][] tabMid = mapPrincipale.getMapMid();
-			if(tabMid[coordX][coordY]!=0 && tabMid[coordX][coordY]!=6 && tabMid[coordX][coordY]!=7 && tabMid[coordX][coordY]!=8 ) {
-				 for(Tiles tileMid : ListMid) {
-					 	if (tileMid.getX() == coordX && tileMid.getY() == coordY) {
-					 		TileView tv = new TileView(tileMid);
-					 		tv.relocate(((int) k.getX() / 32) * 32 - 32 + countX, ((int) k.getY() / 32) * 32-countY);
-					 		floor.getChildren().add(tv);
-					 	}
-				 }
-			 }
+			if (tabSol[coordX][coordY] != 0) {
+					
+				add = "background";
+				if (clicked instanceof Pane) {
+					if (clicked.getId().equals("charapane"))
+						floor.getChildren()
+								.removeIf(img -> img.getLayoutY() >= k.getY() - 32 && img.getLayoutY() < k.getY()
+										&& img.getLayoutX() >= k.getX() - 32 && img.getLayoutX() < k.getX());
+				} else
+					floor.getChildren().removeIf(Tile -> Tile == clicked);
+			}
 		}
 		if (k.isSecondaryButtonDown()) {
 			add = "mouse";
-			int[][] tabSol = mapPrincipale.getMapSol();
-			
-			if(coordX < 0) coordX+=300;
-			else if (coordX >= 300) coordX -= 300;
-			if (tabSol[coordX][coordY] == 0) {
-				Tiles t = new Tiles(coordX, coordY, 2);
-				TileView tv = new TileView(t);
-				tv.relocate(((int) k.getX() / 32) * 32 - 32 + countX, ((int) k.getY() / 32) * 32-countY);
-				floor.getChildren().add(tv);
+			if(Math.abs(30-(int)k.getX()/32)!=0 || Math.abs(16-(int)k.getY()/32)!=0) {
+				if (tabSol[coordX][coordY] == 0) {
+					Tiles t = new Tiles(coordX, coordY, 2);
+					TileView tv = new TileView(t);
+					tv.relocate(((int) k.getX() / 32) * 32 - 32 + countX, ((int) k.getY() / 32) * 32 - countY);
+					floor.getChildren().add(tv);
+				}
 			}
-		}
+		}}
+		
 		// case "mouse":
 		// ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
 		// int[][] tabSol = mapPrincipale.getMapSol();
@@ -572,6 +572,9 @@ public class GameController extends Controller {
 		// System.out.println(viewAbleSol.size());
 		//
 		// }
+	}
+	public boolean aroundBill() {
+		return true;
 	}
 
 }
