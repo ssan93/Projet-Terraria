@@ -57,14 +57,14 @@ public class Main extends Application {
 	public void changeMenu(Stage primaryStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			URL url = new File("src/view/game/menu.fxml").toURI().toURL();
+			URL url = new File("src/view/menu/menu.fxml").toURI().toURL();
 			loader.setLocation(url);
 			Pane root = new Pane();
 			root = new BorderPane();
 			root = loader.load();
 			Controller c = loader.getController();
 			Scene scene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
-			scene.getStylesheets().add("view/game/menu.css");
+			scene.getStylesheets().add("view/menu/menu.css");
 			primaryStage.setScene(scene);
 			primaryStage.setFullScreen(true);
 			c.getInGame().addListener((observable, oldValue, newValue) -> {
@@ -81,7 +81,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		Pane root = new Pane();
 
-		MediaPlayer player = new MediaPlayer( new Media(getClass().getResource("../view/game/intro.mp4").toExternalForm()));
+		MediaPlayer player = new MediaPlayer( new Media(getClass().getResource("../view/intro/intro.mp4").toExternalForm()));
         MediaView mediaView = new MediaView(player);
         Label info = new Label("espace pour passer");
         mediaView.setFitWidth(1600);

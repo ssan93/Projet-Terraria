@@ -1,0 +1,36 @@
+.root{
+	-fx-background-image :url('../../../src/view/menu/resources/image2.jpg');
+}
+
+.button{
+	-fx-border-width: 0;
+}
+
+#rdio{
+	-fx-border-width: 0;
+	-fx-border-radius: 0;
+}
+
+#jouer{
+	-fx-background-image :url('../../../src/view/menu/resources/jouerA.jpg');
+}
+
+#jouer:hover{
+	-fx-background-image :url('../../../src/view/menu/resources/jouerB.jpg');
+}
+
+#options{
+	-fx-background-image :url('../../../src/view/menu/resources/optionsA.jpg');
+}
+
+#options:hover{
+	-fx-background-image :url('../../../src/view/menu/resources/optionsB.jpg');
+}
+
+#quitter{
+	-fx-background-image :url('../../../src/view/menu/resources/quitterA.jpg');
+}
+
+#quitter:hover{
+	-fx-background-image :url('../../../src/view/menu/resources/quitterB.jpg');
+}
