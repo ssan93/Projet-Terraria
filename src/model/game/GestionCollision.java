@@ -45,8 +45,14 @@ public class GestionCollision {
 	 * @param ch
 	 * @return true si il y a rien a droite
 	 */
-	public boolean verifRight(Character ch) {
-		return (map.getMapSol()[ch.getX()][ch.getY()] == 0 && map.getMapSol()[ch.getX()][ch.getY() + 1] == 0);
+	public boolean verifRight(Character ch, boolean jumping, boolean falling) {
+		boolean verifDefault = map.getMapSol()[ch.getX()][ch.getY()] == 0 && map.getMapSol()[ch.getX()][ch.getY() + 1] == 0;
+		if(falling)
+			return verifDefault && map.getMapSol()[ch.getX()+1][ch.getY() +2] == 0 ;
+		if (jumping)
+			return verifDefault && map.getMapSol()[ch.getX()][ch.getY() +2] == 0;
+		
+		return verifDefault;
 	}
 
 	/**
@@ -54,8 +60,13 @@ public class GestionCollision {
 	 * @param ch
 	 * @return true si il y a rien a gauche
 	 */
-	public boolean verifLeft(Character ch) {
-		return (map.getMapSol()[ch.getX() - 1][ch.getY()] == 0 && map.getMapSol()[ch.getX() - 1][ch.getY() + 1] == 0);
+	public boolean verifLeft(Character ch, boolean jumping, boolean falling) {
+		boolean verifDefault = map.getMapSol()[ch.getX() - 1][ch.getY()] == 0 && map.getMapSol()[ch.getX() - 1][ch.getY() + 1] == 0;
+		if(falling)
+			return verifDefault && map.getMapSol()[ch.getX()-2][ch.getY() +2] == 0 ;
+		if (jumping)
+			return verifDefault && map.getMapSol()[ch.getX()-1][ch.getY() +2] == 0;
+		return verifDefault;
 	}
 	
 	public static boolean collide(Objet environnement, Objet character) {

@@ -186,7 +186,7 @@ public class GameController extends Controller {
 
 	public void actions() {
 		if ((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT))
-				&& detecteur.verifRight(bill.getChrac())) {
+				&& detecteur.verifRight(bill.getChrac(),jumping,falling)) {
 			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
 
@@ -195,7 +195,7 @@ public class GameController extends Controller {
 
 		}
 		if ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT))
-				&& detecteur.verifLeft(bill.getChrac())) {
+				&& detecteur.verifLeft(bill.getChrac(), jumping, falling)) {
 			// if (!stopSroll().equals("left stop")) {
 			bill.getChrac().animation("RunLeft");
 
