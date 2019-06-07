@@ -33,6 +33,8 @@ public class Main extends Application {
 			// quand une touche est pressé
 			scene.setOnKeyPressed(e -> {
 				c.addKeyCode(e.getCode());
+				if (e.getCode() == KeyCode.I)
+					c.getInventoryContainer().setVisible(c.getInventoryContainer().isVisible() ? false : true);
 				e.consume();
 			});
 			// quand une touche est relaché
@@ -40,6 +42,10 @@ public class Main extends Application {
 				c.removeKeyCode(e.getCode());
 				c.stopAction();
 				e.consume();
+			});
+			scene.setOnMousePressed(e -> {
+				if (c.getInventoryContainer().isVisible() && e.isPrimaryButtonDown())
+					c.clickGrid(e);
 			});
 			primaryStage.setTitle("Last man in Vietnam");
 			primaryStage.setScene(scene);
@@ -79,7 +85,6 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		Pane root = new Pane();
-
 		MediaPlayer player = new MediaPlayer( new Media(getClass().getResource("../view/intro/intro.mp4").toExternalForm()));
         MediaView mediaView = new MediaView(player);
         Label info = new Label("espace pour passer");

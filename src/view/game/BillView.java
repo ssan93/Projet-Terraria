@@ -12,9 +12,9 @@ public class BillView extends CharacterView {
 
 	public BillView(String imagePerso) {
 		super(imagePerso);
-
 		this.charac = new Bill(30, 16, 9);
 		this.imageViewCharac.relocate(708, 400);
+		this.imageViewCharac.relocate(708, 405);
 		this.animation();
 	}
 
