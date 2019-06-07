@@ -5,10 +5,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import model.game.Tiles;
 
+<<<<<<< HEAD
 public class TileView extends ImageView {
 
 	
 	private static final int nbImage = 9;
+=======
+public class TileView extends ImageView{
+	
+	private Tiles tile;
+>>>>>>> refs/remotes/origin/ssan
 	
 	private static ArrayList<Image> images;// image deja chargé
 	
@@ -23,7 +29,13 @@ public class TileView extends ImageView {
 	public TileView(Tiles t) {
 		super();
 		this.setImage(images.get(t.getCode()-1));
+<<<<<<< HEAD
+=======
+		
+		
+>>>>>>> refs/remotes/origin/ssan
 	}
+	
 	
 	public static void inizImages(){
 		images = new ArrayList<Image>();
@@ -37,5 +49,8 @@ public class TileView extends ImageView {
 
 	public TileView(Image image) {
 		super(image);
+	}
+	public Tiles getTile() {
+		return this.tile;
 	}
 }

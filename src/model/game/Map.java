@@ -83,9 +83,19 @@ public class Map {
 	 public int[][] getMapSol() {
 	 return this.tabSol;
 	 }
+	 public int[][] getMapMid() {
+		 return this.mid;
+		 }
 	// public int[][] getMapMilieu() {
 	// return this.mid;
 	// }
+	 public void removeTile(int x , int y) {
+		 this.tabSol[x][y]=0;
+	 }
+	 public void setTileSol(int x , int y, int value) {
+		 this.tabSol[x][y]=value;
+	 }
+	 
 
 	public ObservableList<Tiles> getTilesListSol() {
 		return tilesListSol;

@@ -38,6 +38,10 @@ public class Main extends Application {
 					c.getInventoryContainer().setVisible(c.getInventoryContainer().isVisible() ? false : true);
 				e.consume();
 			});
+			scene.setOnMousePressed(e -> {
+				c.test(e);	
+			});
+			
 			// quand une touche est relaché
 			scene.setOnKeyReleased(e -> {
 				c.removeKeyCode(e.getCode());
