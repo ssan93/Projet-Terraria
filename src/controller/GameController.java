@@ -14,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -538,7 +537,7 @@ public class GameController extends Controller {
 
 	}
 
-	public void clickGrid(javafx.scene.input.MouseEvent event) {
+	public void clickGrid(MouseEvent event) {
 		Node clickedNode = event.getPickResult().getIntersectedNode();
 		System.out.println(clickedNode);
 		if (clickedNode != layoutInventory) {
