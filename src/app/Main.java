@@ -1,5 +1,6 @@
 package app;
 
+import java.awt.Toolkit;
 import java.io.File;
 import java.net.URL;
 import controller.GameController;
@@ -88,8 +89,8 @@ public class Main extends Application {
 		MediaPlayer player = new MediaPlayer( new Media(getClass().getResource("../view/intro/intro.mp4").toExternalForm()));
         MediaView mediaView = new MediaView(player);
         Label info = new Label("espace pour passer");
-        mediaView.setFitWidth(1600);
-        mediaView.setFitHeight(950);
+        mediaView.setFitWidth(Toolkit.getDefaultToolkit().getScreenSize().width);
+        mediaView.setFitHeight(Toolkit.getDefaultToolkit().getScreenSize().height);
         root.getChildren().add( mediaView);
         root.getChildren().add(info);
         info.setLayoutX(1400);

@@ -248,11 +248,13 @@ public class GameController extends Controller {
 			radio.setText(buff);
 		else {
 			ok.setDisable(true);
-			radio.setOpacity(0);
-			ok.setOpacity(0);
-			codec.setOpacity(0);
+			radio.setVisible(false);
+			ok.setVisible(false);
+			codec.setVisible(false);
+			codec.getParent().prefHeight(100);
 			allowMouv=true;
-		}
+			
+		}      
 	}
 
 	public SimpleBooleanProperty getIsAlive() {
