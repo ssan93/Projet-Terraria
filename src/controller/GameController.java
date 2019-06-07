@@ -13,14 +13,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-<<<<<<< HEAD
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
-=======
 import javafx.scene.Node;
->>>>>>> refs/remotes/origin/ssan
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -44,10 +41,7 @@ import model.game.radioChatter;
 
 public class GameController extends Controller {
 
-<<<<<<< HEAD
 	private radioChatter ra = new radioChatter();
-=======
->>>>>>> refs/remotes/origin/ssan
 	private GestionCollision detecteur;
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
 	private boolean allowMouv= false;
@@ -115,7 +109,6 @@ public class GameController extends Controller {
 		bill.getChrac().setSpeed(4);
 		charapane.getChildren().add(bill.getImage());
 		floor.getChildren().addAll(mv.creerVue());
-<<<<<<< HEAD
 		play();
 		addListen();
 		inventaire.addToInventory("pioche", 1);
@@ -124,15 +117,7 @@ public class GameController extends Controller {
 		inventaire.addToInventory("plastique", 1);
 		inventaire.addToInventory("metal", 5);
 	}
-=======
-		addListen();
->>>>>>> refs/remotes/origin/ssan
 
-<<<<<<< HEAD
-=======
-	}
-
->>>>>>> refs/remotes/origin/ssan
 	public void addListen() {
 		viewAbleSol.addListener(new ListChangeListener<Tiles>() {
 
@@ -194,9 +179,7 @@ public class GameController extends Controller {
 			}
 
 		});
-		floor.getChildren().addListener(new ListChangeListener<Node>() {
 
-<<<<<<< HEAD
 		inventaire.addListener(new ListChangeListener<InventoryItem>() {
 
 			int lastColumn = 0, lastRow = 0;
@@ -231,56 +214,55 @@ public class GameController extends Controller {
 
 		});
 
-		inventoryContainer.visibleProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue) {
-				inventoryContainer.setVisible(true);
-				loop.pause();
-			} else {
-				inventoryContainer.setVisible(false);
-				loop.play();
-			}
-=======
-			@Override
-			public void onChanged(Change<? extends Node> c) {
-				// TODO Auto-generated method stub
-				while (c.next()) {
-					if (c.wasRemoved()) {
-						if (delete == "mouse") {
-							for (Node t : c.getRemoved()) {
-								if (t instanceof TileView) {
-									ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
-
-									int[][] tabSol = mapPrincipale.getMapSol();
-
-									TileView tView = (TileView) t;
-									Tiles tile = tView.getTile();
-									ListSol.remove(tile);
-									viewAbleSol.remove(tile);
-									tabSol[tile.getX()][tile.getY()] = 0;
-
-								}
-							}
-						}
-					}
-					if (c.wasAdded()) {
-						if (add == "mouse") {
-							for (Node t : c.getAddedSubList()) {
-								if (t instanceof TileView) {
-									ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
-									TileView tView = (TileView) t;
-									Tiles tile = tView.getTile();
-									ListSol.add(tile);
-									// viewAbleSol.add(tile);
-									mapPrincipale.setTileSol(tile.getX(), tile.getY(), tile.getCode());
-								}
-							}
-						}
-					}
-				}
-			}
-
->>>>>>> refs/remotes/origin/ssan
-		});
+//		inventoryContainer.visibleProperty().addListener((observable, oldValue, newValue) -> {
+//			if (newValue) {
+//				inventoryContainer.setVisible(true);
+//				loop.pause();
+//			} else {
+//				inventoryContainer.setVisible(false);
+//				loop.play();
+//			}
+//		
+//			@Override
+//			public void onChanged(Change<? extends Node> c) {
+//				// TODO Auto-generated method stub
+//				while (c.next()) {
+//					if (c.wasRemoved()) {
+//						if (delete == "mouse") {
+//							for (Node t : c.getRemoved()) {
+//								if (t instanceof TileView) {
+//									ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
+//
+//									int[][] tabSol = mapPrincipale.getMapSol();
+//
+//									TileView tView = (TileView) t;
+//									Tiles tile = tView.getTile();
+//									ListSol.remove(tile);
+//									viewAbleSol.remove(tile);
+//									tabSol[tile.getX()][tile.getY()] = 0;
+//
+//								}
+//							}
+//						}
+//					}
+//					if (c.wasAdded()) {
+//						if (add == "mouse") {
+//							for (Node t : c.getAddedSubList()) {
+//								if (t instanceof TileView) {
+//									ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
+//									TileView tView = (TileView) t;
+//									Tiles tile = tView.getTile();
+//									ListSol.add(tile);
+//									// viewAbleSol.add(tile);
+//									mapPrincipale.setTileSol(tile.getX(), tile.getY(), tile.getCode());
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//
+//		});
 	}
 
 	public void play() {
@@ -326,8 +308,6 @@ public class GameController extends Controller {
 
 	public void actions() {
 		if (allowMouv &&((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)))
-				&& detecteur.verifRight(bill.getChrac())) {
-		if ((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT))
 				&& detecteur.verifRight(bill.getChrac(),jumping,falling)) {
 			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
@@ -337,9 +317,7 @@ public class GameController extends Controller {
 
 		}
 		if (allowMouv&&((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)))
-				&& detecteur.verifLeft(bill.getChrac())) {
-		if ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT))
-				&& detecteur.verifLeft(bill.getChrac(), jumping, falling)) {
+				&& detecteur.verifLeft(bill.getChrac(),jumping, falling)) {
 			// if (!stopSroll().equals("left stop")) {
 			bill.getChrac().animation("RunLeft");
 
@@ -449,20 +427,13 @@ public class GameController extends Controller {
 			if (countY < 0) {
 				bill.getChrac().move("Up");
 				addImages("Up");
-<<<<<<< HEAD
-=======
 				deleteImages("Down");
->>>>>>> refs/remotes/origin/ssan
 				countY += 32;
 			}
 			break;
 		case "Down":
 			countY += bill.getChrac().getSpeed();
-<<<<<<< HEAD
-			if (32 < countY) {
-=======
 			if (32 - countY < 0) {
->>>>>>> refs/remotes/origin/ssan
 				bill.getChrac().move("Down");
 				addImages("Down");
 				countY -= 32;
@@ -636,7 +607,6 @@ public class GameController extends Controller {
 		keyPressed.remove(k);
 	}
 
-<<<<<<< HEAD
 	public Pane getInventoryContainer() {
 		return inventoryContainer;
 	}
@@ -660,7 +630,7 @@ public class GameController extends Controller {
 			Integer rowIndex = GridPane.getRowIndex(clickedNode);
 			System.out.println("Mouse clicked cell: " + colIndex + " And: " + rowIndex);
 		}
-=======
+	}
 	public void test(MouseEvent k) {
 		delete = "mouse";
 		Node clicked = k.getPickResult().getIntersectedNode();
@@ -719,7 +689,6 @@ public class GameController extends Controller {
 	}
 	public boolean aroundBill() {
 		return true;
->>>>>>> refs/remotes/origin/ssan
 	}
 
 }
