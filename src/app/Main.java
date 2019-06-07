@@ -29,7 +29,6 @@ public class Main extends Application {
 			root = loader.load();
 			GameController c = loader.getController();
 			Scene scene = new Scene(root, root.getMaxWidth(), root.getMaxHeight());
-			scene.getStylesheets().add("view/game/menu.css");
 
 			// quand une touche est pressé
 			scene.setOnKeyPressed(e -> {
