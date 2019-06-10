@@ -38,9 +38,7 @@ public class Main extends Application {
 					c.getInventoryContainer().setVisible(c.getInventoryContainer().isVisible() ? false : true);
 				e.consume();
 			});
-			scene.setOnMousePressed(e -> {
-				c.test(e);	
-			});
+		
 			
 			// quand une touche est relaché
 			scene.setOnKeyReleased(e -> {
@@ -49,6 +47,7 @@ public class Main extends Application {
 				e.consume();
 			});
 			scene.setOnMousePressed(e -> {
+				c.test(e);	
 				if (c.getInventoryContainer().isVisible() && e.isPrimaryButtonDown())
 					c.clickGrid(e);
 			});

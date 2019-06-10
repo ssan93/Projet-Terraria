@@ -35,9 +35,10 @@ public class GestionCollision {
 	 * @return true si il y a rien a droite
 	 */
 	public boolean verifRight(Character ch, boolean jumping, boolean falling) {
+		
 		boolean verifDefault = map.getMapSol()[ch.getX()][ch.getY()] == 0 && map.getMapSol()[ch.getX()][ch.getY() + 1] == 0;
 		if(falling)
-			return verifDefault && map.getMapSol()[ch.getX()+1][ch.getY() +2] == 0 ;
+			return verifDefault && map.getMapSol()[(ch.getX()+1)%300][ch.getY() +2] == 0 ;
 		if (jumping)
 			return verifDefault && map.getMapSol()[ch.getX()][ch.getY() +2] == 0;
 		
@@ -52,9 +53,9 @@ public class GestionCollision {
 	public boolean verifLeft(Character ch, boolean jumping, boolean falling) {
 		boolean verifDefault = map.getMapSol()[ch.getX() - 1][ch.getY()] == 0 && map.getMapSol()[ch.getX() - 1][ch.getY() + 1] == 0;
 		if(falling)
-			return verifDefault && map.getMapSol()[ch.getX()-2][ch.getY() +2] == 0 ;
+			return verifDefault && map.getMapSol()[(ch.getX()-2+300)%300][ch.getY() +2] == 0 ; //%300 for map boundaries
 		if (jumping)
-			return verifDefault && map.getMapSol()[ch.getX()-1][ch.getY() +2] == 0;
+			return verifDefault && map.getMapSol()[(ch.getX()-1+300)%300][ch.getY() +2] == 0;
 		return verifDefault;
 	}
 	

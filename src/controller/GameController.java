@@ -634,14 +634,15 @@ public class GameController extends Controller {
 	public void test(MouseEvent k) {
 		delete = "mouse";
 		Node clicked = k.getPickResult().getIntersectedNode();
+		System.out.println(clicked);
 		int[][] tabSol = mapPrincipale.getMapSol();
-		int coordX = bill.getChrac().getX() - 31 + (int) k.getX() / 32;
+		int coordX = ((bill.getChrac().getX() - 31 + (int) k.getX() / 32)+300)%300;
 		int coordY = bill.getChrac().getY() - 16 + (int) k.getY() / 32;
 		if(Math.abs(30-(int)k.getX()/32)<=3 && Math.abs(16-(int)k.getY()/32)<=4) {
-		if (coordX < 0)
+		/*if (coordX < 0)
 			coordX += 300;
 		else if (coordX >= 300)
-			coordX -= 300;
+			coordX -= 300;*/
 
 		if (k.isPrimaryButtonDown()) {
 			if (tabSol[coordX][coordY] != 0) {
