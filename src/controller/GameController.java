@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -17,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -44,8 +42,10 @@ public class GameController extends Controller {
 	private radioChatter ra = new radioChatter();
 	private GestionCollision detecteur;
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
-	private boolean allowMouv= false;
+	private boolean allowMouv = false;
 
+	@FXML
+	private Label desc;
 	@FXML
 	private Label radio;
 	@FXML
@@ -111,11 +111,11 @@ public class GameController extends Controller {
 		floor.getChildren().addAll(mv.creerVue());
 		play();
 		addListen();
-		inventaire.addToInventory("pioche", 1);
-		inventaire.addToInventory("M16", 1);
-		inventaire.addToInventory("cuivre", 5);
-		inventaire.addToInventory("plastique", 1);
-		inventaire.addToInventory("metal", 5);
+		inventaire.addToInventory(new InventoryItem("pioche", 1,"La pioche est un outil composé de deux pièces : une pièce de travail en acier fixée par l'intermédiaire d'un œil à un manche en bois dur. La pièce de métal forme un angle d'environ 90° avec le manche."));
+//		inventaire.addToInventory("M16", 1);
+//		inventaire.addToInventory("cuivre", 5);
+//		inventaire.addToInventory("plastique", 1);
+//		inventaire.addToInventory("metal", 5);
 	}
 
 	public void addListen() {
@@ -178,7 +178,7 @@ public class GameController extends Controller {
 							for (Node t : c.getRemoved()) {
 								if (t instanceof TileView) {
 									ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
-									
+
 									int[][] tabSol = mapPrincipale.getMapSol();
 
 									TileView tView = (TileView) t;
@@ -213,6 +213,7 @@ public class GameController extends Controller {
 		inventaire.addListener(new ListChangeListener<InventoryItem>() {
 
 			int lastColumn = 0, lastRow = 0;
+			InventoryItem focused = null;
 
 			@Override
 			public void onChanged(Change<? extends InventoryItem> c) {
@@ -220,14 +221,20 @@ public class GameController extends Controller {
 					if (c.wasAdded()) {
 						ImageView img = new ImageView(
 								"view/resources/Inventaire/" + c.getAddedSubList().get(0).getName() + "_Inv.png");
+						img.setId(c.getAddedSubList().get(0).getName());
 						img.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
 							@Override
 							public void handle(MouseEvent event) {
-								boolean in = event.getEventType().equals(MouseEvent.MOUSE_EXITED) ? false :true;
+								boolean in = event.getEventType().equals(MouseEvent.MOUSE_EXITED) ? false : true;
 								if (in)
 									img.setEffect(new DropShadow(35, 0, 0, Color.CORNFLOWERBLUE));
 								else
 									img.setEffect(null);
+								if (event.isPrimaryButtonDown()) {
+									focused = inventaire.get(inventaire.contains(img.getId()));
+									desc.setText(focused.toString());
+								}
+
 							}
 						});
 						layoutInventory.add(img, lastRow, lastColumn);
@@ -244,59 +251,19 @@ public class GameController extends Controller {
 
 		});
 
-//		inventoryContainer.visibleProperty().addListener((observable, oldValue, newValue) -> {
-//			if (newValue) {
-//				inventoryContainer.setVisible(true);
-//				loop.pause();
-//			} else {
-//				inventoryContainer.setVisible(false);
-//				loop.play();
-//			}
-//		
-//			@Override
-//			public void onChanged(Change<? extends Node> c) {
-//				// TODO Auto-generated method stub
-//				while (c.next()) {
-//					if (c.wasRemoved()) {
-//						if (delete == "mouse") {
-//							for (Node t : c.getRemoved()) {
-//								if (t instanceof TileView) {
-//									ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
-//
-//									int[][] tabSol = mapPrincipale.getMapSol();
-//
-//									TileView tView = (TileView) t;
-//									Tiles tile = tView.getTile();
-//									ListSol.remove(tile);
-//									viewAbleSol.remove(tile);
-//									tabSol[tile.getX()][tile.getY()] = 0;
-//
-//								}
-//							}
-//						}
-//					}
-//					if (c.wasAdded()) {
-//						if (add == "mouse") {
-//							for (Node t : c.getAddedSubList()) {
-//								if (t instanceof TileView) {
-//									ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
-//									TileView tView = (TileView) t;
-//									Tiles tile = tView.getTile();
-//									ListSol.add(tile);
-//									// viewAbleSol.add(tile);
-//									mapPrincipale.setTileSol(tile.getX(), tile.getY(), tile.getCode());
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//
-//		});
+		inventoryContainer.visibleProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue) {
+				inventoryContainer.setVisible(true);
+				loop.pause();
+			} else {
+				inventoryContainer.setVisible(false);
+				loop.play();
+			}
+		});
 	}
 
 	public void play() {
-		//the player is set with a random music
+		// the player is set with a random music
 		this.player = new MediaPlayer(new Media(new File("src/menu-musics/wind.mp3").toURI().toString()));
 		player.play();
 		player.setOnEndOfMedia(new Runnable() {
@@ -306,7 +273,7 @@ public class GameController extends Controller {
 			}
 		});
 	}
-	
+
 	public void isAlive() {
 
 		bill.setLife(heart);
@@ -316,10 +283,11 @@ public class GameController extends Controller {
 			isAlive.set(true);
 
 	}
+
 	@FXML
 	void changeRdi(ActionEvent event) {
-		String buff=ra.getCall();
-		if(!buff.equals("endoffile"))
+		String buff = ra.getCall();
+		if (!buff.equals("endoffile"))
 			radio.setText(buff);
 		else {
 			ok.setDisable(true);
@@ -327,9 +295,9 @@ public class GameController extends Controller {
 			ok.setVisible(false);
 			codec.setVisible(false);
 			codec.getParent().prefHeight(100);
-			allowMouv=true;
-			
-		}      
+			allowMouv = true;
+
+		}
 	}
 
 	public SimpleBooleanProperty getIsAlive() {
@@ -337,8 +305,8 @@ public class GameController extends Controller {
 	}
 
 	public void actions() {
-		if (allowMouv &&((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)))
-				&& detecteur.verifRight(bill.getChrac(),jumping,falling)) {
+		if (allowMouv && ((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)))
+				&& detecteur.verifRight(bill.getChrac(), jumping, falling)) {
 			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
 
@@ -346,8 +314,8 @@ public class GameController extends Controller {
 			scroll("Right");
 
 		}
-		if (allowMouv&&((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)))
-				&& detecteur.verifLeft(bill.getChrac(),jumping, falling)) {
+		if (allowMouv && ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)))
+				&& detecteur.verifLeft(bill.getChrac(), jumping, falling)) {
 			// if (!stopSroll().equals("left stop")) {
 			bill.getChrac().animation("RunLeft");
 
@@ -372,7 +340,7 @@ public class GameController extends Controller {
 				relocateImages(direction, i);
 			CountAddDelete("Right");
 			break;
-			
+
 		case "Left":
 			for (int i = floor.getChildren().size() - 1; i >= 0; i--)
 				relocateImages(direction, i);
@@ -386,7 +354,7 @@ public class GameController extends Controller {
 			relocated += bill.getChrac().getSpeed();
 			CountAddDelete("Up");
 			break;
-	
+
 		case "Down":
 			relocated -= bill.getChrac().getSpeed();
 			for (int i = 0; i < floor.getChildren().size(); i++)
@@ -548,6 +516,7 @@ public class GameController extends Controller {
 
 		}
 	}
+
 	public void deleteImages(String direction) {
 		switch (direction) {
 		case "Right":
@@ -644,7 +613,7 @@ public class GameController extends Controller {
 	@FXML
 	void drop(ActionEvent event) {
 
-	}	
+	}
 
 	@FXML
 	void use(ActionEvent event) {
@@ -661,44 +630,45 @@ public class GameController extends Controller {
 			System.out.println("Mouse clicked cell: " + colIndex + " And: " + rowIndex);
 		}
 	}
+
 	public void test(MouseEvent k) {
 		delete = "mouse";
 		Node clicked = k.getPickResult().getIntersectedNode();
 		System.out.println(clicked);
 		int[][] tabSol = mapPrincipale.getMapSol();
-		int coordX = ((bill.getChrac().getX() - 31 + (int) k.getX() / 32)+300)%300;
+		int coordX = ((bill.getChrac().getX() - 31 + (int) k.getX() / 32) + 300) % 300;
 		int coordY = bill.getChrac().getY() - 16 + (int) k.getY() / 32;
-		if(Math.abs(30-(int)k.getX()/32)<=3 && Math.abs(16-(int)k.getY()/32)<=4) {
-		/*if (coordX < 0)
-			coordX += 300;
-		else if (coordX >= 300)
-			coordX -= 300;*/
+		if (Math.abs(30 - (int) k.getX() / 32) <= 3 && Math.abs(16 - (int) k.getY() / 32) <= 4) {
+			/*
+			 * if (coordX < 0) coordX += 300; else if (coordX >= 300) coordX -= 300;
+			 */
 
-		if (k.isPrimaryButtonDown()) {
-			if (tabSol[coordX][coordY] != 0) {
-					
-				add = "background";
-				if (clicked instanceof Pane) {
-					if (clicked.getId().equals("charapane"))
-						floor.getChildren()
-								.removeIf(img -> img.getLayoutY() >= k.getY() - 32 && img.getLayoutY() < k.getY()
-										&& img.getLayoutX() >= k.getX() - 32 && img.getLayoutX() < k.getX());
-				} else
-					floor.getChildren().removeIf(Tile -> Tile == clicked);
-			}
-		}
-		if (k.isSecondaryButtonDown()) {
-			add = "mouse";
-			if(Math.abs(30-(int)k.getX()/32)!=0 || Math.abs(16-(int)k.getY()/32)!=0) {
-				if (tabSol[coordX][coordY] == 0) {
-					Tiles t = new Tiles(coordX, coordY, 2);
-					TileView tv = new TileView(t);
-					tv.relocate(((int) k.getX() / 32) * 32 - 32 + countX, ((int) k.getY() / 32) * 32 - countY);
-					floor.getChildren().add(tv);
+			if (k.isPrimaryButtonDown()) {
+				if (tabSol[coordX][coordY] != 0) {
+
+					add = "background";
+					if (clicked instanceof Pane) {
+						if (clicked.getId().equals("charapane"))
+							floor.getChildren()
+									.removeIf(img -> img.getLayoutY() >= k.getY() - 32 && img.getLayoutY() < k.getY()
+											&& img.getLayoutX() >= k.getX() - 32 && img.getLayoutX() < k.getX());
+					} else
+						floor.getChildren().removeIf(Tile -> Tile == clicked);
 				}
 			}
-		}}
-		
+			if (k.isSecondaryButtonDown()) {
+				add = "mouse";
+				if (Math.abs(30 - (int) k.getX() / 32) != 0 || Math.abs(16 - (int) k.getY() / 32) != 0) {
+					if (tabSol[coordX][coordY] == 0) {
+						Tiles t = new Tiles(coordX, coordY, 2);
+						TileView tv = new TileView(t);
+						tv.relocate(((int) k.getX() / 32) * 32 - 32 + countX, ((int) k.getY() / 32) * 32 - countY);
+						floor.getChildren().add(tv);
+					}
+				}
+			}
+		}
+
 		// case "mouse":
 		// ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
 		// int[][] tabSol = mapPrincipale.getMapSol();
@@ -718,6 +688,7 @@ public class GameController extends Controller {
 		//
 		// }
 	}
+
 	public boolean aroundBill() {
 		return true;
 	}

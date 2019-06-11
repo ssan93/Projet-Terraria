@@ -4,10 +4,22 @@ public class InventoryItem {
 
 	private int quantity;
 	private String name;
+	private String description;
 
-	public InventoryItem(String name, int quantity) {
+	/**
+	 * 
+	 * @param name
+	 * @param quantity
+	 * @param desc
+	 */
+	public InventoryItem(String name, int quantity, String desc) {
 		this.quantity = quantity;
 		this.name = name;
+		this.description = desc;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	public int getQuantity() {
@@ -28,5 +40,12 @@ public class InventoryItem {
 
 	public String getName() {
 		return this.name;
+	}
+	
+	@Override
+	public String toString() {
+		return description+"\n"
+				+ "Vous avez "+ this.quantity+" "+this.name;
+		
 	}
 }

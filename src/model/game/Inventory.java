@@ -12,14 +12,17 @@ public class Inventory {
 		this.IL = FXCollections.observableArrayList();
 	}
 
-	public void addToInventory(String object, int quantity) {
+	public InventoryItem get(int i) {
+		return IL.get(i);
+	}
+	public void addToInventory(InventoryItem item) {
 		
 		
-		int contain = this.contains(object);
+		int contain = this.contains(item.getName());
 		if (contain != -1)
-			IL.get(contain).addQuantity(quantity);
+			IL.get(contain).addQuantity(item.getQuantity());
 		else
-			IL.add(new InventoryItem(object, quantity));
+			IL.add(item);
 	}
 
 	public boolean removeFromInventory(String object, int quantity) {

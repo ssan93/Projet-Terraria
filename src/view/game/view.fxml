@@ -17,9 +17,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-
-		
-
 <AnchorPane fx:id="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameController">
 	<children>
 		<Pane fx:id="floor" maxHeight="1144.0" maxWidth="2040.0" minHeight="1144.0" minWidth="2040.0" prefHeight="1144.0" prefWidth="2040.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
@@ -74,6 +71,20 @@
                   <Reflection fraction="0.6" topOffset="0.1" topOpacity="0.2" />
                </effect>
             </Button>
+            <Label fx:id="desc" alignment="TOP_LEFT" layoutX="300.0" layoutY="400.0" maxWidth="600.0" wrapText="true">
+               <font>
+                  <Font size="40.0" />
+               </font>
+               <textFill>
+                  <LinearGradient cycleMethod="REFLECT" endX="0.03846153846153855" endY="1.0" startX="1.0" startY="1.0">
+                     <stops>
+                        <Stop color="#c33dd9" />
+                        <Stop color="#3d62d9" offset="0.42" />
+                        <Stop color="#070bdd" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Label>
          </children>
       </Pane>
        <Pane layoutX="1056.0" layoutY="10.0" prefHeight="62.0" prefWidth="862.0">

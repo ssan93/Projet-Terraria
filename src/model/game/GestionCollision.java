@@ -25,7 +25,6 @@ public class GestionCollision {
 	 * @return true si il y a rien au dessus du personnage.
 	 */
 	public boolean verifTop(Character ch) {
-		// System.out.println(ch.getX() +"\t"+ch.getY());
 		return (map.getMapSol()[ch.getX()-1][ch.getY() +1] == 0 && map.getMapSol()[ch.getX()-1][ch.getY() ] == 0);
 	}
 
@@ -35,13 +34,11 @@ public class GestionCollision {
 	 * @return true si il y a rien a droite
 	 */
 	public boolean verifRight(Character ch, boolean jumping, boolean falling) {
-		
 		boolean verifDefault = map.getMapSol()[ch.getX()][ch.getY()] == 0 && map.getMapSol()[ch.getX()][ch.getY() + 1] == 0;
 		if(falling)
 			return verifDefault && map.getMapSol()[(ch.getX()+1)%Map.Largeur][ch.getY() +2] == 0 ;
 		if (jumping)
 			return verifDefault && map.getMapSol()[ch.getX()][ch.getY() +2] == 0;
-		
 		return verifDefault;
 	}
 
