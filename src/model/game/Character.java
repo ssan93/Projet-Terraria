@@ -1,15 +1,19 @@
 package model.game;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Rectangle2D;
 
 public class Character extends AnimatedObject {
 
 	private int speed, hp;
+	SimpleIntegerProperty hpProperty;
 
 	public Character(int x, int y, int speed, int hp) {
 		super(x, y);
 		this.speed = speed;
 		this.hp = hp;
+		this.hpProperty = new SimpleIntegerProperty(hp);
+
 	}
 
 	@Override
@@ -58,9 +62,17 @@ public class Character extends AnimatedObject {
 
 	public void setHp(int hp) {
 		this.hp = hp;
+		setHpProperty(hp);
 	}
 
 	public void damage(int dp) {
 		this.hp -= dp;
+	}
+	
+	public void setHpProperty(int hp) {
+		this.hpProperty.set(hp);
+	}
+	public SimpleIntegerProperty getHpProperty() {
+		return this.hpProperty;
 	}
 }

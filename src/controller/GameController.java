@@ -29,8 +29,10 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import view.game.BillView;
+import view.game.EnnemyView;
 import view.game.MapView;
 import view.game.TileView;
+import model.game.Ennemy;
 import model.game.GestionCollision;
 import model.game.Inventory;
 import model.game.InventoryItem;
@@ -88,7 +90,7 @@ public class GameController extends Controller {
 	private long temps;
 	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
 	private String oldAnim = "tactac";
-
+	private EnnemyView ev = new EnnemyView("view/resources/personnages/right_static_bill.png");
 	ObservableList<Tiles> viewAbleSol;
 
 	@Override
@@ -115,6 +117,17 @@ public class GameController extends Controller {
 		inventaire.addToInventory("cuivre", 5);
 		inventaire.addToInventory("plastique", 1);
 		inventaire.addToInventory("metal", 5);
+		floor.getChildren().add(ev.getImage());
+//		ev.getImage().layoutXProperty().bind(ev.getChrac().getXProperty());
+//		ev.getImage().layoutYProperty().bind(ev.getChrac().getYProperty());
+//		ev.getChrac().getXProperty().bind(ev.getImage().layoutXProperty());
+//		ev.getChrac().getYProperty().bind(ev.getImage().layoutYProperty());
+		ev.getChrac().getHpProperty().addListener((observable, oldValue, newValue) -> {
+			if(newValue.equals(0))
+				floor.getChildren().remove(ev.getImage());
+		});
+		 detecteur.astar(bill.getChrac(), ev.getChrac());
+	System.out.println(bill.getChrac().getX() + " " + ev.getChrac().getX() + "     "+bill.getChrac().getY() + " " + ev.getChrac().getY());
 	}
 
 	public void addListen() {
@@ -170,7 +183,6 @@ public class GameController extends Controller {
 
 			@Override
 			public void onChanged(Change<? extends Node> c) {
-				// TODO Auto-generated method stub
 				while (c.next()) {
 					if (c.wasRemoved()) {
 						if (delete == "mouse") {
@@ -303,7 +315,7 @@ public class GameController extends Controller {
 				&& detecteur.verifRight(bill.getChrac(), jumping, falling)) {
 			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
-
+			
 			oldAnim = "RunRight";
 			scroll("Right");
 
@@ -329,7 +341,10 @@ public class GameController extends Controller {
 	public void scroll(String direction) {
 		switch (direction) {
 		case "Right":
-
+			System.out.println(ev.getChrac().getX());
+			ev.getChrac().move("RunRight");
+			ev.getImage().relocate(ev.getImage().getLayoutX()+4, ev.getImage().getLayoutY());
+			
 			for (int i = 0; i < floor.getChildren().size(); i++)
 				relocateImages(direction, i);
 			CountAddDelete("Right");
