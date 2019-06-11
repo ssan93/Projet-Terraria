@@ -174,6 +174,36 @@ public class GameController extends Controller {
 				// TODO Auto-generated method stub
 				while (c.next()) {
 					if (c.wasRemoved()) {
+						if (delete == "mouse") {
+							for (Node t : c.getRemoved()) {
+								if (t instanceof TileView) {
+									ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
+									
+									int[][] tabSol = mapPrincipale.getMapSol();
+
+									TileView tView = (TileView) t;
+									Tiles tile = tView.getTile();
+									ListSol.remove(tile);
+									viewAbleSol.remove(tile);
+									tabSol[tile.getX()][tile.getY()] = 0;
+
+								}
+							}
+						}
+					}
+					if (c.wasAdded()) {
+						if (add == "mouse") {
+							for (Node t : c.getAddedSubList()) {
+								if (t instanceof TileView) {
+									ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
+									TileView tView = (TileView) t;
+									Tiles tile = tView.getTile();
+									ListSol.add(tile);
+									// viewAbleSol.add(tile);
+									mapPrincipale.setTileSol(tile.getX(), tile.getY(), tile.getCode());
+								}
+							}
+						}
 					}
 				}
 			}

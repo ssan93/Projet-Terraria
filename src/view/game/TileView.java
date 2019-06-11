@@ -25,6 +25,7 @@ public class TileView extends ImageView {
 	public TileView(Tiles t) {
 		super();
 		this.setImage(images.get(t.getCode()-1));
+		this.tile = t;
 	}
 	
 	
