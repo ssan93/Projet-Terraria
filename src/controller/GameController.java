@@ -30,8 +30,10 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import view.game.BillView;
+import view.game.EnnemyView;
 import view.game.MapView;
 import view.game.TileView;
+import model.game.Ennemy;
 import model.game.GestionCollision;
 import model.game.Inventory;
 import model.game.InventoryItem;
@@ -89,7 +91,7 @@ public class GameController extends Controller {
 	private long temps;
 	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
 	private String oldAnim = "tactac";
-
+	private EnnemyView ev = new EnnemyView("view/resources/personnages/right_static_bill.png");
 	ObservableList<Tiles> viewAbleSol;
 
 	@Override
@@ -116,6 +118,12 @@ public class GameController extends Controller {
 		inventaire.addToInventory("cuivre", 5);
 		inventaire.addToInventory("plastique", 1);
 		inventaire.addToInventory("metal", 5);
+		floor.getChildren().add(ev.getImage());
+		
+		ev.getChrac().getHpProperty().addListener((observable, oldValue, newValue) -> {
+			if(newValue.equals(0))
+				floor.getChildren().remove(ev.getImage());
+		});
 	}
 
 	public void addListen() {
