@@ -43,6 +43,21 @@ public class GameController extends Controller {
 	private GestionCollision detecteur;
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
 	private boolean allowMouv = false;
+	private SimpleBooleanProperty isAlive;
+	private Map mapPrincipale = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv");
+	private MapView mv;
+	private Timeline loop;
+	private int countX = 32, countY = 0, relocated = 0;
+	private String delete, add;
+	private int addLignTop = 0, addLignBot = 33, addLignX = 299;
+	private int deleteLignX = 0, deleteLignY = 0;
+	private int focRow = 0, focCol = 0;
+	private boolean jumping = false, falling = true;
+	private long temps;
+	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
+	private String oldAnim = "tactac";
+	private InventoryItem focused = null;
+	private ObservableList<Tiles> viewAbleSol;
 
 	@FXML
 	private Label desc;
@@ -77,21 +92,6 @@ public class GameController extends Controller {
 	@FXML
 	private Pane charapane;
 
-	private SimpleBooleanProperty isAlive;
-	private Map mapPrincipale = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv");
-	private MapView mv;
-	private Timeline loop;
-	private int countX = 32, countY = 0, relocated = 0;
-	private String delete, add;
-	private int addLignTop = 0, addLignBot = 33, addLignX = 299;
-	private int deleteLignX = 0, deleteLignY = 0;
-	private boolean jumping = false, falling = true;
-	private long temps;
-	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
-	private String oldAnim = "tactac";
-
-	ObservableList<Tiles> viewAbleSol;
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		changeRdi(null);
@@ -111,11 +111,12 @@ public class GameController extends Controller {
 		floor.getChildren().addAll(mv.creerVue());
 		play();
 		addListen();
-		inventaire.addToInventory(new InventoryItem("pioche", 1,"La pioche est un outil composé de deux pièces : une pièce de travail en acier fixée par l'intermédiaire d'un œil à un manche en bois dur. La pièce de métal forme un angle d'environ 90° avec le manche."));
-//		inventaire.addToInventory("M16", 1);
-//		inventaire.addToInventory("cuivre", 5);
-//		inventaire.addToInventory("plastique", 1);
-//		inventaire.addToInventory("metal", 5);
+		inventaire.addToInventory(new InventoryItem("pioche", 1,
+				"La pioche est un outil composé de deux pièces : une pièce de travail en acier fixée par l'intermédiaire d'un œil à un manche en bois dur. La pièce de métal forme un angle d'environ 90° avec le manche."));
+		 inventaire.addToInventory(new InventoryItem("M16", 1,""));
+		// inventaire.addToInventory("cuivre", 5);
+		// inventaire.addToInventory("plastique", 1);
+		// inventaire.addToInventory("metal", 5);
 	}
 
 	public void addListen() {
@@ -212,8 +213,7 @@ public class GameController extends Controller {
 
 		inventaire.addListener(new ListChangeListener<InventoryItem>() {
 
-			int lastColumn = 0, lastRow = 0;
-			InventoryItem focused = null;
+			int lastRow = 0, lastCol = 0;
 
 			@Override
 			public void onChanged(Change<? extends InventoryItem> c) {
@@ -231,20 +231,24 @@ public class GameController extends Controller {
 								else
 									img.setEffect(null);
 								if (event.isPrimaryButtonDown()) {
+									Node clickedNode = event.getPickResult().getIntersectedNode();
+									focRow = (int) GridPane.getRowIndex(clickedNode);
+									focCol = (int) GridPane.getColumnIndex(clickedNode);
 									focused = inventaire.get(inventaire.contains(img.getId()));
 									desc.setText(focused.toString());
 								}
-
 							}
 						});
-						layoutInventory.add(img, lastRow, lastColumn);
-						if (lastRow == 3) {
-							lastColumn++;
-							lastRow = 0;
-						} else
+						layoutInventory.add(img, lastCol, lastRow);
+						if (lastCol == 3) {
 							lastRow++;
+							lastCol = 0;
+						} else
+							lastCol++;
 					}
 					if (c.wasRemoved()) {
+						layoutInventory.getChildren().removeIf(f -> f.getId().equals(focused.getName()));
+						desc.setText("");
 					}
 				}
 			}
@@ -612,7 +616,7 @@ public class GameController extends Controller {
 
 	@FXML
 	void drop(ActionEvent event) {
-
+		inventaire.removeFromInventory(focused.getName(), focused.getQuantity());
 	}
 
 	@FXML

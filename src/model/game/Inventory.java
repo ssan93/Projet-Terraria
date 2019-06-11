@@ -12,12 +12,19 @@ public class Inventory {
 		this.IL = FXCollections.observableArrayList();
 	}
 
+	/**
+	 * 
+	 * @param i
+	 * @return the item at the index i
+	 */
 	public InventoryItem get(int i) {
 		return IL.get(i);
 	}
+	/**
+	 * 
+	 * @param item
+	 */
 	public void addToInventory(InventoryItem item) {
-		
-		
 		int contain = this.contains(item.getName());
 		if (contain != -1)
 			IL.get(contain).addQuantity(item.getQuantity());
@@ -26,7 +33,10 @@ public class Inventory {
 	}
 
 	public boolean removeFromInventory(String object, int quantity) {
-		return IL.get(contains(object)).removeQuantity(quantity);
+		InventoryItem item = IL.get(contains(object));
+		if(quantity == item.getQuantity())
+			return IL.remove(item);
+		return item.removeQuantity(quantity);
 	}
 
 	public int contains(String name) {
