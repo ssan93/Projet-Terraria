@@ -37,6 +37,8 @@ import model.game.Inventory;
 import model.game.InventoryItem;
 import model.game.Map;
 import model.game.Tiles;
+import model.game.Tool;
+import model.game.Weapon;
 import model.game.radioChatter;
 
 public class GameController extends Controller {
@@ -114,7 +116,7 @@ public class GameController extends Controller {
 		floor.getChildren().addAll(mv.creerVue());
 		play();
 		addListen();
-		inventaire.addToInventory(new InventoryItem("pioche", 1,
+		inventaire.addToInventory(new Tool("pioche",
 				"La pioche est un outil composé de deux pièces : une pièce de travail en acier fixée par l'intermédiaire d'un œil à un manche en bois dur. La pièce de métal forme un angle d'environ 90° avec le manche."));
 		 inventaire.addToInventory(new InventoryItem("M16", 1,""));
 	}
@@ -634,7 +636,7 @@ public class GameController extends Controller {
 			 * if (coordX < 0) coordX += 300; else if (coordX >= 300) coordX -= 300;
 			 */
 
-			if (k.isPrimaryButtonDown()) {
+			if (k.isPrimaryButtonDown() && bill.getChrac().getEquiped() instanceof Tool && bill.getChrac().getEquiped().getName().equals("pioche")) {
 				if (tabSol[coordX][coordY] != 0) {
 
 					add = "background";
