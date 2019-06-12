@@ -118,12 +118,12 @@ public class GameController extends Controller {
 		inventaire.addToInventory("cuivre", 5);
 		inventaire.addToInventory("plastique", 1);
 		inventaire.addToInventory("metal", 5);
-		floor.getChildren().add(ev.getImage());
+		//floor.getChildren().add(ev.getImage());
 		
-		ev.getChrac().getHpProperty().addListener((observable, oldValue, newValue) -> {
+		/*ev.getChrac().getHpProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue.equals(0))
 				floor.getChildren().remove(ev.getImage());
-		});
+		});*/
 	}
 
 	public void addListen() {
