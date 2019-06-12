@@ -75,4 +75,27 @@ public class Character extends AnimatedObject {
 	public SimpleIntegerProperty getHpProperty() {
 		return this.hpProperty;
 	}
+	public void randomMove() {
+		int random = (int)(Math.random()*3);
+		switch (random) {
+		case 0 ://no move
+			break;
+		case 1 :
+			move("RunRight");
+			animation("right_run_buffalo");
+			System.out.println(this.x.get());
+			break;
+		case 2 : 
+			move("RunLeft");
+			animation("left_run_buffalo");
+			break;
+			
+		case 3 :
+			animation("left_static_buffalo");
+			break;
+		case 4 :
+			animation("right_static_buffalo");
+			break;
+		}
+	}
 }

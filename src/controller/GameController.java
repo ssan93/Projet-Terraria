@@ -90,7 +90,8 @@ public class GameController extends Controller {
 	private long temps;
 	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
 	private String oldAnim = "tactac";
-	private EnnemyView ev = new EnnemyView("view/resources/personnages/right_static_bill.png");
+	private EnnemyView ev = new EnnemyView("view/resources/personnages/right_static_bill.png",31,20);
+	private EnnemyView buffalo = new EnnemyView("view/resources/personnages/buffalo.gif",43,21);
 	ObservableList<Tiles> viewAbleSol;
 
 	@Override
@@ -118,10 +119,13 @@ public class GameController extends Controller {
 		inventaire.addToInventory("plastique", 1);
 		inventaire.addToInventory("metal", 5);
 		floor.getChildren().add(ev.getImage());
+		floor.getChildren().add(buffalo.getImage());
+		ev.getChrac().randomMove();       
 //		ev.getImage().layoutXProperty().bind(ev.getChrac().getXProperty());
 //		ev.getImage().layoutYProperty().bind(ev.getChrac().getYProperty());
 //		ev.getChrac().getXProperty().bind(ev.getImage().layoutXProperty());
 //		ev.getChrac().getYProperty().bind(ev.getImage().layoutYProperty());
+		buffalo.getImage().xProperty().bind(buffalo.getChrac().getXProperty().divide(32));
 		ev.getChrac().getHpProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue.equals(0))
 				floor.getChildren().remove(ev.getImage());
@@ -315,7 +319,7 @@ public class GameController extends Controller {
 			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
 			
-			oldAnim = "RunRight";
+			oldAnim = "RunRight"; 
 			scroll("Right");
 
 		}
@@ -340,7 +344,6 @@ public class GameController extends Controller {
 	public void scroll(String direction) {
 		switch (direction) {
 		case "Right":
-			System.out.println(ev.getChrac().getX());
 			ev.getChrac().move("RunRight");
 			ev.getImage().relocate(ev.getImage().getLayoutX()+4, ev.getImage().getLayoutY());
 			
@@ -602,6 +605,7 @@ public class GameController extends Controller {
 				falling = false;
 			}
 			actions();
+			buffalo.getChrac().randomMove();
 		}));
 		loop.getKeyFrames().add(kf);
 	}
