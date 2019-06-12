@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -35,6 +36,7 @@ import model.game.GestionCollision;
 import model.game.Inventory;
 import model.game.InventoryItem;
 import model.game.Map;
+import model.game.Material;
 import model.game.Tiles;
 import model.game.radioChatter;
 
@@ -58,6 +60,7 @@ public class GameController extends Controller {
 	private String oldAnim = "tactac";
 	private InventoryItem focused = null;
 	private ObservableList<Tiles> viewAbleSol;
+	private ObservableList<InventoryItem> selected;
 
 	@FXML
 	private Label desc;
@@ -91,14 +94,17 @@ public class GameController extends Controller {
 	private Pane floor;
 	@FXML
 	private Pane charapane;
+	@FXML
+	private ImageView equip;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		Craft.inizCraft();
+		TileView.inizImages();
+		selected = FXCollections.observableArrayList();
 		changeRdi(null);
 		effect.visibleProperty().bind(inventoryContainer.visibleProperty());
 		inventoryContainer.setVisible(false);
-		TileView.inizImages();
 		inventaire = new Inventory();
 		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
 		isAlive = new SimpleBooleanProperty(true);
@@ -114,9 +120,10 @@ public class GameController extends Controller {
 		addListen();
 		inventaire.addToInventory(new InventoryItem("pioche", 1,
 				"La pioche est un outil composé de deux pièces : une pièce de travail en acier fixée par l'intermédiaire d'un œil à un manche en bois dur. La pièce de métal forme un angle d'environ 90° avec le manche."));
-		focused = inventaire.get(0); 
+		focused = inventaire.get(0);
+		equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
 		inventaire.addToInventory(Craft.objetÀcraft.get("10 fer, 10 plastique, 10 cuivre, etabli"));
-		// inventaire.addToInventory("cuivre", 5);
+		inventaire.addToInventory(new Material("bois", 78, "bois qui vient des arbres"));
 		// inventaire.addToInventory("plastique", 1);
 		// inventaire.addToInventory("metal", 5);
 	}
@@ -228,16 +235,28 @@ public class GameController extends Controller {
 							@Override
 							public void handle(MouseEvent event) {
 								boolean in = event.getEventType().equals(MouseEvent.MOUSE_EXITED) ? false : true;
-								if (in)
+								if (in && !selected.contains(c.getAddedSubList().get(0)))
 									img.setEffect(new DropShadow(35, 0, 0, Color.CORNFLOWERBLUE));
-								else
+								else if (!in && !selected.contains(c.getAddedSubList().get(0)))
 									img.setEffect(null);
 								if (event.isPrimaryButtonDown()) {
-//									Node clickedNode = event.getPickResult().getIntersectedNode();
-//									focRow = (int) GridPane.getRowIndex(clickedNode);
-//									focCol = (int) GridPane.getColumnIndex(clickedNode);
+									// Node clickedNode = event.getPickResult().getIntersectedNode();
+									// focRow = (int) GridPane.getRowIndex(clickedNode);
+									// focCol = (int) GridPane.getColumnIndex(clickedNode);
 									focused = inventaire.get(inventaire.contains(img.getId()));
 									desc.setText(focused.toString());
+									if (keyPressed.contains(KeyCode.CONTROL))
+										if (selected.contains(focused)) {
+											selected.remove(focused);
+											img.setEffect(null);
+										} else {
+											selected.add(focused);
+											img.setEffect(new DropShadow(35, 0, 0, Color.ORANGERED));
+										}
+
+									// for (InventoryItem item: selected) {
+									// System.out.println(item.getName());
+									// }
 								}
 							}
 						});
@@ -249,7 +268,7 @@ public class GameController extends Controller {
 							lastCol++;
 					}
 					if (c.wasRemoved()) {
-						layoutInventory.getChildren().removeIf(f -> f.getId().equals(focused.getName()));
+						c.getRemoved().forEach(i-> layoutInventory.getChildren().removeIf(f -> f.getId().equals(i.getName())));
 						desc.setText("");
 					}
 				}
@@ -260,12 +279,26 @@ public class GameController extends Controller {
 		inventoryContainer.visibleProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue) {
 				inventoryContainer.setVisible(true);
+				utiliser.setText("Utiliser");
 				loop.pause();
 			} else {
 				inventoryContainer.setVisible(false);
+				utiliser.setText("Utiliser");
+				selected.clear();
 				loop.play();
 			}
 		});
+
+		selected.addListener(new ListChangeListener<InventoryItem>() {
+
+			@Override
+			public void onChanged(Change<? extends InventoryItem> c) {
+				while (c.next()) {
+					
+				}
+			}
+		});
+
 	}
 
 	public void play() {
@@ -618,13 +651,19 @@ public class GameController extends Controller {
 
 	@FXML
 	void drop(ActionEvent event) {
-		inventaire.removeFromInventory(focused.getName(), focused.getQuantity());
-		focused = inventaire.get(0);
+		if (!selected.isEmpty()) {
+			selected.forEach(i -> inventaire.removeIf(f -> !f.getName().equals("pioche")));
+		} else if (!focused.getName().equals("pioche")) {
+			inventaire.removeFromInventory(focused.getName(), focused.getQuantity());
+			focused = inventaire.get(0);
+		}
+		selected.clear();
 	}
 
 	@FXML
 	void use(ActionEvent event) {
 		bill.getChrac().setEquiped(focused);
+		equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
 	}
 
 	public void test(MouseEvent k) {
