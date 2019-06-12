@@ -11,7 +11,9 @@ public class GestionCollision {
 	public GestionCollision(Map m) {
 		this.map = m;
 	}
-
+	public ArrayList<Tiles> getTileList(){
+		return this.tileList;
+	}
 	/**
 	 * 
 	 * @param ch
@@ -113,46 +115,47 @@ public class GestionCollision {
 	// }
 	public void astar(Tiles t1, Tiles t2) {
 
-		ArrayList<Nodes> file = new ArrayList<Nodes>();
-		ArrayList<Nodes> from = new ArrayList<Nodes>();
+		ArrayList<Nodes> queue = new ArrayList<Nodes>();
+		ArrayList<Nodes> tileTreated = new ArrayList<Nodes>();
 		ArrayList<Nodes> path = new ArrayList<Nodes>();
-		file.add(new Nodes(t1, t1, 0));
+		queue.add(new Nodes(t1, t1, 0));
 		// from.add(new Nodes(c.getX(),c.getY(),0));
 		// cost.add(new Nodes(c.getX(),c.getY(),0));
-		from.add(file.get(0));
-		while (file.size() > 0) {
-			Nodes current = file.remove(0);
+		tileTreated.add(queue.get(0));
+		while (queue.size() > 0) {
+			
+			Nodes current = queue.remove(0);
 			path.add(current);
 			if (current.getTile().compareTo(t2) == 0) {
 				System.out.println("found");
 				break;
 			}
 			for (Nodes no : neighbors(current)) {
-				int newCost = current.getCost() + 1;
+				int newCost = current.getCost() + no.getCost();
 				boolean contain = false;
 				int index = 0;
-				while (index < from.size() && from.get(index).getTile().compareTo(no.getTile()) != 0)
+				while (index < tileTreated.size() && tileTreated.get(index).getTile().compareTo(no.getTile()) != 0)
 					index++;
-				if (index < from.size() && from.get(index).getTile().compareTo(no.getTile()) == 0)
+				if (index < tileTreated.size() && tileTreated.get(index).getTile().compareTo(no.getTile()) == 0)
 					contain = true;
-				if (/* !cost.contains(no) */!contain || newCost < from.get(index).getCost()) {
+				if (/* !cost.contains(no) */!contain || newCost < tileTreated.get(index).getCost()) {
 					no.setCost(newCost);
 					if (!contain) {
-						from.add(no);
+						tileTreated.add(no);
 					} else {
-						from.set(index, no);
+						tileTreated.set(index, no);
 					}
 					int prio = newCost + heuristic(t2, no);
 
-					insert(new Nodes(no.getTile(), current.getTile(), prio), file);
+					insert(new Nodes(no.getTile(), current.getTile(), prio), queue);
 
 				}
 			}
 		}
 		pathFinding(path, t1, t2);
 		tileList.add(0, t1);
-		for (Tiles t : tileList)
-			System.out.println(t);
+//		for (Tiles t : tileList)
+//			System.out.println(t);
 		// for(Nodes n : path)
 		// System.out.println(n);
 
@@ -170,29 +173,14 @@ public class GestionCollision {
 	public ArrayList<Nodes> neighbors(Nodes n) {
 		ArrayList<Nodes> neighborsList = new ArrayList<Nodes>();
 		int[][] tabSol = map.getMapSol();
-//		if (tabSol[n.getTile().getX()][n.getTile().getY() + 1] != 0) {
-//			Tiles down = new Tiles(n.getTile().getX(), n.getTile().getY() + 1);
-//			neighborsList.add(new Nodes(down, n.getTile(), 100));
-//		}
-//		if (tabSol[n.getTile().getX()][n.getTile().getY() - 1] != 0) {
-//			Tiles up = new Tiles(n.getTile().getX(), n.getTile().getY() - 1);
-//			neighborsList.add(new Nodes(up, n.getTile(), 100));
-//		}
-//		if (tabSol[n.getTile().getX() + 1][n.getTile().getY()] != 0) {
-//			Tiles right = new Tiles(n.getTile().getX() + 1, n.getTile().getY());
-//			neighborsList.add(new Nodes(right, n.getTile(), 100));
-//		}
-//		if (tabSol[n.getTile().getX() - 1][n.getTile().getY()] != 0) {
-//			Tiles left = new Tiles(n.getTile().getX() - 1, n.getTile().getY());
-//			neighborsList.add(new Nodes(left, n.getTile(), 100));
-//		}
 		for (int x = -1; x <= 2; x += 2) {
 			int cx = n.getTile().getX();
 			int cy = n.getTile().getY();
-			//if (cx + x > 0 && cx + x <300 && tabSol[cx + x][cy] == 0)
-				neighborsList.add(new Nodes(new Tiles(cx + x, cy), n.getTile(), 100));
-//			if (cy + x > 0 && cy + x < 100 && tabSol[cx][cy + x] == 0)
-				neighborsList.add(new Nodes(new Tiles(cx, cy + x), n.getTile(), 100));
+//			System.out.println(cx+" nani "+cy);
+			if (cy > 0 && cx + x > 0 && cx + x <300 && tabSol[cx + x][cy] == 0)
+				neighborsList.add(new Nodes(new Tiles(cx + x, cy), n.getTile(), 1));
+			if (cx>0 && cy + x > 0 && cy + x < 100 && tabSol[cx][cy + x] == 0)
+				neighborsList.add(new Nodes(new Tiles(cx, cy + x), n.getTile(), 2));
 		}
 
 		return neighborsList;

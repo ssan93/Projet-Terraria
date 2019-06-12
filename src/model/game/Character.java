@@ -29,16 +29,16 @@ public class Character extends AnimatedObject {
 		this.speed = vitesse;
 	}
 
-	public void move(String direction) {
+	public void move(String direction, boolean pnj) {
 		switch (direction) {
 		case "RunLeft":
 			this.x.set(this.x.get() - 1);
-			if (this.getX() <= 0)
+			if (this.getX() <= 0 && !pnj)
 				this.x.set(299);
 			break;
 		case "RunRight":
 			this.x.set(this.x.get() + 1);
-			if (this.getX() > 299)
+			if (this.getX() > 299 && !pnj)
 				this.x.set(1);
 			break;
 		case "Up":
@@ -81,12 +81,11 @@ public class Character extends AnimatedObject {
 		case 0 ://no move
 			break;
 		case 1 :
-			move("RunRight");
+			move("RunRight", true);
 			animation("right_run_buffalo");
-			System.out.println(this.x.get());
 			break;
 		case 2 : 
-			move("RunLeft");
+			move("RunLeft", true);
 			animation("left_run_buffalo");
 			break;
 			
