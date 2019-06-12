@@ -284,14 +284,15 @@ public class GameController extends Controller {
 	public void effectPlay(String sfx) {
 		this.effectPlayer = new MediaPlayer(new Media(new File(sfx).toURI().toString()));
 		this.effectPlayer.play();
-		if(sfx.equals("src/menu-musics/marche.mp3")) {
+		isPlaying=true;
+		/*if(sfx.equals("src/menu-musics/marche.mp3")) {
 			effectPlayer.setOnEndOfMedia(new Runnable() {
 				@Override
 				public void run() {
 					effectPlay(sfx);
 				}
 			});
-		}
+		}*/
 	}
 	
 	public void endEffectPlay() {
@@ -351,6 +352,7 @@ public class GameController extends Controller {
 			oldAnim = "RunLeft";
 			scroll("Left");
 			if(!isPlaying) {
+				System.out.println("je joue");
 				effectPlay("src/menu-musics/marche.mp3");
 			}
 
