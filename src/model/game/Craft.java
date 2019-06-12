@@ -6,6 +6,9 @@ public class Craft {
 
 	public static HashMap<String, InventoryItem> objetÀcraft = new HashMap<>();
 	
+	/**
+	 * fill the HashMap
+	 */
 	public static void inizCraft() {
 		objetÀcraft.put("1 bois, 2 metal", new Weapon("couteauBowie", "Le couteau Bowie, parfois appelé cure-dent de l'Arkansas (« Arkansas toothpick »), est un genre de couteau dont la popularité vient de son usage intensif faite par le colonel James Bowie, qui en créa la légende et le démocratisa. ",5));
 		objetÀcraft.put("1 couteau, 2 planche en bois", new Weapon("lance", "La lance est une arme d'hast dotée d'un fer emmanché sur une hampe ou long bois et, pour certaines d'entre elles, d'un talon métallique qui sert en général à équilibrer l'arme tenue en main et à la planter dans le sol.",7));

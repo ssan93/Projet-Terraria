@@ -129,6 +129,9 @@ public class GameController extends Controller {
 		// inventaire.addToInventory("metal", 5);
 	}
 
+	/**
+	 * ajoute tout les ecouteurs nécessaires
+	 */
 	public void addListen() {
 		viewAbleSol.addListener(new ListChangeListener<Tiles>() {
 
@@ -347,6 +350,9 @@ public class GameController extends Controller {
 		return this.isAlive;
 	}
 
+	/**
+	 * toute les actions(touche clavier)
+	 */
 	public void actions() {
 		if (allowMouv && ((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)))
 				&& detecteur.verifRight(bill.getChrac(), jumping, falling)) {
@@ -375,6 +381,7 @@ public class GameController extends Controller {
 
 	}
 
+	
 	public void scroll(String direction) {
 		switch (direction) {
 		case "Right":
@@ -435,8 +442,8 @@ public class GameController extends Controller {
 	}
 
 	/**
-	 * gere l'ajout et la suppression des images au bord et fait bouger le
-	 * perso(modele) au bon moment
+	 * gere l'ajout et la suppression des images au bord et fait bouger bill(modele)
+	 * au bon moment
 	 * 
 	 * @param Direction
 	 */
@@ -485,9 +492,10 @@ public class GameController extends Controller {
 	}
 
 	/**
-	 * ajoute les images au bord correspondant
+	 * add images at the corresponding edge
 	 * 
 	 * @param direction
+	 *            of the scroll
 	 */
 	public void addImages(String direction) {
 		ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
@@ -560,6 +568,12 @@ public class GameController extends Controller {
 		}
 	}
 
+	/**
+	 * delete images according to the direction
+	 * 
+	 * @param direction
+	 *            of the scroll
+	 */
 	public void deleteImages(String direction) {
 		switch (direction) {
 		case "Right":
@@ -744,8 +758,8 @@ public class GameController extends Controller {
 		// }
 	}
 
-	public boolean aroundBill() {
-		return true;
-	}
+//	public boolean aroundBill() {
+//		return true;
+//	}
 
 }
