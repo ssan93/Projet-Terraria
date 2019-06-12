@@ -126,8 +126,7 @@ public class GameController extends Controller {
 			if(newValue.equals(0))
 				floor.getChildren().remove(ev.getImage());
 		});
-		 detecteur.astar(bill.getChrac(), ev.getChrac());
-	System.out.println(bill.getChrac().getX() + " " + ev.getChrac().getX() + "     "+bill.getChrac().getY() + " " + ev.getChrac().getY());
+		 detecteur.astar(new Tiles(10,20), new Tiles(12,25 ));
 	}
 
 	public void addListen() {
