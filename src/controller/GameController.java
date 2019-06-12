@@ -43,6 +43,7 @@ import model.game.radioChatter;
 
 public class GameController extends Controller {
 
+	private MediaPlayer effectPlayer;
 	private radioChatter ra = new radioChatter();
 	private GestionCollision detecteur;
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
@@ -114,11 +115,11 @@ public class GameController extends Controller {
 		bill.getChrac().setSpeed(4);
 		charapane.getChildren().add(bill.getImage());
 		floor.getChildren().addAll(mv.creerVue());
-		play();
 		addListen();
 		inventaire.addToInventory(new Tool("pioche",
 				"La pioche est un outil composé de deux pièces : une pièce de travail en acier fixée par l'intermédiaire d'un œil à un manche en bois dur. La pièce de métal forme un angle d'environ 90° avec le manche."));
 		 inventaire.addToInventory(new InventoryItem("M16", 1,""));
+		 play();
 	}
 
 	public void addListen() {
@@ -269,7 +270,7 @@ public class GameController extends Controller {
 
 	public void play() {
 		// the player is set with a random music
-		this.player = new MediaPlayer(new Media(new File("src/menu-musics/wind.mp3").toURI().toString()));
+		this.player = new MediaPlayer(new Media(new File("src/menu-musics/background.mp3").toURI().toString()));
 		player.play();
 		player.setOnEndOfMedia(new Runnable() {
 			@Override
@@ -277,6 +278,19 @@ public class GameController extends Controller {
 				play();
 			}
 		});
+	}
+	
+	public void effectPlay(String sfx) {
+		this.effectPlayer = new MediaPlayer(new Media(new File(sfx).toURI().toString()));
+		this.effectPlayer.play();
+		if(sfx.equals("src/menu-musics/marche.mp3")) {
+			effectPlayer.setOnEndOfMedia(new Runnable() {
+				@Override
+				public void run() {
+					effectPlay(sfx);
+				}
+			});
+		}
 	}
 
 	public void isAlive() {
@@ -317,6 +331,7 @@ public class GameController extends Controller {
 
 			oldAnim = "RunRight";
 			scroll("Right");
+			effectPlay("src/menu-musics/marche.mp3");
 
 		}
 		if (allowMouv && ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)))
@@ -326,6 +341,8 @@ public class GameController extends Controller {
 
 			oldAnim = "RunLeft";
 			scroll("Left");
+			effectPlay("src/menu-musics/marche.mp3");
+
 
 		}
 
@@ -570,10 +587,13 @@ public class GameController extends Controller {
 		case "RunRight":
 			bill.getChrac().animation("idleRight");
 			oldAnim = "idleRight";
+			this.effectPlayer.stop();
 			break;
 		case "RunLeft":
 			bill.getChrac().animation("idleLeft");
 			oldAnim = "idleLeft";
+			this.effectPlayer.stop();
+
 			break;
 		}
 	}
