@@ -296,6 +296,7 @@ public class GameController extends Controller {
 	
 	public void endEffectPlay() {
 		this.effectPlayer.dispose();
+		isPlaying=false;
 	}
 
 	public void isAlive() {
@@ -334,6 +335,9 @@ public class GameController extends Controller {
 			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
 
+			if(!isPlaying) {
+				effectPlay("src/menu-musics/marche.mp3");
+			}
 			oldAnim = "RunRight";
 			scroll("Right");
 		
