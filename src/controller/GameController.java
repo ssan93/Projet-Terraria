@@ -51,7 +51,6 @@ public class GameController extends Controller {
 	private String delete, add;
 	private int addLignTop = 0, addLignBot = 33, addLignX = 299;
 	private int deleteLignX = 0, deleteLignY = 0;
-	private int focRow = 0, focCol = 0;
 	private boolean jumping = false, falling = true;
 	private long temps;
 	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
@@ -231,9 +230,9 @@ public class GameController extends Controller {
 								else
 									img.setEffect(null);
 								if (event.isPrimaryButtonDown()) {
-									Node clickedNode = event.getPickResult().getIntersectedNode();
-									focRow = (int) GridPane.getRowIndex(clickedNode);
-									focCol = (int) GridPane.getColumnIndex(clickedNode);
+//									Node clickedNode = event.getPickResult().getIntersectedNode();
+//									focRow = (int) GridPane.getRowIndex(clickedNode);
+//									focCol = (int) GridPane.getColumnIndex(clickedNode);
 									focused = inventaire.get(inventaire.contains(img.getId()));
 									desc.setText(focused.toString());
 								}
@@ -621,24 +620,12 @@ public class GameController extends Controller {
 
 	@FXML
 	void use(ActionEvent event) {
-
-	}
-
-	public void clickGrid(MouseEvent event) {
-		Node clickedNode = event.getPickResult().getIntersectedNode();
-		System.out.println(clickedNode);
-		if (clickedNode != layoutInventory) {
-			// click on descendant node
-			Integer colIndex = GridPane.getColumnIndex(clickedNode);
-			Integer rowIndex = GridPane.getRowIndex(clickedNode);
-			System.out.println("Mouse clicked cell: " + colIndex + " And: " + rowIndex);
-		}
+		bill.getChrac().setEquiped(focused);
 	}
 
 	public void test(MouseEvent k) {
 		delete = "mouse";
 		Node clicked = k.getPickResult().getIntersectedNode();
-		System.out.println(clicked);
 		int[][] tabSol = mapPrincipale.getMapSol();
 		int coordX = ((bill.getChrac().getX() - 31 + (int) k.getX() / 32) + 300) % 300;
 		int coordY = bill.getChrac().getY() - 16 + (int) k.getY() / 32;

@@ -5,6 +5,8 @@ import javafx.geometry.Rectangle2D;
 public class Character extends AnimatedObject {
 
 	private int speed, hp;
+	private InventoryItem equiped;
+
 
 	public Character(int x, int y, int speed, int hp) {
 		super(x, y);
@@ -50,6 +52,13 @@ public class Character extends AnimatedObject {
 
 	public Rectangle2D getRectangle2D() {
 		return new Rectangle2D(getX(), getY(), 27, 50);
+	}
+	public InventoryItem getEquiped() {
+		return equiped;
+	}
+
+	public void setEquiped(InventoryItem equiped) {
+		this.equiped = equiped;
 	}
 
 	public int getHp() {

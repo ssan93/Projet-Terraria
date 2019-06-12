@@ -7,7 +7,6 @@ import controller.GameController;
 import controller.Controller;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
@@ -48,8 +47,6 @@ public class Main extends Application {
 			});
 			scene.setOnMousePressed(e -> {
 				c.test(e);	
-				if (c.getInventoryContainer().isVisible() && e.isPrimaryButtonDown())
-					c.clickGrid(e);
 			});
 			primaryStage.setTitle("Last man in Vietnam");
 			primaryStage.setScene(scene);
