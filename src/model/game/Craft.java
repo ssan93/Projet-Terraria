@@ -12,4 +12,11 @@ public class Craft {
 		objetÀcraft.put("3 ficelle, 1 planche en bois", new Weapon("arc", "Un arc est une arme de trait de tir tirant des flèches.", 10));
 		objetÀcraft.put("10 fer, 10 plastique, 10 cuivre, etabli", new Weapon("M16", "Le M16 est le fusil d'assaut standard de l'armée américaine. Actuellement l'U.S. Army utilise la version A1.", 20));
 	}
+	
+//	public static ArrayList<InventoryItem> craftable(ArrayList<InventoryItem> inventaire){
+//		if(inventaire.isEmpty())
+//			return null;
+//		ArrayList<InventoryItem> result = new ArrayList<>();
+//		return ;
+//	}
 }

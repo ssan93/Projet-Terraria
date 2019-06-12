@@ -30,6 +30,7 @@ import javafx.util.Duration;
 import view.game.BillView;
 import view.game.MapView;
 import view.game.TileView;
+import model.game.Craft;
 import model.game.GestionCollision;
 import model.game.Inventory;
 import model.game.InventoryItem;
@@ -93,6 +94,7 @@ public class GameController extends Controller {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		Craft.inizCraft();
 		changeRdi(null);
 		effect.visibleProperty().bind(inventoryContainer.visibleProperty());
 		inventoryContainer.setVisible(false);
@@ -112,7 +114,8 @@ public class GameController extends Controller {
 		addListen();
 		inventaire.addToInventory(new InventoryItem("pioche", 1,
 				"La pioche est un outil composé de deux pièces : une pièce de travail en acier fixée par l'intermédiaire d'un œil à un manche en bois dur. La pièce de métal forme un angle d'environ 90° avec le manche."));
-		 inventaire.addToInventory(new InventoryItem("M16", 1,""));
+		focused = inventaire.get(0); 
+		inventaire.addToInventory(Craft.objetÀcraft.get("10 fer, 10 plastique, 10 cuivre, etabli"));
 		// inventaire.addToInventory("cuivre", 5);
 		// inventaire.addToInventory("plastique", 1);
 		// inventaire.addToInventory("metal", 5);
