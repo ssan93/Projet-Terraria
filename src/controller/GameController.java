@@ -94,6 +94,7 @@ public class GameController extends Controller {
 	private String oldAnim = "tactac";
 	private EnnemyView ennemy = new EnnemyView("view/resources/personnages/right_static_bill.png",5,20);
 	private EnnemyView buffalo = new EnnemyView("view/resources/personnages/buffalo.gif",1,20);
+	private EnnemyView chicken = new EnnemyView("view/resources/personnages/Chicken.gif",42*4,22);
 	ObservableList<Tiles> viewAbleSol;
 
 	@Override
@@ -122,6 +123,7 @@ public class GameController extends Controller {
 		inventaire.addToInventory("metal", 5);
 		pnjPane.getChildren().add(ennemy.getImage());
 		pnjPane.getChildren().add(buffalo.getImage());
+		pnjPane.getChildren().add(chicken.getImage());
 		ennemy.getChrac().randomMove();    
 		charapane.setDisable(true);
 		pnjPane.setDisable(true);
@@ -130,6 +132,7 @@ public class GameController extends Controller {
 //		ev.getChrac().getXProperty().bind(ev.getImage().layoutXProperty());
 //		ev.getChrac().getYProperty().bind(ev.getImage().layoutYProperty());
 		buffalo.getImage().layoutXProperty().bind(buffalo.getChrac().getXProperty().multiply(32/4));
+		chicken.getImage().layoutXProperty().bind(chicken.getChrac().getXProperty().multiply(32/4));
 		ennemy.getImage().layoutXProperty().bind(ennemy.getChrac().getXProperty().multiply(32));
 		ennemy.getImage().layoutYProperty().bind(ennemy.getChrac().getYProperty().multiply(32));
 		ennemy.getChrac().getHpProperty().addListener((observable, oldValue, newValue) -> {
@@ -628,7 +631,11 @@ public class GameController extends Controller {
 			else if(ennemy.getChrac().getY()> y)
 				ennemy.getChrac().move("Up", true);
 //			ennemy.getChrac().move("RunRight", true);
+			if(detecteur.verifRight(buffalo.getChrac(), false, false))
 			buffalo.getChrac().randomMove();
+			//if(detecteur.verifRight(chicken.getChrac(), false, false))
+				chicken.getChrac().randomMove();
+			
 		}));
 		loop.getKeyFrames().add(kf);
 	}

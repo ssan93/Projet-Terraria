@@ -42,8 +42,8 @@ public class GestionCollision {
 	 */
 	public boolean verifRight(Character ch, boolean jumping, boolean falling) {
 
-		boolean verifDefault = map.getMapSol()[ch.getX()][ch.getY()] == 0
-				&& map.getMapSol()[ch.getX()][ch.getY() + 1] == 0;
+		boolean verifDefault = map.getMapSol()[(ch.getX()+Map.Largeur)%map.Largeur][ch.getY()] == 0
+				&& map.getMapSol()[(ch.getX()+map.Largeur)%map.Largeur][ch.getY() + 1] == 0;
 		if (falling)
 			return verifDefault && map.getMapSol()[(ch.getX() + 1) % 300][ch.getY() + 2] == 0;
 		if (jumping)
