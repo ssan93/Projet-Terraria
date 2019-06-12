@@ -285,14 +285,12 @@ public class GameController extends Controller {
 		this.effectPlayer = new MediaPlayer(new Media(new File(sfx).toURI().toString()));
 		this.effectPlayer.play();
 		isPlaying=true;
-		/*if(sfx.equals("src/menu-musics/marche.mp3")) {
-			effectPlayer.setOnEndOfMedia(new Runnable() {
-				@Override
-				public void run() {
-					effectPlay(sfx);
-				}
-			});
-		}*/
+		effectPlayer.setOnEndOfMedia(new Runnable() {
+			@Override
+			public void run() {
+				effectPlay(sfx);
+			}
+		});
 	}
 	
 	public void endEffectPlay() {
@@ -336,35 +334,30 @@ public class GameController extends Controller {
 			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
 
-			if(!isPlaying) {
+			if(!isPlaying && !falling && !jumping) {
 				effectPlay("src/menu-musics/marche.mp3");
 			}
 			oldAnim = "RunRight";
 			scroll("Right");
-		
-
 		}
 		if (allowMouv && ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)))
 				&& detecteur.verifLeft(bill.getChrac(), jumping, falling)) {
 			// if (!stopSroll().equals("left stop")) {
 			bill.getChrac().animation("RunLeft");
-
-			oldAnim = "RunLeft";
-			scroll("Left");
-			if(!isPlaying) {
-				System.out.println("je joue");
+			if(!isPlaying && !falling && !jumping) {
 				effectPlay("src/menu-musics/marche.mp3");
 			}
-
-
+			oldAnim = "RunLeft";
+			scroll("Left");
 		}
 
 		if (!jumping && keyPressed.contains(KeyCode.SPACE) && allowMouv && detecteur.verifTop(bill.getChrac())) {
 			bill.getChrac().animation(oldAnim.contains("Right") ? "jumpRight" : "jumpLeft");
 			oldAnim = oldAnim.contains("Right") ? "jumpRight" : "jumpLeft";
 			scroll("Up");
+			if(isPlaying && !falling)
+				endEffectPlay();
 		}
-
 	}
 
 	public void scroll(String direction) {
