@@ -616,6 +616,7 @@ public class GameController extends Controller {
 	@FXML
 	void drop(ActionEvent event) {
 		inventaire.removeFromInventory(focused.getName(), focused.getQuantity());
+		focused = inventaire.get(0);
 	}
 
 	@FXML
