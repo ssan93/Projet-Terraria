@@ -355,8 +355,12 @@ public class GameController extends Controller {
 			bill.getChrac().animation(oldAnim.contains("Right") ? "jumpRight" : "jumpLeft");
 			oldAnim = oldAnim.contains("Right") ? "jumpRight" : "jumpLeft";
 			scroll("Up");
-			if(isPlaying && !falling)
+			if(!isPlaying) {
+				effectPlay("src/menu-musics/jump.mp3");
+			}
+			if(isPlaying && !falling) {
 				endEffectPlay();
+			}
 		}
 	}
 
