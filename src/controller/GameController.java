@@ -62,6 +62,7 @@ public class GameController extends Controller {
 	private String oldAnim = "tactac";
 	private InventoryItem focused = null;
 	private ObservableList<Tiles> viewAbleSol;
+	private boolean isPlaying = false;
 
 	@FXML
 	private Label desc;
@@ -292,6 +293,10 @@ public class GameController extends Controller {
 			});
 		}
 	}
+	
+	public void endEffectPlay() {
+		this.effectPlayer.dispose();
+	}
 
 	public void isAlive() {
 
@@ -331,7 +336,7 @@ public class GameController extends Controller {
 
 			oldAnim = "RunRight";
 			scroll("Right");
-			effectPlay("src/menu-musics/marche.mp3");
+		
 
 		}
 		if (allowMouv && ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)))
@@ -341,7 +346,9 @@ public class GameController extends Controller {
 
 			oldAnim = "RunLeft";
 			scroll("Left");
-			effectPlay("src/menu-musics/marche.mp3");
+			if(!isPlaying) {
+				effectPlay("src/menu-musics/marche.mp3");
+			}
 
 
 		}
@@ -587,13 +594,12 @@ public class GameController extends Controller {
 		case "RunRight":
 			bill.getChrac().animation("idleRight");
 			oldAnim = "idleRight";
-			this.effectPlayer.stop();
+			endEffectPlay();
 			break;
 		case "RunLeft":
 			bill.getChrac().animation("idleLeft");
 			oldAnim = "idleLeft";
-			this.effectPlayer.stop();
-
+			endEffectPlay();
 			break;
 		}
 	}
