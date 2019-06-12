@@ -123,7 +123,8 @@ public class GameController extends Controller {
 		focused = inventaire.get(0);
 		equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
 		inventaire.addToInventory(Craft.objetÀcraft.get("10 fer, 10 plastique, 10 cuivre, etabli"));
-		inventaire.addToInventory(new Material("bois", 78, "bois qui vient des arbres"));
+		inventaire.addToInventory(new Material("bois", 1, "bois qui vient des arbres"));
+		inventaire.addToInventory(new Material("metal", 2, "metal "));
 		// inventaire.addToInventory("plastique", 1);
 		// inventaire.addToInventory("metal", 5);
 	}
@@ -243,9 +244,9 @@ public class GameController extends Controller {
 									// Node clickedNode = event.getPickResult().getIntersectedNode();
 									// focRow = (int) GridPane.getRowIndex(clickedNode);
 									// focCol = (int) GridPane.getColumnIndex(clickedNode);
-									focused = inventaire.get(inventaire.contains(img.getId()));
+									focused = inventaire.get(inventaire.indexOf(img.getId()));
 									desc.setText(focused.toString());
-									if (keyPressed.contains(KeyCode.CONTROL))
+									if (keyPressed.contains(KeyCode.CONTROL) || keyPressed.contains(KeyCode.SHIFT))
 										if (selected.contains(focused)) {
 											selected.remove(focused);
 											img.setEffect(null);
@@ -268,7 +269,8 @@ public class GameController extends Controller {
 							lastCol++;
 					}
 					if (c.wasRemoved()) {
-						c.getRemoved().forEach(i-> layoutInventory.getChildren().removeIf(f -> f.getId().equals(i.getName())));
+						c.getRemoved().forEach(
+								i -> layoutInventory.getChildren().removeIf(f -> f.getId().equals(i.getName())));
 						desc.setText("");
 					}
 				}
@@ -294,7 +296,10 @@ public class GameController extends Controller {
 			@Override
 			public void onChanged(Change<? extends InventoryItem> c) {
 				while (c.next()) {
-					
+					if (selected.size() >= 2)
+						utiliser.setText("Craft");
+					else
+						utiliser.setText("Utiliser");
 				}
 			}
 		});
@@ -335,7 +340,6 @@ public class GameController extends Controller {
 			codec.setVisible(false);
 			codec.getParent().prefHeight(100);
 			allowMouv = true;
-
 		}
 	}
 
@@ -652,7 +656,8 @@ public class GameController extends Controller {
 	@FXML
 	void drop(ActionEvent event) {
 		if (!selected.isEmpty()) {
-			selected.forEach(i -> inventaire.removeIf(f -> !f.getName().equals("pioche")));
+			selected.forEach(
+					i -> inventaire.removeIf(f -> !i.getName().equals("pioche") && i.getName().equals(f.getName())));
 		} else if (!focused.getName().equals("pioche")) {
 			inventaire.removeFromInventory(focused.getName(), focused.getQuantity());
 			focused = inventaire.get(0);
@@ -662,8 +667,24 @@ public class GameController extends Controller {
 
 	@FXML
 	void use(ActionEvent event) {
-		bill.getChrac().setEquiped(focused);
-		equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
+		if (utiliser.getText().equals("Utiliser")) {
+			bill.getChrac().setEquiped(focused);
+			equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
+		}else if(utiliser.getText().equals("Craft")) {
+			String need = "";
+			for (int i = 0; i < selected.size(); i++) {
+				InventoryItem item = selected.get(i);
+				need+= item.getQuantity()+" "+ item.getName();
+				if(i!= selected.size()-1)
+					need+=", ";
+			}
+			InventoryItem crafted = Craft.objetÀcraft.getOrDefault(need, null);
+			if(crafted!=null) {
+				selected.forEach(item -> inventaire.removeFromInventory(item.getName(), item.getQuantity()));
+				inventaire.addToInventory(crafted);
+			}
+		}
+		selected.clear();
 	}
 
 	public void test(MouseEvent k) {

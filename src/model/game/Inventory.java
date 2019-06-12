@@ -27,7 +27,7 @@ public class Inventory {
 	 * @param item
 	 */
 	public void addToInventory(InventoryItem item) {
-		int contain = this.contains(item.getName());
+		int contain = this.indexOf(item.getName());
 		if (contain != -1)
 			IL.get(contain).addQuantity(item.getQuantity());
 		else
@@ -35,17 +35,16 @@ public class Inventory {
 	}
 
 	public boolean removeFromInventory(String object, int quantity) {
-		InventoryItem item = IL.get(contains(object));
+		InventoryItem item = IL.get(indexOf(object));
 		if(quantity == item.getQuantity())
 			return IL.remove(item);
 		return item.removeQuantity(quantity);
 	}
 
-	public int contains(String name) {
-		for (int i = 0; i < IL.size(); i++) {
+	public int indexOf(String name) {
+		for (int i = 0; i < IL.size(); i++)
 			if (IL.get(i).getName().equals(name))
 				return i;
-		}
 		return -1;
 	}
 	

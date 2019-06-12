@@ -48,7 +48,7 @@ public class InventoryItem {
 	 * @return if the operation has succeeded
 	 */
 	public boolean removeQuantity(int rmqty) {
-		if (this.quantity >= rmqty) {
+		if (this.quantity > rmqty) {
 			this.quantity -= rmqty;
 			return true;
 		}
