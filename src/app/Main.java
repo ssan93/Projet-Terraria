@@ -34,7 +34,7 @@ public class Main extends Application {
 			scene.setOnKeyPressed(e -> {
 				c.addKeyCode(e.getCode());
 				if (e.getCode() == KeyCode.I)
-					c.getInventoryContainer().setVisible(c.getInventoryContainer().isVisible() ? false : true);
+					c.setVisibilityInventoryContainer();
 				e.consume();
 			});
 		

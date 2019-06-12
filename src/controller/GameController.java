@@ -649,16 +649,16 @@ public class GameController extends Controller {
 		keyPressed.remove(k);
 	}
 
-	public Pane getInventoryContainer() {
-		return inventoryContainer;
+	public void setVisibilityInventoryContainer() {
+		inventoryContainer.setVisible(inventoryContainer.isVisible() ? false : true);
 	}
 
 	@FXML
 	void drop(ActionEvent event) {
-		if (!selected.isEmpty()) {
+		if (!selected.isEmpty())
 			selected.forEach(
 					i -> inventaire.removeIf(f -> !i.getName().equals("pioche") && i.getName().equals(f.getName())));
-		} else if (!focused.getName().equals("pioche")) {
+		else if (!focused.getName().equals("pioche")) {
 			inventaire.removeFromInventory(focused.getName(), focused.getQuantity());
 			focused = inventaire.get(0);
 		}
@@ -670,16 +670,16 @@ public class GameController extends Controller {
 		if (utiliser.getText().equals("Utiliser")) {
 			bill.getChrac().setEquiped(focused);
 			equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
-		}else if(utiliser.getText().equals("Craft")) {
+		} else if (utiliser.getText().equals("Craft")) {
 			String need = "";
 			for (int i = 0; i < selected.size(); i++) {
 				InventoryItem item = selected.get(i);
-				need+= item.getQuantity()+" "+ item.getName();
-				if(i!= selected.size()-1)
-					need+=", ";
+				need += item.getQuantity() + " " + item.getName();
+				if (i != selected.size() - 1)
+					need += ", ";
 			}
 			InventoryItem crafted = Craft.objetÀcraft.getOrDefault(need, null);
-			if(crafted!=null) {
+			if (crafted != null) {
 				selected.forEach(item -> inventaire.removeFromInventory(item.getName(), item.getQuantity()));
 				inventaire.addToInventory(crafted);
 			}
