@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.File;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -29,19 +30,24 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import view.game.BillView;
+import view.game.EnnemyView;
 import view.game.MapView;
 import view.game.TileView;
 import model.game.Craft;
+import model.game.Ennemy;
 import model.game.GestionCollision;
 import model.game.Inventory;
 import model.game.InventoryItem;
 import model.game.Map;
 import model.game.Material;
 import model.game.Tiles;
+import model.game.Tool;
+import model.game.Weapon;
 import model.game.radioChatter;
 
 public class GameController extends Controller {
 
+	private MediaPlayer effectPlayer;
 	private radioChatter ra = new radioChatter();
 	private GestionCollision detecteur;
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
@@ -62,6 +68,7 @@ public class GameController extends Controller {
 	private ObservableList<Tiles> viewAbleSol;
 	private ObservableList<InventoryItem> selected;
 	private InventoryItem equiped;
+	private boolean isPlaying = false;
 
 	@FXML
 	private Label desc;
@@ -117,9 +124,8 @@ public class GameController extends Controller {
 		bill.getChrac().setSpeed(4);
 		charapane.getChildren().add(bill.getImage());
 		floor.getChildren().addAll(mv.creerVue());
-		play();
 		addListen();
-		inventaire.addToInventory(new InventoryItem("pioche", 1,
+		inventaire.addToInventory(new Tool("pioche",
 				"La pioche est un outil composé de deux pièces : une pièce de travail en acier fixée par l'intermédiaire d'un œil à un manche en bois dur. La pièce de métal forme un angle d'environ 90° avec le manche."));
 		focused = inventaire.get(0);
 		equiped = focused;
@@ -129,6 +135,8 @@ public class GameController extends Controller {
 		inventaire.addToInventory(new Material("metal", 2, "metal "));
 		// inventaire.addToInventory("plastique", 1);
 		// inventaire.addToInventory("metal", 5);
+		inventaire.addToInventory(new InventoryItem("M16", 1, ""));
+		play();
 	}
 
 	/**
@@ -187,7 +195,6 @@ public class GameController extends Controller {
 
 			@Override
 			public void onChanged(Change<? extends Node> c) {
-				// TODO Auto-generated method stub
 				while (c.next()) {
 					if (c.wasRemoved()) {
 						if (delete == "mouse") {
@@ -318,7 +325,7 @@ public class GameController extends Controller {
 
 	public void play() {
 		// the player is set with a random music
-		this.player = new MediaPlayer(new Media(new File("src/menu-musics/wind.mp3").toURI().toString()));
+		this.player = new MediaPlayer(new Media(new File("src/menu-musics/background.mp3").toURI().toString()));
 		player.play();
 		player.setOnEndOfMedia(new Runnable() {
 			@Override
@@ -326,6 +333,25 @@ public class GameController extends Controller {
 				play();
 			}
 		});
+	}
+
+	public void effectPlay(String sfx) {
+		this.effectPlayer = new MediaPlayer(new Media(new File(sfx).toURI().toString()));
+		this.effectPlayer.play();
+		isPlaying = true;
+		if (sfx.equals("src/menu-musics/marche.mp3")) {
+			effectPlayer.setOnEndOfMedia(new Runnable() {
+				@Override
+				public void run() {
+					effectPlay(sfx);
+				}
+			});
+		}
+	}
+
+	public void endEffectPlay() {
+		this.effectPlayer.dispose();
+		isPlaying = false;
 	}
 
 	public void isAlive() {
@@ -361,31 +387,45 @@ public class GameController extends Controller {
 	 * toute les actions(touche clavier)
 	 */
 	public void actions() {
+
 		if (allowMouv && ((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)))
 				&& detecteur.verifRight(bill.getChrac(), jumping, falling)) {
-			// if (!stopSroll().equals("right stop")) {
 			bill.getChrac().animation("RunRight");
-
+			if(isPlaying && jumping) {
+				endEffectPlay();
+			}
+			if (!isPlaying && !falling && !jumping) {
+				effectPlay("src/menu-musics/marche.mp3");
+			}
 			oldAnim = "RunRight";
 			scroll("Right");
-
 		}
 		if (allowMouv && ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)))
 				&& detecteur.verifLeft(bill.getChrac(), jumping, falling)) {
-			// if (!stopSroll().equals("left stop")) {
 			bill.getChrac().animation("RunLeft");
-
+			if(isPlaying && jumping || falling) {
+				endEffectPlay();
+			}
+			if (!isPlaying && !falling && !jumping) {
+				effectPlay("src/menu-musics/marche.mp3");
+			}
 			oldAnim = "RunLeft";
 			scroll("Left");
-
 		}
 
 		if (!jumping && keyPressed.contains(KeyCode.SPACE) && allowMouv && detecteur.verifTop(bill.getChrac())) {
 			bill.getChrac().animation(oldAnim.contains("Right") ? "jumpRight" : "jumpLeft");
 			oldAnim = oldAnim.contains("Right") ? "jumpRight" : "jumpLeft";
 			scroll("Up");
-		}
+			if (isPlaying && jumping) {
+				effectPlay("src/menu-musics/saut.mp3");
+			}
+			if (!isPlaying && jumping) {
+				effectPlay("src/menu-musics/saut.mp3");
 
+			}
+
+		}
 	}
 
 	public void scroll(String direction) {
@@ -628,10 +668,12 @@ public class GameController extends Controller {
 		case "RunRight":
 			bill.getChrac().animation("idleRight");
 			oldAnim = "idleRight";
+			endEffectPlay();
 			break;
 		case "RunLeft":
 			bill.getChrac().animation("idleLeft");
 			oldAnim = "idleLeft";
+			endEffectPlay();
 			break;
 		}
 	}
@@ -722,7 +764,8 @@ public class GameController extends Controller {
 			 * if (coordX < 0) coordX += 300; else if (coordX >= 300) coordX -= 300;
 			 */
 
-			if (k.isPrimaryButtonDown()) {
+			if (k.isPrimaryButtonDown() && bill.getChrac().getEquiped() instanceof Tool
+					&& bill.getChrac().getEquiped().getName().equals("pioche")) {
 				if (tabSol[coordX][coordY] != 0) {
 
 					add = "background";
