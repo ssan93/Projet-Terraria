@@ -4,8 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Rectangle2D;
 
 public class Character extends AnimatedObject {
-	private GestionCollision detecteur;
-	private int speed, hp, aggroRange, move, moveLeft;
+	private int speed, hp, aggroRange;
 	SimpleIntegerProperty hpProperty;
 
 	public Character(int x, int y, int speed, int hp) {
@@ -42,13 +41,13 @@ public class Character extends AnimatedObject {
 		switch (direction) {
 		case "Left":
 			this.x.set(this.x.get() - 1);
-			if (this.getX() <= 0 && !pnj)
+			if (this.getX() < 0 && !pnj)
 				this.x.set(299);
 			break;
 		case "Right":
 			this.x.set(this.x.get() + 1);
 			if (this.getX() > 299 && !pnj)
-				this.x.set(1);
+				this.x.set(0);
 			break;
 		case "Up":
 			this.y.set(this.y.get() - 1);
@@ -90,80 +89,4 @@ public class Character extends AnimatedObject {
 		return this.hpProperty;
 	}
 
-	public void randomMove(Character c, String character) {
-		int random;
-		if (moveLeft != 0)
-			random = move;
-		else {
-			random = (int) (Math.random() * 3);
-			this.moveLeft = 10;
-		}
-		switch (random) {
-		case 0:// no move
-			break;
-		case 1:
-			if (detecteur.verifRight(this, false, false, character)) {
-				c.move("Right", true);
-				animation("right_run_" + character);
-			}
-			break;
-		case 2:
-			if (detecteur.verifLeft(this, false, false, character)) {
-				c.move("Left", true);
-				animation("left_run_" + character);
-			}
-			break;
-
-		case 3:
-			animation("left_static_" + character);
-			break;
-		case 4:
-			animation("right_static_" + character);
-			break;
-		}
-		this.moveLeft--;
-		this.move = random;
-	}
-	public void randomMove(int n, String character) {
-		int random;
-		if (moveLeft != 0)
-			n = move;
-		else {
-			random = (int) (Math.random() * 3);
-			this.moveLeft = 10;
-		}
-		switch (n) {
-		case 0:// no move
-			break;
-		case 1:
-			
-				move("Right", true);
-				animation("right_run_" + character);
-			
-			break;
-		case 2:
-			
-				move("Left", true);
-				animation("left_run_" + character);
-			
-			break;
-
-		case 3:
-			animation("left_static_" + character);
-			break;
-		case 4:
-			animation("right_static_" + character);
-			break;
-		}
-		this.moveLeft--;
-		this.move = n;
-	}
-
-	public int getMove() {
-		return move;
-	}
-
-	public int getMoveLeft() {
-		return moveLeft;
-	}
 }

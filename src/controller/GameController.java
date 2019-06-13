@@ -87,7 +87,7 @@ public class GameController extends Controller {
 	private Timeline loop;
 	private int countX = 32, countY = 0, relocated = 0;
 	private String delete, add;
-	private int addLignTop = 0, addLignBot = 33, addLignX = 299;
+	private int addLignTop = 0, addLignBot = 33, addLignX = 0;
 	private int deleteLignX = 0, deleteLignY = 0;
 	private boolean jumping = false, falling = true;
 	private long temps;
@@ -98,6 +98,7 @@ public class GameController extends Controller {
 	private EnnemyView chicken = new EnnemyView("view/resources/personnages/Chicken.gif", 42 * 4, 22, 10);
 	private EnnemyView fly = new EnnemyView("view/resources/personnages/heli1.gif", 42, 15, 10);
 	private int temps2 = 0;
+	int move = 1;
 	ObservableList<Tiles> viewAbleSol;
 
 	@Override
@@ -499,11 +500,11 @@ public class GameController extends Controller {
 			 */
 
 			for (Tiles tile : ListMid)
-				if (tile.getX() == (addLignX + 61) % Map.Largeur && addLignTop <= tile.getY()
+				if (tile.getX() == (addLignX + 60) % Map.Largeur && addLignTop <= tile.getY()
 						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == (addLignX + 61) % Map.Largeur && addLignTop <= tile.getY()
+				if (tile.getX() == (addLignX + 60) % Map.Largeur && addLignTop <= tile.getY()
 						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			addLignX++;
@@ -513,10 +514,10 @@ public class GameController extends Controller {
 		case "Left":
 			add = "Left";
 			for (Tiles tile : ListMid)
-				if (tile.getX() == addLignX % Map.Largeur && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+				if (tile.getX() == (addLignX+Map.Largeur) % Map.Largeur && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == addLignX % Map.Largeur && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+				if (tile.getX() == (addLignX+Map.Largeur) % Map.Largeur && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			addLignX--;
 
@@ -628,25 +629,50 @@ public class GameController extends Controller {
 			temps2++;
 			actions();
 			flyMove();
-			// ennemy.getChrac().move("Right", true);
-			int n = (int) (Math.random() * 3);
-			if (n == 1 && detecteur.verifRight(buffalo.getChrac(), false, false, "buffalo"))
-				buffalo.getChrac().randomMove(n, "buffalo");
-			if (n == 2 && detecteur.verifLeft(buffalo.getChrac(), false, false, "buffalo"))
-				buffalo.getChrac().randomMove(n, "buffalo");
-			// if(detecteur.verifRight(chicken.getChrac(), false, false))
-			n = (int) (Math.random() * 3);
-			if (n == 1 && detecteur.verifRight(chicken.getChrac(), false, false, "chicken"))
-				chicken.getChrac().randomMove(n, "chicken");
-			if (n == 2 && detecteur.verifLeft(chicken.getChrac(), false, false, "chicken"))
-				chicken.getChrac().randomMove(n, "chicken");
-			if (detecteur.verifUnder(chicken.getChrac(), "chicken"))
-				chicken.getChrac().move("Down", true);
-			if (detecteur.verifUnder(buffalo.getChrac(), "buffalo"))
-				buffalo.getChrac().move("Down", true);
+			randomMove(buffalo.getChrac(), "buffalo");
+			randomMove(chicken.getChrac(), "chicken");
+			animalFalling();
+			
 
 		}));
 		loop.getKeyFrames().add(kf);
+	}
+	public void animalFalling() {
+		if (detecteur.verifUnder(chicken.getChrac(), "chicken"))
+			chicken.getChrac().move("Down", true);
+		if (detecteur.verifUnder(buffalo.getChrac(), "buffalo"))
+			buffalo.getChrac().move("Down", true);
+	}
+	public void randomMove(Character ch, String character) {
+		if (temps2 % ((int) Math.random() * 11 + 10) == 0)
+			move = (int) (Math.random() * 5)+1;
+		switch (move) {
+		case 1:
+			if (detecteur.verifRight(ch, false, false, character))
+				ch.move("Right", true);
+			else if (detecteur.verifTopRight(ch, character)) {
+				ch.move("Up", true);
+				ch.move("Right", true);
+			}
+			ch.animation("right_run_"+character);
+			break;
+		case 2:
+
+			if (detecteur.verifLeft(ch, false, false, character))
+				ch.move("Left", true);
+			else if (detecteur.verifTopLeft(ch, character)) {
+				ch.move("Up", true);
+				ch.move("Left", true);
+			}
+			ch.animation("left_run_"+character);
+			break;
+		case 3 :
+			ch.animation("right_static_"+character);
+			break;
+		case 4 :
+			ch.animation("left_static_"+character);
+			break;
+		}
 	}
 
 	public void flyMove() {
@@ -661,7 +687,7 @@ public class GameController extends Controller {
 			if (detecteur.heuristic(t, t2) == 0) {
 				// bill.getChrac().damage(10);
 				fly.getChrac().animation("shoot");
-			} else if (tabSol[billX + 1][billY - 1] != 0
+			} else if (tabSol[(billX + 1 + Map.Largeur) % Map.Largeur][billY - 1] != 0
 					&& detecteur.heuristic(t, t2) < fly.getChrac().getAggroRange()) {
 
 			} else if (detecteur.heuristic(t, t2) < fly.getChrac().getAggroRange()
@@ -746,20 +772,6 @@ public class GameController extends Controller {
 			if (k.isPrimaryButtonDown()) {
 				if (tabSol[coordX][coordY] != 0) {
 					add = "background";
-					// if (clicked instanceof Pane) {
-					// if (clicked.getId().equals("charapane")) {
-					// floor.getChildren()
-					// .removeIf(img -> img.getLayoutY() >= k.getY() - 32 && img.getLayoutY() <
-					// k.getY()
-					// && img.getLayoutX() >= k.getX() - 32 && img.getLayoutX() < k.getX());
-					// // a refaire
-					// /*Tiles t = new Tiles(coordX, coordY, 5);
-					// TileView tv = new TileView(t);
-					// tv.relocate(((int) k.getX() / 32) * 32 - 32 + countX, ((int) k.getY() / 32) *
-					// 32 - countY);
-					// floor.getChildren().add(tv);*/
-					// }
-					// } else
 					floor.getChildren().removeIf(Tile -> Tile == clicked);
 				}
 			}
