@@ -13,28 +13,19 @@ class GestionCollisionsTest {
 	
 	@Test
 	void test() {
-		/*
-		assertTrue(gc.verifTop(c), "vérifie si on peut sauter d'un cran");
-		assertFalse(gc.verifTop(c), "vérifie si on peut sauter d'un cran");
-		 */
-		
-		
+
 		assertTrue(gc.verifLeft(c, false, false), "dans le cas ou le personnage passe");	
 		assertTrue(gc.verifRight(c, false, false), "dans le cas ou le personnage ne passe pas");	
-		c.move("RunRight");
-		c.move("RunRight");
+		c = new Character(19, 22, 2, 10);
 		assertFalse(gc.verifRight(c, false, false), "dans le cas ou le personnage ne passe pas");	
-		c.move("RunRight");
+		c = new Character(20, 22, 2, 10);
 		assertFalse(gc.verifLeft(c, false, false), "dans le cas ou le personnage passe à gauche");	
 		assertFalse(gc.verifUnder(c), "vérifie si on ne peut pas descendre");
-		assertTrue(gc.verifTop(c), "vérifie si on peut sauter d'un cran");
-		c.move("Up");
-		c.move("Up");
+		c = new Character(20, 20, 2, 10);
 		assertTrue(gc.verifUnder(c), "vérifie si on peut descendre");
-		
-
-		
+		c = new Character(11, 27, 2, 10);		
+		assertTrue(gc.verifTop(c), "vérifie si on peut sauter d'un cran");
+		c = new Character(11, 28, 2, 10);		
+		assertFalse(gc.verifTop(c), "vérifie si on peut sauter d'un cran");
 	}
-	
-
 }
