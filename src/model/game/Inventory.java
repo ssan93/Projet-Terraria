@@ -1,5 +1,6 @@
 package model.game;
 
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javafx.collections.FXCollections;
@@ -54,5 +55,9 @@ public class Inventory {
 	
 	public void removeIf(Predicate<? super InventoryItem> filter) {
 		this.IL.removeIf(filter);
+	}
+	
+	public void foreach(Consumer<? super InventoryItem> action) {
+		IL.forEach(action);
 	}
 }

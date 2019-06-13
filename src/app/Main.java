@@ -33,7 +33,7 @@ public class Main extends Application {
 			// quand une touche est pressé
 			scene.setOnKeyPressed(e -> {
 				c.addKeyCode(e.getCode());
-				if (e.getCode() == KeyCode.I)
+				if (e.getCode() == KeyCode.I || e.getCode() == KeyCode.TAB)
 					c.setVisibilityInventoryContainer();
 				e.consume();
 			});

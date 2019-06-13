@@ -232,21 +232,22 @@ public class GameController extends Controller {
 			public void onChanged(Change<? extends InventoryItem> c) {
 				while (c.next()) {
 					if (c.wasAdded()) {
+						System.out.println(" subList" + c.getAddedSubList().size());
 						ImageView img = new ImageView(
 								"view/resources/Inventaire/" + c.getAddedSubList().get(0).getName() + "_Inv.png");
 						img.setId(c.getAddedSubList().get(0).getName());
 						img.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
+							InventoryItem item = c.getAddedSubList().get(0);
+
 							@Override
 							public void handle(MouseEvent event) {
 								boolean in = event.getEventType().equals(MouseEvent.MOUSE_EXITED) ? false : true;
-								if (in && !selected.contains(c.getAddedSubList().get(0)))
+								System.out.println(item.getName());
+								if (in && !selected.contains(item))
 									img.setEffect(new DropShadow(35, 0, 0, Color.CORNFLOWERBLUE));
-								else if (!in && !selected.contains(c.getAddedSubList().get(0)))
+								else if (!in && !selected.contains(item))
 									img.setEffect(null);
 								if (event.isPrimaryButtonDown()) {
-									// Node clickedNode = event.getPickResult().getIntersectedNode();
-									// focRow = (int) GridPane.getRowIndex(clickedNode);
-									// focCol = (int) GridPane.getColumnIndex(clickedNode);
 									focused = inventaire.get(inventaire.indexOf(img.getId()));
 									desc.setText(focused.toString());
 									if (keyPressed.contains(KeyCode.CONTROL) || keyPressed.contains(KeyCode.SHIFT))
@@ -257,10 +258,6 @@ public class GameController extends Controller {
 											selected.add(focused);
 											img.setEffect(new DropShadow(35, 0, 0, Color.ORANGERED));
 										}
-
-									// for (InventoryItem item: selected) {
-									// System.out.println(item.getName());
-									// }
 								}
 							}
 						});
@@ -272,9 +269,25 @@ public class GameController extends Controller {
 							lastCol++;
 					}
 					if (c.wasRemoved()) {
+						// inventaire.foreach(it -> System.out.println(it.getName()));
+						// layoutInventory.getChildren().clear();
+						// inventaire.foreach(item -> layoutInventory.getChildren().add(new ImageView(
+						// "view/resources/Inventaire/" + item.getName() + "_Inv.png")));
+						lastCol = 0;
+						lastRow = 0;
 						c.getRemoved().forEach(
 								i -> layoutInventory.getChildren().removeIf(f -> f.getId().equals(i.getName())));
+						layoutInventory.getChildren().forEach(img -> {
+							GridPane.clearConstraints(img);
+							GridPane.setConstraints(img, lastCol, lastRow);
+							if (lastCol == 3) {
+								lastRow++;
+								lastCol = 0;
+							} else
+								lastCol++;
+						});
 						desc.setText("");
+
 					}
 				}
 			}
@@ -284,14 +297,13 @@ public class GameController extends Controller {
 		inventoryContainer.visibleProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue) {
 				inventoryContainer.setVisible(true);
-				utiliser.setText("Utiliser");
 				loop.pause();
 			} else {
 				inventoryContainer.setVisible(false);
-				utiliser.setText("Utiliser");
 				selected.clear();
 				loop.play();
 			}
+			utiliser.setText("Utiliser");
 		});
 
 		selected.addListener(new ListChangeListener<InventoryItem>() {
@@ -381,7 +393,6 @@ public class GameController extends Controller {
 
 	}
 
-	
 	public void scroll(String direction) {
 		switch (direction) {
 		case "Right":
@@ -758,8 +769,8 @@ public class GameController extends Controller {
 		// }
 	}
 
-//	public boolean aroundBill() {
-//		return true;
-//	}
+	// public boolean aroundBill() {
+	// return true;
+	// }
 
 }

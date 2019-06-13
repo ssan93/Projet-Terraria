@@ -97,7 +97,7 @@
             </ImageView>
             <Label fx:id="radio" contentDisplay="CENTER" layoutX="1017.0" layoutY="122.0" prefHeight="138.0" prefWidth="353.0" style="-fx-background-color: black;" textAlignment="CENTER" textFill="#40c365" />
             <Button fx:id="ok" layoutX="1322.0" layoutY="223.0" mnemonicParsing="false" onAction="#changeRdi" style="-fx-background-color: #40c635;" text="OK" />
-            <Label layoutX="20.0" layoutY="40.0" text="Equiped" textFill="#596643">
+            <Label layoutX="20.0" layoutY="40.0" text="Equipé" textFill="#596643">
                <font>
                   <Font name="FontAwesome Regular" size="40.0" />
                </font>
