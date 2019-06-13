@@ -145,7 +145,7 @@ public class GestionCollision {
 					} else {
 						tileTreated.set(index, no);
 					}
-					int prio = newCost + heuristic(t2, no);
+					int prio = newCost + heuristic(t2, no.getTile());
 
 					insert(new Nodes(no.getTile(), current.getTile(), prio), queue);
 
@@ -186,8 +186,8 @@ public class GestionCollision {
 		return neighborsList;
 	}
 
-	public int heuristic(Tiles goal, Nodes nextNode) {
-		return Math.abs(goal.getX() - nextNode.getTile().getX()) + Math.abs(goal.getY() - nextNode.getTile().getY());
+	public int heuristic(Tiles goal, Tiles nextNode) {
+		return Math.abs(goal.getX() - nextNode.getX()) + Math.abs(goal.getY() - nextNode.getY());
 	}
 
 	public void pathFinding(ArrayList<Nodes> path, Tiles start, Tiles goal) {

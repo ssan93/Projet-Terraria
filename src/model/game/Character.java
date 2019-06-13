@@ -5,7 +5,7 @@ import javafx.geometry.Rectangle2D;
 
 public class Character extends AnimatedObject {
 
-	private int speed, hp;
+	private int speed, hp, aggroRange;
 	SimpleIntegerProperty hpProperty;
 
 	public Character(int x, int y, int speed, int hp) {
@@ -13,6 +13,14 @@ public class Character extends AnimatedObject {
 		this.speed = speed;
 		this.hp = hp;
 		this.hpProperty = new SimpleIntegerProperty(hp);
+
+	}
+	public Character(int x, int y, int speed, int hp, int aggro) {
+		super(x, y);
+		this.speed = speed;
+		this.hp = hp;
+		this.hpProperty = new SimpleIntegerProperty(hp);
+		this.aggroRange = aggro;
 
 	}
 
@@ -58,6 +66,9 @@ public class Character extends AnimatedObject {
 
 	public int getHp() {
 		return this.hp;
+	}
+	public int getAggroRange() {
+		return this.aggroRange;
 	}
 
 	public void setHp(int hp) {
