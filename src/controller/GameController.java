@@ -683,6 +683,7 @@ public class GameController extends Controller {
 			if (equiped == focused) {
 				focused = inventaire.get(0);
 				equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
+				equip.setId(focused.getName());
 			}
 		}
 		selected.clear();
@@ -693,6 +694,7 @@ public class GameController extends Controller {
 		if (equiper.getText().equals("Equiper")) {
 			bill.getChrac().setEquiped(focused);
 			equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
+			equip.setId(focused.getName());
 			equiped = focused;
 		} else if (equiper.getText().equals("Craft")) {
 			String need = "";
