@@ -677,7 +677,7 @@ public class GameController extends Controller {
 	void drop(ActionEvent event) {
 		if (!selected.isEmpty())
 			selected.forEach(
-					i -> inventaire.removeIf(f -> !i.getName().equals("pioche") && i.getName().equals(f.getName())));
+					i -> inventaire.removeIf(f -> !i.getName().equals("pioche") && i.getName().equals(f.getName()) && i != equiped));
 		else if (!focused.getName().equals("pioche")) {
 			inventaire.removeFromInventory(focused.getName(), focused.getQuantity());
 			if (equiped == focused) {
