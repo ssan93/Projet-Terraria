@@ -61,6 +61,7 @@ public class GameController extends Controller {
 	private InventoryItem focused = null;
 	private ObservableList<Tiles> viewAbleSol;
 	private ObservableList<InventoryItem> selected;
+	private InventoryItem equiped;
 
 	@FXML
 	private Label desc;
@@ -81,7 +82,7 @@ public class GameController extends Controller {
 	private GridPane layoutInventory;
 
 	@FXML
-	private Button utiliser;
+	private Button equiper;
 
 	@FXML
 	private Button jeter;
@@ -121,6 +122,7 @@ public class GameController extends Controller {
 		inventaire.addToInventory(new InventoryItem("pioche", 1,
 				"La pioche est un outil composé de deux pièces : une pièce de travail en acier fixée par l'intermédiaire d'un œil à un manche en bois dur. La pièce de métal forme un angle d'environ 90° avec le manche."));
 		focused = inventaire.get(0);
+		equiped = focused;
 		equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
 		inventaire.addToInventory(Craft.objetÀcraft.get("10 fer, 10 plastique, 10 cuivre, etabli"));
 		inventaire.addToInventory(new Material("bois", 1, "bois qui vient des arbres"));
@@ -232,7 +234,6 @@ public class GameController extends Controller {
 			public void onChanged(Change<? extends InventoryItem> c) {
 				while (c.next()) {
 					if (c.wasAdded()) {
-						System.out.println(" subList" + c.getAddedSubList().size());
 						ImageView img = new ImageView(
 								"view/resources/Inventaire/" + c.getAddedSubList().get(0).getName() + "_Inv.png");
 						img.setId(c.getAddedSubList().get(0).getName());
@@ -242,7 +243,6 @@ public class GameController extends Controller {
 							@Override
 							public void handle(MouseEvent event) {
 								boolean in = event.getEventType().equals(MouseEvent.MOUSE_EXITED) ? false : true;
-								System.out.println(item.getName());
 								if (in && !selected.contains(item))
 									img.setEffect(new DropShadow(35, 0, 0, Color.CORNFLOWERBLUE));
 								else if (!in && !selected.contains(item))
@@ -269,10 +269,6 @@ public class GameController extends Controller {
 							lastCol++;
 					}
 					if (c.wasRemoved()) {
-						// inventaire.foreach(it -> System.out.println(it.getName()));
-						// layoutInventory.getChildren().clear();
-						// inventaire.foreach(item -> layoutInventory.getChildren().add(new ImageView(
-						// "view/resources/Inventaire/" + item.getName() + "_Inv.png")));
 						lastCol = 0;
 						lastRow = 0;
 						c.getRemoved().forEach(
@@ -287,7 +283,6 @@ public class GameController extends Controller {
 								lastCol++;
 						});
 						desc.setText("");
-
 					}
 				}
 			}
@@ -303,7 +298,7 @@ public class GameController extends Controller {
 				selected.clear();
 				loop.play();
 			}
-			utiliser.setText("Utiliser");
+			equiper.setText("Equiper");
 		});
 
 		selected.addListener(new ListChangeListener<InventoryItem>() {
@@ -312,9 +307,9 @@ public class GameController extends Controller {
 			public void onChanged(Change<? extends InventoryItem> c) {
 				while (c.next()) {
 					if (selected.size() >= 2)
-						utiliser.setText("Craft");
+						equiper.setText("Craft");
 					else
-						utiliser.setText("Utiliser");
+						equiper.setText("Equiper");
 				}
 			}
 		});
@@ -685,17 +680,21 @@ public class GameController extends Controller {
 					i -> inventaire.removeIf(f -> !i.getName().equals("pioche") && i.getName().equals(f.getName())));
 		else if (!focused.getName().equals("pioche")) {
 			inventaire.removeFromInventory(focused.getName(), focused.getQuantity());
-			focused = inventaire.get(0);
+			if (equiped == focused) {
+				focused = inventaire.get(0);
+				equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
+			}
 		}
 		selected.clear();
 	}
 
 	@FXML
 	void use(ActionEvent event) {
-		if (utiliser.getText().equals("Utiliser")) {
+		if (equiper.getText().equals("Equiper")) {
 			bill.getChrac().setEquiped(focused);
 			equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
-		} else if (utiliser.getText().equals("Craft")) {
+			equiped = focused;
+		} else if (equiper.getText().equals("Craft")) {
 			String need = "";
 			for (int i = 0; i < selected.size(); i++) {
 				InventoryItem item = selected.get(i);

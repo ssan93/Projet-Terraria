@@ -55,7 +55,7 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </GridPane>
-            <Button fx:id="utiliser" ellipsisString="" layoutX="1000.0" layoutY="780.0" mnemonicParsing="false" onAction="#use" style="-fx-background-color: #06821f;" text="UTILISER" textAlignment="CENTER" textFill="WHITE" textOverrun="WORD_ELLIPSIS">
+            <Button fx:id="equiper" ellipsisString="" layoutX="1000.0" layoutY="780.0" mnemonicParsing="false" onAction="#use" style="-fx-background-color: #06821f;" text="Equiper" textAlignment="CENTER" textFill="WHITE" textOverrun="WORD_ELLIPSIS">
                <font>
                   <Font name="DejaVu Sans Bold Oblique" size="46.0" />
                </font>
