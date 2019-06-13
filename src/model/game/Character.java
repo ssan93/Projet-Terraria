@@ -4,8 +4,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Rectangle2D;
 
 public class Character extends AnimatedObject {
-
-	private int speed, hp, aggroRange;
+	private GestionCollision detecteur;
+	private int speed, hp, aggroRange, move, moveLeft;
 	SimpleIntegerProperty hpProperty;
 
 	public Character(int x, int y, int speed, int hp) {
@@ -15,6 +15,7 @@ public class Character extends AnimatedObject {
 		this.hpProperty = new SimpleIntegerProperty(hp);
 
 	}
+
 	public Character(int x, int y, int speed, int hp, int aggro) {
 		super(x, y);
 		this.speed = speed;
@@ -39,12 +40,12 @@ public class Character extends AnimatedObject {
 
 	public void move(String direction, boolean pnj) {
 		switch (direction) {
-		case "RunLeft":
+		case "Left":
 			this.x.set(this.x.get() - 1);
 			if (this.getX() <= 0 && !pnj)
 				this.x.set(299);
 			break;
-		case "RunRight":
+		case "Right":
 			this.x.set(this.x.get() + 1);
 			if (this.getX() > 299 && !pnj)
 				this.x.set(1);
@@ -67,6 +68,7 @@ public class Character extends AnimatedObject {
 	public int getHp() {
 		return this.hp;
 	}
+
 	public int getAggroRange() {
 		return this.aggroRange;
 	}
@@ -79,33 +81,89 @@ public class Character extends AnimatedObject {
 	public void damage(int dp) {
 		this.hp -= dp;
 	}
-	
+
 	public void setHpProperty(int hp) {
 		this.hpProperty.set(hp);
 	}
+
 	public SimpleIntegerProperty getHpProperty() {
 		return this.hpProperty;
 	}
-	public void randomMove() {
-		int random = (int)(Math.random()*3);
+
+	public void randomMove(Character c, String character) {
+		int random;
+		if (moveLeft != 0)
+			random = move;
+		else {
+			random = (int) (Math.random() * 3);
+			this.moveLeft = 10;
+		}
 		switch (random) {
-		case 0 ://no move
+		case 0:// no move
 			break;
-		case 1 :
-			move("RunRight", true);
-			animation("right_run_buffalo");
+		case 1:
+			if (detecteur.verifRight(this, false, false, character)) {
+				c.move("Right", true);
+				animation("right_run_" + character);
+			}
 			break;
-		case 2 : 
-			move("RunLeft", true);
-			animation("left_run_buffalo");
+		case 2:
+			if (detecteur.verifLeft(this, false, false, character)) {
+				c.move("Left", true);
+				animation("left_run_" + character);
+			}
 			break;
-			
-		case 3 :
-			animation("left_static_buffalo");
+
+		case 3:
+			animation("left_static_" + character);
 			break;
-		case 4 :
-			animation("right_static_buffalo");
+		case 4:
+			animation("right_static_" + character);
 			break;
 		}
+		this.moveLeft--;
+		this.move = random;
+	}
+	public void randomMove(int n, String character) {
+		int random;
+		if (moveLeft != 0)
+			n = move;
+		else {
+			random = (int) (Math.random() * 3);
+			this.moveLeft = 10;
+		}
+		switch (n) {
+		case 0:// no move
+			break;
+		case 1:
+			
+				move("Right", true);
+				animation("right_run_" + character);
+			
+			break;
+		case 2:
+			
+				move("Left", true);
+				animation("left_run_" + character);
+			
+			break;
+
+		case 3:
+			animation("left_static_" + character);
+			break;
+		case 4:
+			animation("right_static_" + character);
+			break;
+		}
+		this.moveLeft--;
+		this.move = n;
+	}
+
+	public int getMove() {
+		return move;
+	}
+
+	public int getMoveLeft() {
+		return moveLeft;
 	}
 }

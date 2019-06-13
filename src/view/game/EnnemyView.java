@@ -22,7 +22,7 @@ public class EnnemyView extends CharacterView{
 					getImage().setImage(new Image("view/resources/personnages/heligun.gif"));
 					break;
 				case "stand":
-					getImage().setImage(new Image("view/resources/personnages/heli.gif"));
+					getImage().setImage(new Image("view/resources/personnages/heli1.gif"));
 					break;
 				
 				default:

@@ -20,10 +20,10 @@ public class BillView extends CharacterView {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				switch (newValue) {
-				case "RunRight":
+				case "Right":
 					getImage().setImage(new Image("view/resources/personnages/right_run_bill.gif"));
 					break;
-				case "RunLeft":
+				case "Left":
 					getImage().setImage(new Image("view/resources/personnages/left_run_bill.gif"));
 					break;
 				case "idleLeft":
