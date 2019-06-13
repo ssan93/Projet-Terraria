@@ -96,10 +96,10 @@ public class GameController extends Controller {
 	private EnnemyView ennemy = new EnnemyView("view/resources/personnages/right_static_bill.png", 5, 20, 10);
 	private EnnemyView buffalo = new EnnemyView("view/resources/personnages/buffalo.gif", 1, 20, 10);
 	private EnnemyView chicken = new EnnemyView("view/resources/personnages/Chicken.gif", 42 * 4, 22, 10);
-	private EnnemyView fly = new EnnemyView("view/resources/personnages/heli.gif", 42, 15, 10);
+	private EnnemyView fly = new EnnemyView("view/resources/personnages/heli3.gif", 42, 15, 10);
 	private int temps2 = 0 ;
 	ObservableList<Tiles> viewAbleSol;
-
+ 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		changeRdi(null);
@@ -640,7 +640,7 @@ public class GameController extends Controller {
 				Tiles t2 = new Tiles(billX, billY-2);
 				if (detecteur.heuristic(t, t2)==0) {
 					System.out.println(bill.getChrac().getHp());
-					//bill.getChrac().damage(10);
+//					bill.getChrac().damage(10);
 					fly.getChrac().animation("shoot");
 				}
 				else if (detecteur.heuristic(t1, t2) < fly.getChrac().getAggroRange() && detecteur.heuristic(new Tiles (43, 15), t1) < 30) {
