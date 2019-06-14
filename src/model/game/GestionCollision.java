@@ -35,6 +35,9 @@ public class GestionCollision {
 		case "chicken":
 			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() + 2] == 0
 					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+1) % Map.Largeur][ch.getY() + 2] == 0);
+		case "oculus":
+			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() + 2] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+1) % Map.Largeur][ch.getY() + 2] == 0);
 
 		default:
 			return false;
@@ -75,6 +78,9 @@ public class GestionCollision {
 		case "chicken":
 			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY() + 1] == 0
 					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY() ] == 0);
+		case "oculus":
+			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY() + 1] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY() ] == 0);
 
 		default:
 			return false;
@@ -106,6 +112,9 @@ public class GestionCollision {
 		case "chicken":
 			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() + 1] == 0
 					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() ] == 0);
+		case "oculus":
+			return (map.getMapSol()[(ch.getX()  + Map.Largeur) % Map.Largeur][ch.getY() ] == 0
+					&& map.getMapSol()[(ch.getX() + Map.Largeur) % Map.Largeur][ch.getY()+1] == 0);
 
 
 		default:
@@ -123,6 +132,10 @@ public class GestionCollision {
 		case "chicken":
 			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY()] == 0
 					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY() - 1] == 0);
+		case "oculus":
+			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY()] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY() - 1] == 0);
+
 
 		default:
 			return false;
@@ -137,6 +150,9 @@ public class GestionCollision {
 		case "chicken":
 			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() ] == 0
 					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() - 1] == 0);
+		case "oculus":
+			return (map.getMapSol()[(ch.getX()  + Map.Largeur) % Map.Largeur][ch.getY() ] == 0
+					&& map.getMapSol()[(ch.getX()  + Map.Largeur) % Map.Largeur][ch.getY() - 1] == 0);
 
 		default:
 			return false;

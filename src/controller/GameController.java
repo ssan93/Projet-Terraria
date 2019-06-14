@@ -110,10 +110,11 @@ public class GameController extends Controller {
 	private String oldAnim = "tactac";
 	private EnnemyView buffalo = new EnnemyView("view/resources/personnages/buffalo.gif", 1, 20, 10);
 	private EnnemyView chicken = new EnnemyView("view/resources/personnages/Chicken.gif", 42 * 4, 22, 10);
+	private EnnemyView oculus = new EnnemyView("view/resources/personnages/oculus.gif", 43 * 4, 22, 10);
 	private EnnemyView fly = new EnnemyView("view/resources/personnages/heli1.gif", 42, 15, 10);
 	private int temps2 = 0;
 	int moveBuffalo = 1;
-	int moveChicken = 1 ;
+	int moveChicken = 1;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -139,6 +140,7 @@ public class GameController extends Controller {
 				"La pioche est un outil composé de deux pièces : une pièce de travail en acier fixée par l'intermédiaire d'un œil à un manche en bois dur. La pièce de métal forme un angle d'environ 90° avec le manche."));
 		focused = inventaire.get(0);
 		equiped = focused;
+		bill.getChrac().setEquiped(equiped);
 		equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
 		inventaire.addToInventory(Craft.objetÀcraft.get("10 fer, 10 plastique, 10 cuivre, etabli"));
 		inventaire.addToInventory(new Material("bois", 1, "bois qui vient des arbres"));
@@ -150,12 +152,15 @@ public class GameController extends Controller {
 		pnjPane.getChildren().add(buffalo.getImage());
 		pnjPane.getChildren().add(chicken.getImage());
 		pnjPane.getChildren().add(fly.getImage());
+		pnjPane.getChildren().add(oculus.getImage());
 		charapane.setDisable(true);
 		pnjPane.setDisable(true);
 		buffalo.getImage().layoutXProperty().bind(buffalo.getChrac().getXProperty().multiply(32 / 4));
 		buffalo.getImage().layoutYProperty().bind(buffalo.getChrac().getYProperty().multiply(32));
 		chicken.getImage().layoutXProperty().bind(chicken.getChrac().getXProperty().multiply(32 / 4));
 		chicken.getImage().layoutYProperty().bind(chicken.getChrac().getYProperty().multiply(32));
+		oculus.getImage().layoutXProperty().bind(oculus.getChrac().getXProperty().multiply(32 / 4));
+		oculus.getImage().layoutYProperty().bind(oculus.getChrac().getYProperty().multiply(32));
 		fly.getImage().layoutXProperty().bind(fly.getChrac().getXProperty().multiply(32).subtract(32));
 		fly.getImage().layoutYProperty().bind(fly.getChrac().getYProperty().multiply(32).subtract(32));
 	}
@@ -175,7 +180,7 @@ public class GameController extends Controller {
 							ImageView img = new TileView(tileAdded);
 							switch (add) {
 							case "Left":
-								img.relocate(5-32, tileAdded.getY() * 32 + relocated);
+								img.relocate(5 - 32, tileAdded.getY() * 32 + relocated);
 								break;
 							case "Right":
 								img.relocate(60 * 32 - 5, tileAdded.getY() * 32 + relocated);
@@ -184,7 +189,8 @@ public class GameController extends Controller {
 								img.relocate(tileAdded.getX() * 32, 0);
 								break;
 							case "Down":
-								img.relocate((tileAdded.getX() * 32 - addLignX * 32 - 32 + countX)%(Map.Largeur*32), 34 * 32);
+								img.relocate((tileAdded.getX() * 32 - addLignX * 32 - 32 + countX) % (Map.Largeur * 32),
+										34 * 32);
 								break;
 							}
 							floor.getChildren().add(img);
@@ -313,10 +319,10 @@ public class GameController extends Controller {
 						});
 						desc.setText("");
 						focused = inventaire.get(0);
-						equiped=focused;
+						equiped = focused;
 						equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
 						equip.setId(focused.getName());
-						//ici
+						// ici
 					}
 				}
 			}
@@ -422,7 +428,7 @@ public class GameController extends Controller {
 		if (allowMouv && ((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)))
 				&& detecteur.verifRight(bill.getChrac(), jumping, falling, "bill")) {
 			bill.getChrac().animation("Right");
-			if(isPlaying && jumping) {
+			if (isPlaying && jumping) {
 				endEffectPlay();
 			}
 			if (!isPlaying && !falling && !jumping) {
@@ -434,7 +440,7 @@ public class GameController extends Controller {
 		if (allowMouv && ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)))
 				&& detecteur.verifLeft(bill.getChrac(), jumping, falling, "bill")) {
 			bill.getChrac().animation("Left");
-			if(isPlaying && jumping || falling) {
+			if (isPlaying && jumping || falling) {
 				endEffectPlay();
 			}
 			if (!isPlaying && !falling && !jumping) {
@@ -613,11 +619,11 @@ public class GameController extends Controller {
 		case "Left":
 			add = "Left";
 			for (Tiles tile : ListMid)
-				if (tile.getX() == (addLignX-1 + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
+				if (tile.getX() == (addLignX - 1 + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
 						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == (addLignX-1 + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
+				if (tile.getX() == (addLignX - 1 + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
 						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			addLignX--;
@@ -635,18 +641,22 @@ public class GameController extends Controller {
 
 		case "Down":
 			add = "Down";
-			int leftBorn = (addLignX-1 + Map.Largeur) % Map.Largeur;
+			int leftBorn = (addLignX - 1 + Map.Largeur) % Map.Largeur;
 			int rightBorn = (addLignX + 61 + Map.Largeur) % Map.Largeur;
 			for (Tiles tile : ListMid)
-				if( ( leftBorn > rightBorn && ((tile.getX() >= leftBorn || tile.getX() < rightBorn) && tile.getY() == addLignBot))
+				if ((leftBorn > rightBorn
+						&& ((tile.getX() >= leftBorn || tile.getX() < rightBorn) && tile.getY() == addLignBot))
 						|| (tile.getX() >= leftBorn && tile.getX() < rightBorn && tile.getY() == addLignBot))
-						viewAbleSol.add(tile);
-			
+					viewAbleSol.add(tile);
+
 			for (Tiles tile : ListSol)
-				if( ( leftBorn > rightBorn && ((tile.getX() >= leftBorn || tile.getX() < rightBorn) && tile.getY() == addLignBot))
+				if ((leftBorn > rightBorn
+						&& ((tile.getX() >= leftBorn || tile.getX() < rightBorn) && tile.getY() == addLignBot))
 						|| (tile.getX() >= leftBorn && tile.getX() < rightBorn && tile.getY() == addLignBot))
-				/*if (tile.getX() >= ((addLignX + Map.Largeur) % Map.Largeur)
-						&& tile.getX() < ((addLignX + 60 + Map.Largeur) % Map.Largeur) && tile.getY() == addLignBot)*/
+					/*
+					 * if (tile.getX() >= ((addLignX + Map.Largeur) % Map.Largeur) && tile.getX() <
+					 * ((addLignX + 60 + Map.Largeur) % Map.Largeur) && tile.getY() == addLignBot)
+					 */
 					viewAbleSol.add(tile);
 			addLignBot++;
 
@@ -655,7 +665,8 @@ public class GameController extends Controller {
 		}
 	}
 
-	//if((addLignX + Map.Largeur) % Map.Largeur) >= tile.getX() && tile.getX() <= (addLignX + 60 + Map.Largeur) % Map.Largeur)  );
+	// if((addLignX + Map.Largeur) % Map.Largeur) >= tile.getX() && tile.getX() <=
+	// (addLignX + 60 + Map.Largeur) % Map.Largeur) );
 	/**
 	 * delete images according to the direction
 	 * 
@@ -744,7 +755,23 @@ public class GameController extends Controller {
 			randomMove(buffalo.getChrac(), "buffalo");
 			randomMove(chicken.getChrac(), "chicken");
 			animalFalling();
-
+			if (bill.getChrac().getX() < oculus.getChrac().getX()/4) {
+				if (detecteur.verifLeft(oculus.getChrac(), false, false, "chicken"))
+					oculus.getChrac().move("Left", true);
+				else if (detecteur.verifTopLeft(oculus.getChrac(), "chicken")) {
+					oculus.getChrac().move("Up", true);
+					oculus.getChrac().move("Left", true);
+				}
+			}
+			else if(bill.getChrac().getX() > oculus.getChrac().getX()/4){
+				if (detecteur.verifRight(oculus.getChrac(), false, false, "chicken"))
+					oculus.getChrac().move("Right", true);
+				else if (detecteur.verifTopRight(oculus.getChrac(), "chicken")) {
+					oculus.getChrac().move("Up", true);
+					oculus.getChrac().move("Right", true);
+				}
+			}
+				
 		}));
 		loop.getKeyFrames().add(kf);
 	}
@@ -754,19 +781,22 @@ public class GameController extends Controller {
 			chicken.getChrac().move("Down", true);
 		if (detecteur.verifUnder(buffalo.getChrac(), "buffalo"))
 			buffalo.getChrac().move("Down", true);
+		if (detecteur.verifUnder(oculus.getChrac(), "chicken"))
+			oculus.getChrac().move("Down", true);
 	}
 
 	public void randomMove(Character ch, String character) {
 		if (temps2 % ((int) Math.random() * 11 + 10) == 0) {
-				moveBuffalo = (int) (Math.random() * 5) + 1;
-				moveChicken = (int) (Math.random() * 5) + 1;
+			moveBuffalo = (int) (Math.random() * 5) + 1;
+			moveChicken = (int) (Math.random() * 5) + 1;
 		}
-		if(character.equals("buffalo"))
+		if (character.equals("buffalo"))
 			switchMove(ch, character, moveBuffalo);
-		else if(character.equals("chicken"))
+		else if (character.equals("chicken"))
 			switchMove(ch, character, moveChicken);
 
 	}
+
 	public void switchMove(Character ch, String character, int move) {
 		switch (move) {
 		case 1:
@@ -796,6 +826,7 @@ public class GameController extends Controller {
 			break;
 		}
 	}
+
 	public void flyMove() {
 		int[][] tabSol = mapPrincipale.getMapSol();
 		int flyX = fly.getChrac().getX();
@@ -861,8 +892,8 @@ public class GameController extends Controller {
 	@FXML
 	void drop(ActionEvent event) {
 		if (!selected.isEmpty())
-			selected.forEach(
-					i -> inventaire.removeIf(f -> !i.getName().equals("pioche") && i.getName().equals(f.getName()) && i != equiped));
+			selected.forEach(i -> inventaire
+					.removeIf(f -> !i.getName().equals("pioche") && i.getName().equals(f.getName()) && i != equiped));
 		else if (!focused.getName().equals("pioche")) {
 			inventaire.removeFromInventory(focused.getName(), focused.getQuantity());
 			if (equiped == focused) {
