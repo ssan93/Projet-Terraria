@@ -36,7 +36,7 @@ import view.game.TileView;
 import model.game.Craft;
 import model.game.Character;
 import model.game.ColdSteel;
-import model.game.GestionCollision;
+import model.game.CollisionManager;
 import model.game.Inventory;
 import model.game.InventoryItem;
 import model.game.Map;
@@ -50,7 +50,7 @@ public class GameController extends Controller {
 
 	private MediaPlayer effectPlayer;
 	private radioChatter ra = new radioChatter();
-	private GestionCollision detecteur;
+	private CollisionManager detecteur;
 	private static ArrayList<KeyCode> keyPressed = new ArrayList<>();
 	private boolean allowMouv = false;
 	private InventoryItem focused = null;
@@ -140,7 +140,7 @@ public class GameController extends Controller {
 		inventaire = new Inventory();
 		background.getChildren().add(0, new ImageView(new Image("view/resources/tac.jpg")));
 		isAlive = new SimpleBooleanProperty(true);
-		detecteur = new GestionCollision(mapPrincipale);
+		detecteur = new CollisionManager(mapPrincipale);
 		mv = new MapView(mapPrincipale);
 		viewAbleSol = mv.getListViewSol();
 		initAnimation();
@@ -206,7 +206,7 @@ public class GameController extends Controller {
 								img.relocate(tileAdded.getX() * 32, 0);
 								break;
 							case "Down":
-								img.relocate((tileAdded.getX() * 32 - addLignX * 32 - 32 + countX) % (Map.Largeur * 32),
+								img.relocate((tileAdded.getX() * 32 - addLignX * 32 - 32 + countX) % (Map.WIDTH * 32),
 										34 * 32);
 								break;
 							}
@@ -658,11 +658,11 @@ public class GameController extends Controller {
 		case "Right":
 			add = "Right";
 			for (Tiles tile : ListMid)
-				if (tile.getX() == (addLignX + 61) % Map.Largeur && addLignTop <= tile.getY()
+				if (tile.getX() == (addLignX + 61) % Map.WIDTH && addLignTop <= tile.getY()
 						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == (addLignX + 61) % Map.Largeur && addLignTop <= tile.getY()
+				if (tile.getX() == (addLignX + 61) % Map.WIDTH && addLignTop <= tile.getY()
 						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			addLignX++;
@@ -672,11 +672,11 @@ public class GameController extends Controller {
 		case "Left":
 			add = "Left";
 			for (Tiles tile : ListMid)
-				if (tile.getX() == (addLignX - 1 + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
+				if (tile.getX() == (addLignX - 1 + Map.WIDTH) % Map.WIDTH && addLignTop <= tile.getY()
 						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == (addLignX - 1 + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
+				if (tile.getX() == (addLignX - 1 + Map.WIDTH) % Map.WIDTH && addLignTop <= tile.getY()
 						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			addLignX--;
@@ -694,8 +694,8 @@ public class GameController extends Controller {
 
 		case "Down":
 			add = "Down";
-			int leftBorn = (addLignX - 1 + Map.Largeur) % Map.Largeur;
-			int rightBorn = (addLignX + 61 + Map.Largeur) % Map.Largeur;
+			int leftBorn = (addLignX - 1 + Map.WIDTH) % Map.WIDTH;
+			int rightBorn = (addLignX + 61 + Map.WIDTH) % Map.WIDTH;
 			for (Tiles tile : ListMid)
 				if ((leftBorn > rightBorn
 						&& ((tile.getX() >= leftBorn || tile.getX() < rightBorn) && tile.getY() == addLignBot))
@@ -878,7 +878,7 @@ public class GameController extends Controller {
 				if (detecteur.heuristic(t, t2) == 0) {
 					 bill.getChrac().damage(10);
 					fly.getChrac().animation("shoot");
-				} else if (tabSol[(billX + 1 + Map.Largeur) % Map.Largeur][billY - 1] != 0
+				} else if (tabSol[(billX + 1 + Map.WIDTH) % Map.WIDTH][billY - 1] != 0
 						&& detecteur.heuristic(t, t2) < fly.getChrac().getAggroRange()) {
 
 				} else if (detecteur.heuristic(t, t2) < fly.getChrac().getAggroRange()

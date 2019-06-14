@@ -4,13 +4,13 @@ package model.game;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Rectangle2D;
 
-public class Objet {
+public class Object {
 
 	protected SimpleIntegerProperty x, y;
 	protected int id;
 	private static int lastId = 0;
 
-	public Objet(int x, int y) {
+	public Object(int x, int y) {
 		this.x = new SimpleIntegerProperty(x);
 		this.y = new SimpleIntegerProperty(y);
 		this.id = ++lastId;

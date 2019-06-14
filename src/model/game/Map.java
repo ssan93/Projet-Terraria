@@ -12,9 +12,9 @@ public class Map {
 	private int[][] tabSol, mid;
 	private ObservableList<Tiles> tilesListSol, tilesListMid;
 
-	public static final int Largeur = 300, Hauteur = 100;
+	public static final int WIDTH = 300, Height = 100;
 
-	private String fichierDuSol, fichierDuMilieu/* , fichierDuBg */;
+	private String groundFile, fichierDuMilieu/* , fichierDuBg */;
 
 	/**
 	 * 
@@ -25,15 +25,15 @@ public class Map {
 	 * 
 	 */
 	public Map(String carteSol, String carteMilieu) {
-		this.fichierDuSol = carteSol;
+		this.groundFile = carteSol;
 		this.fichierDuMilieu = carteMilieu;
 		this.tilesListSol = FXCollections.observableArrayList();
 		this.tilesListMid = FXCollections.observableArrayList();
 
-		this.tabSol = new int[Largeur][Hauteur];// sol : terre, pierre, mine this.milieu
-		this.mid = new int[Largeur][Hauteur];// environnement : arbre, caillou,etc.. this.bg =
+		this.tabSol = new int[WIDTH][Height];// sol : terre, pierre, mine this.milieu
+		this.mid = new int[WIDTH][Height];// environnement : arbre, caillou,etc.. this.bg =
 
-		this.initialiseMap(fichierDuSol, true);
+		this.initialiseMap(groundFile, true);
 		this.initialiseMap(fichierDuMilieu, false);
 	}
 

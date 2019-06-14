@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Queue;
 import java.util.Stack;
 
-public class GestionCollision {
+public class CollisionManager {
 
 	private Map map;
 	ArrayList<Tiles> tileList = new ArrayList<>();
 
-	public GestionCollision(Map m) {
+	public CollisionManager(Map m) {
 		this.map = m;
 	}
 
@@ -26,18 +26,18 @@ public class GestionCollision {
 	public boolean verifUnder(Character ch, String character) {
 		switch (character) {
 		case "bill":
-			return (map.getMapSol()[(ch.getX() - 1 + Map.Largeur) % Map.Largeur][ch.getY() + 2] == 0
-					&& map.getMapSol()[(ch.getX() + Map.Largeur) % Map.Largeur][ch.getY() + 2] == 0);
+			return (map.getMapSol()[(ch.getX() - 1 + Map.WIDTH) % Map.WIDTH][ch.getY() + 2] == 0
+					&& map.getMapSol()[(ch.getX() + Map.WIDTH) % Map.WIDTH][ch.getY() + 2] == 0);
 		case "buffalo":
-			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur+1) % Map.Largeur][ch.getY() + 3] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY() + 3] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+3) % Map.Largeur][ch.getY() + 3] == 0);
+			return (map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+1) % Map.WIDTH][ch.getY() + 3] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+2) % Map.WIDTH][ch.getY() + 3] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+3) % Map.WIDTH][ch.getY() + 3] == 0);
 		case "chicken":
-			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() + 2] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+1) % Map.Largeur][ch.getY() + 2] == 0);
+			return (map.getMapSol()[(ch.getX() / 4 + Map.WIDTH) % Map.WIDTH][ch.getY() + 2] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+1) % Map.WIDTH][ch.getY() + 2] == 0);
 		case "oculus":
-			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() + 2] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+1) % Map.Largeur][ch.getY() + 2] == 0);
+			return (map.getMapSol()[(ch.getX() / 4 + Map.WIDTH) % Map.WIDTH][ch.getY() + 2] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+1) % Map.WIDTH][ch.getY() + 2] == 0);
 
 		default:
 			return false;
@@ -52,7 +52,7 @@ public class GestionCollision {
 	 * @return true si il y a rien au dessus du personnage.
 	 */
 	public boolean verifTop(Character ch) {
-		return (map.getMapSol()[(ch.getX() - 1+map.Largeur)%map.Largeur][ch.getY() + 1] == 0 && map.getMapSol()[(ch.getX() - 1+map.Largeur)%map.Largeur][ch.getY()] == 0);
+		return (map.getMapSol()[(ch.getX() - 1+map.WIDTH)%map.WIDTH][ch.getY() + 1] == 0 && map.getMapSol()[(ch.getX() - 1+map.WIDTH)%map.WIDTH][ch.getY()] == 0);
 	}
 
 	/**
@@ -63,24 +63,24 @@ public class GestionCollision {
 	public boolean verifRight(Character ch, boolean jumping, boolean falling, String character) {
 		switch (character) {
 		case "bill":
-			boolean verifDefault = map.getMapSol()[(ch.getX() + Map.Largeur) % map.Largeur][ch.getY()] == 0
-					&& map.getMapSol()[(ch.getX() + map.Largeur) % map.Largeur][ch.getY() + 1] == 0;
+			boolean verifDefault = map.getMapSol()[(ch.getX() + Map.WIDTH) % map.WIDTH][ch.getY()] == 0
+					&& map.getMapSol()[(ch.getX() + map.WIDTH) % map.WIDTH][ch.getY() + 1] == 0;
 			if (falling)
-				return verifDefault && map.getMapSol()[(ch.getX() + 1) % Map.Largeur][ch.getY() + 2] == 0;
+				return verifDefault && map.getMapSol()[(ch.getX() + 1) % Map.WIDTH][ch.getY() + 2] == 0;
 			if (jumping)
 				return verifDefault && map.getMapSol()[ch.getX()][ch.getY() + 2] == 0;
 
 			return verifDefault;
 		case "buffalo":
-			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur+4) % Map.Largeur][ch.getY() + 2] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+4) % Map.Largeur][ch.getY() + 1] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+4) % Map.Largeur][ch.getY() ] == 0);
+			return (map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+4) % Map.WIDTH][ch.getY() + 2] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+4) % Map.WIDTH][ch.getY() + 1] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+4) % Map.WIDTH][ch.getY() ] == 0);
 		case "chicken":
-			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY() + 1] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY() ] == 0);
+			return (map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+2) % Map.WIDTH][ch.getY() + 1] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+2) % Map.WIDTH][ch.getY() ] == 0);
 		case "oculus":
-			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY() + 1] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY() ] == 0);
+			return (map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+2) % Map.WIDTH][ch.getY() + 1] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+2) % Map.WIDTH][ch.getY() ] == 0);
 
 		default:
 			return false;
@@ -98,23 +98,23 @@ public class GestionCollision {
 	public boolean verifLeft(Character ch, boolean jumping, boolean falling, String character) {
 		switch (character) {
 		case "bill":
-			boolean verifDefault = map.getMapSol()[(ch.getX() - 1  + Map.Largeur) % Map.Largeur][ch.getY()] == 0
-					&& map.getMapSol()[(ch.getX() - 1  + Map.Largeur) % Map.Largeur][ch.getY() + 1] == 0;
+			boolean verifDefault = map.getMapSol()[(ch.getX() - 1  + Map.WIDTH) % Map.WIDTH][ch.getY()] == 0
+					&& map.getMapSol()[(ch.getX() - 1  + Map.WIDTH) % Map.WIDTH][ch.getY() + 1] == 0;
 			if (falling)
-				return verifDefault && map.getMapSol()[(ch.getX() - 2 + map.Largeur) % map.Largeur][ch.getY() + 2] == 0; // %map.Largeur for map boundaries
+				return verifDefault && map.getMapSol()[(ch.getX() - 2 + map.WIDTH) % map.WIDTH][ch.getY() + 2] == 0; // %map.Largeur for map boundaries
 			if (jumping)
-				return verifDefault && map.getMapSol()[(ch.getX() - 1 + map.Largeur) % map.Largeur][ch.getY() + 2] == 0;
+				return verifDefault && map.getMapSol()[(ch.getX() - 1 + map.WIDTH) % map.WIDTH][ch.getY() + 2] == 0;
 			return verifDefault;
 		case "buffalo":
-			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() + 2] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() + 1] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() ] == 0);
+			return (map.getMapSol()[(ch.getX() / 4 + Map.WIDTH) % Map.WIDTH][ch.getY() + 2] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH) % Map.WIDTH][ch.getY() + 1] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH) % Map.WIDTH][ch.getY() ] == 0);
 		case "chicken":
-			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() + 1] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() ] == 0);
+			return (map.getMapSol()[(ch.getX() / 4 + Map.WIDTH) % Map.WIDTH][ch.getY() + 1] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH) % Map.WIDTH][ch.getY() ] == 0);
 		case "oculus":
-			return (map.getMapSol()[(ch.getX()  + Map.Largeur) % Map.Largeur][ch.getY() ] == 0
-					&& map.getMapSol()[(ch.getX() + Map.Largeur) % Map.Largeur][ch.getY()+1] == 0);
+			return (map.getMapSol()[(ch.getX()  + Map.WIDTH) % Map.WIDTH][ch.getY() ] == 0
+					&& map.getMapSol()[(ch.getX() + Map.WIDTH) % Map.WIDTH][ch.getY()+1] == 0);
 
 
 		default:
@@ -126,15 +126,15 @@ public class GestionCollision {
 	public boolean verifTopRight(Character ch, String character) {
 		switch (character) {
 		case "buffalo":
-			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur+4) % Map.Largeur][ch.getY() + 1] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+4) % Map.Largeur][ch.getY() ] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+4) % Map.Largeur][ch.getY() - 1] == 0);
+			return (map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+4) % Map.WIDTH][ch.getY() + 1] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+4) % Map.WIDTH][ch.getY() ] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+4) % Map.WIDTH][ch.getY() - 1] == 0);
 		case "chicken":
-			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY()] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY() - 1] == 0);
+			return (map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+2) % Map.WIDTH][ch.getY()] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+2) % Map.WIDTH][ch.getY() - 1] == 0);
 		case "oculus":
-			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY()] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur+2) % Map.Largeur][ch.getY() - 1] == 0);
+			return (map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+2) % Map.WIDTH][ch.getY()] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH+2) % Map.WIDTH][ch.getY() - 1] == 0);
 
 
 		default:
@@ -144,15 +144,15 @@ public class GestionCollision {
 	public boolean verifTopLeft(Character ch, String character) {
 		switch (character) {
 		case "buffalo":
-			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() + 1] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() ] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() - 1] == 0);
+			return (map.getMapSol()[(ch.getX() / 4 + Map.WIDTH) % Map.WIDTH][ch.getY() + 1] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH) % Map.WIDTH][ch.getY() ] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH) % Map.WIDTH][ch.getY() - 1] == 0);
 		case "chicken":
-			return (map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() ] == 0
-					&& map.getMapSol()[(ch.getX() / 4 + Map.Largeur) % Map.Largeur][ch.getY() - 1] == 0);
+			return (map.getMapSol()[(ch.getX() / 4 + Map.WIDTH) % Map.WIDTH][ch.getY() ] == 0
+					&& map.getMapSol()[(ch.getX() / 4 + Map.WIDTH) % Map.WIDTH][ch.getY() - 1] == 0);
 		case "oculus":
-			return (map.getMapSol()[(ch.getX()  + Map.Largeur) % Map.Largeur][ch.getY() ] == 0
-					&& map.getMapSol()[(ch.getX()  + Map.Largeur) % Map.Largeur][ch.getY() - 1] == 0);
+			return (map.getMapSol()[(ch.getX()  + Map.WIDTH) % Map.WIDTH][ch.getY() ] == 0
+					&& map.getMapSol()[(ch.getX()  + Map.WIDTH) % Map.WIDTH][ch.getY() - 1] == 0);
 
 		default:
 			return false;

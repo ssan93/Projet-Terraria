@@ -2,7 +2,7 @@ package model.game;
 
 import javafx.beans.property.SimpleStringProperty;
 
-public class AnimatedObject extends Objet {
+public class AnimatedObject extends Object {
 
 	SimpleStringProperty anim;
 

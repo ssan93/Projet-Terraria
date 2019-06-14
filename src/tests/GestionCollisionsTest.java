@@ -2,13 +2,13 @@ package tests;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import model.game.Character;
-import model.game.GestionCollision;
+import model.game.CollisionManager;
 import model.game.Map;
 
 class GestionCollisionsTest {
 
 	private Map mapPrincipale = new Map("src/maps/grosseMap_sol.csv", "src/maps/grosseMap_environnement.csv");
-	GestionCollision gc = new GestionCollision(mapPrincipale);
+	CollisionManager gc = new CollisionManager(mapPrincipale);
 	Character c = new Character(17, 22, 2, 10);
 	
 	@Test
