@@ -11,7 +11,7 @@ public class BillView extends CharacterView {
 	public BillView(String imagePerso) {
 		super(imagePerso);
 		this.charac = new Bill(31, 16, 9);
-		this.imageViewCharac.relocate(0, 0);
+		this.relocate(0, 0);
 		this.animation();
 	}
 
@@ -21,22 +21,22 @@ public class BillView extends CharacterView {
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				switch (newValue) {
 				case "Right":
-					getImage().setImage(new Image("view/resources/personnages/right_run_bill.gif"));
+					setImage(new Image("view/resources/personnages/right_run_bill.gif"));
 					break;
 				case "Left":
-					getImage().setImage(new Image("view/resources/personnages/left_run_bill.gif"));
+					setImage(new Image("view/resources/personnages/left_run_bill.gif"));
 					break;
 				case "idleLeft":
-					getImage().setImage(new Image("view/resources/personnages/left_static_bill.png"));
+					setImage(new Image("view/resources/personnages/left_static_bill.png"));
 					break;
 				case "idleRight":
-					getImage().setImage(new Image("view/resources/personnages/right_static_bill.png"));
+					setImage(new Image("view/resources/personnages/right_static_bill.png"));
 					break;
 				case "jumpRight":
-					getImage().setImage(new Image("view/resources/personnages/right_jump_bill.gif"));
+					setImage(new Image("view/resources/personnages/right_jump_bill.gif"));
 					break;
 				case "jumpLeft":
-					getImage().setImage(new Image("view/resources/personnages/left_jump_bill.gif"));
+					setImage(new Image("view/resources/personnages/left_jump_bill.gif"));
 					break;
 				default:
 					break;

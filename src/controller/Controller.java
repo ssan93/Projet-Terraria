@@ -23,9 +23,6 @@ public class Controller implements Initializable {
 	private Button play;
 
 	@FXML
-	private Button options;
-
-	@FXML
 	private Button quit;
 
 	private SimpleBooleanProperty inGame;

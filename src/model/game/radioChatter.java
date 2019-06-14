@@ -13,6 +13,7 @@ public class radioChatter {
 		radioCalls.add("POUR TE DEPLACER UTILISE Q & D ...");
 		radioCalls.add("POUR SAUTER UTIlISE SPACE ...");
 		radioCalls.add("PARFAIT BILL, POUR UTILISER TON INVENTAIRE APPUI SUR I");
+		radioCalls.add("PARFAIT BILL, POUR CRAFTER APPUI SUR C");
 		radioCalls.add("C'EST TOUT BILL, BONNE CHANCE.");
 	}
 

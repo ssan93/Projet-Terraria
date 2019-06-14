@@ -35,7 +35,7 @@ import view.game.MapView;
 import view.game.TileView;
 import model.game.Craft;
 import model.game.Character;
-import model.game.Ennemy;
+import model.game.ColdSteel;
 import model.game.GestionCollision;
 import model.game.Inventory;
 import model.game.InventoryItem;
@@ -56,6 +56,7 @@ public class GameController extends Controller {
 	private InventoryItem focused = null;
 	private ObservableList<Tiles> viewAbleSol;
 	private ObservableList<InventoryItem> selected;
+	private Inventory craftable;
 	private InventoryItem equiped;
 	private boolean isPlaying = false;
 
@@ -108,6 +109,16 @@ public class GameController extends Controller {
 	private long temps;
 	private BillView bill = new BillView("view/resources/personnages/right_static_bill.png");
 	private String oldAnim = "tactac";
+	@FXML
+	private Pane craftContainer;
+
+	@FXML
+	private GridPane layoutCraft;
+
+	@FXML
+	private Button craft;
+
+	
 	private EnnemyView buffalo = new EnnemyView("view/resources/personnages/buffalo.gif", 1, 20, 10);
 	private EnnemyView chicken = new EnnemyView("view/resources/personnages/Chicken.gif", 42 * 4, 22, 10);
 	private EnnemyView oculus = new EnnemyView("view/resources/personnages/oculus.gif", 43 * 4, 22, 10);
@@ -120,6 +131,7 @@ public class GameController extends Controller {
 	public void initialize(URL location, ResourceBundle resources) {
 		Craft.inizCraft();
 		TileView.inizImages();
+		craftable = new Inventory();
 		selected = FXCollections.observableArrayList();
 		changeRdi(null);
 		effect.visibleProperty().bind(inventoryContainer.visibleProperty());
@@ -133,10 +145,10 @@ public class GameController extends Controller {
 		initAnimation();
 		loop.play();
 		bill.getChrac().setSpeed(4);
-		charapane.getChildren().add(bill.getImage());
+		charapane.getChildren().add(bill);
 		floor.getChildren().addAll(mv.creerVue());
 		addListen();
-		inventaire.addToInventory(new InventoryItem("pioche", 1,
+		inventaire.addToInventory(new Tool("pioche",
 				"La pioche est un outil composé de deux pièces : une pièce de travail en acier fixée par l'intermédiaire d'un œil à un manche en bois dur. La pièce de métal forme un angle d'environ 90° avec le manche."));
 		focused = inventaire.get(0);
 		equiped = focused;
@@ -149,20 +161,29 @@ public class GameController extends Controller {
 		// inventaire.addToInventory("metal", 5);
 		inventaire.addToInventory(new InventoryItem("M16", 1, ""));
 		play();
-		pnjPane.getChildren().add(buffalo.getImage());
-		pnjPane.getChildren().add(chicken.getImage());
-		pnjPane.getChildren().add(fly.getImage());
-		pnjPane.getChildren().add(oculus.getImage());
+		inventaire.addToInventory(new Material("bois", 1, ""));
+		inventaire.addToInventory(new Material("metal", 2, ""));
+		pnjPane.getChildren().add(buffalo);
+		pnjPane.getChildren().add(chicken);
+		pnjPane.getChildren().add(fly);
+		pnjPane.getChildren().add(oculus);
 		charapane.setDisable(true);
 		pnjPane.setDisable(true);
-		buffalo.getImage().layoutXProperty().bind(buffalo.getChrac().getXProperty().multiply(32 / 4));
-		buffalo.getImage().layoutYProperty().bind(buffalo.getChrac().getYProperty().multiply(32));
-		chicken.getImage().layoutXProperty().bind(chicken.getChrac().getXProperty().multiply(32 / 4));
-		chicken.getImage().layoutYProperty().bind(chicken.getChrac().getYProperty().multiply(32));
-		oculus.getImage().layoutXProperty().bind(oculus.getChrac().getXProperty().multiply(32 / 4));
-		oculus.getImage().layoutYProperty().bind(oculus.getChrac().getYProperty().multiply(32));
-		fly.getImage().layoutXProperty().bind(fly.getChrac().getXProperty().multiply(32).subtract(32));
-		fly.getImage().layoutYProperty().bind(fly.getChrac().getYProperty().multiply(32).subtract(32));
+		buffalo.layoutXProperty().bind(buffalo.getChrac().getXProperty().multiply(32 / 4));
+		buffalo.layoutYProperty().bind(buffalo.getChrac().getYProperty().multiply(32));
+		chicken.layoutXProperty().bind(chicken.getChrac().getXProperty().multiply(32 / 4));
+		chicken.layoutYProperty().bind(chicken.getChrac().getYProperty().multiply(32));
+		oculus.layoutXProperty().bind(oculus.getChrac().getXProperty().multiply(32 / 4));
+		oculus.layoutYProperty().bind(oculus.getChrac().getYProperty().multiply(32));
+		fly.layoutXProperty().bind(fly.getChrac().getXProperty().multiply(32).subtract(32));
+		fly.layoutYProperty().bind(fly.getChrac().getYProperty().multiply(32).subtract(32));
+		fly.getChrac().getHpProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue.intValue() <= 0)
+				pnjPane.getChildren().remove(fly);
+		});
+		detecteur.astar(new Tiles(23, 23), new Tiles(25, 23));
+		craftable.addToInventory(Craft.objetÀcraft.get("1 bois, 2 metal"));
+		craftable.addToInventory(Craft.objetÀcraft.get("1 bois, 1 metal"));
 	}
 
 	/**
@@ -330,31 +351,60 @@ public class GameController extends Controller {
 		});
 
 		inventoryContainer.visibleProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue) {
-				inventoryContainer.setVisible(true);
+			if (newValue)
 				loop.pause();
-			} else {
-				inventoryContainer.setVisible(false);
+			else {
 				selected.clear();
 				loop.play();
 			}
 			equiper.setText("Equiper");
 		});
 
-		selected.addListener(new ListChangeListener<InventoryItem>() {
-
-			@Override
-			public void onChanged(Change<? extends InventoryItem> c) {
-				while (c.next()) {
-					if (selected.size() >= 2)
-						equiper.setText("Craft");
-					else
-						equiper.setText("Equiper");
-				}
+		craftContainer.visibleProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue)
+				loop.pause();
+			else {
+				selected.clear();
 				loop.play();
 			}
 		});
 
+		craftable.addListener(new ListChangeListener<InventoryItem>() {
+			int lastRow = 0, lastCol = 0;
+
+			@Override
+			public void onChanged(Change<? extends InventoryItem> c) {
+				while (c.next()) {
+					if (c.wasAdded()) {
+						ImageView img = new ImageView(
+								"view/resources/Inventaire/" + c.getAddedSubList().get(0).getName() + "_Inv.png");
+						img.setId(c.getAddedSubList().get(0).getName());
+						img.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
+							InventoryItem item = c.getAddedSubList().get(0);
+
+							@Override
+							public void handle(MouseEvent event) {
+								boolean in = event.getEventType().equals(MouseEvent.MOUSE_EXITED) ? false : true;
+								if (in)
+									img.setEffect(new DropShadow(35, 0, 0, Color.CORNFLOWERBLUE));
+								else if (!in)
+									img.setEffect(null);
+								if (event.isPrimaryButtonDown()) {
+									focused = item;
+									desc.setText(focused.toString());
+								}
+							}
+						});
+						layoutCraft.add(img, lastCol, lastRow);
+						if (lastCol == 3) {
+							lastRow++;
+							lastCol = 0;
+						} else
+							lastCol++;
+					}
+				}
+			}
+		});
 	}
 
 	public void play() {
@@ -648,25 +698,17 @@ public class GameController extends Controller {
 						&& ((tile.getX() >= leftBorn || tile.getX() < rightBorn) && tile.getY() == addLignBot))
 						|| (tile.getX() >= leftBorn && tile.getX() < rightBorn && tile.getY() == addLignBot))
 					viewAbleSol.add(tile);
-
 			for (Tiles tile : ListSol)
 				if ((leftBorn > rightBorn
 						&& ((tile.getX() >= leftBorn || tile.getX() < rightBorn) && tile.getY() == addLignBot))
 						|| (tile.getX() >= leftBorn && tile.getX() < rightBorn && tile.getY() == addLignBot))
-					/*
-					 * if (tile.getX() >= ((addLignX + Map.Largeur) % Map.Largeur) && tile.getX() <
-					 * ((addLignX + 60 + Map.Largeur) % Map.Largeur) && tile.getY() == addLignBot)
-					 */
 					viewAbleSol.add(tile);
 			addLignBot++;
-
 			break;
 
 		}
 	}
 
-	// if((addLignX + Map.Largeur) % Map.Largeur) >= tile.getX() && tile.getX() <=
-	// (addLignX + 60 + Map.Largeur) % Map.Largeur) );
 	/**
 	 * delete images according to the direction
 	 * 
@@ -698,22 +740,6 @@ public class GameController extends Controller {
 			break;
 		}
 	}
-
-	// public String stopSroll() {
-	//
-	// if (floor.getChildren().get(1).getLayoutX() == charapane.getLayoutX() +
-	// bill.getChrac().getX() + 64) {
-	// return "left stop";
-	// }
-	//
-	// if (floor.getChildren().get(floor.getChildren().size() - 1).getLayoutX() ==
-	// charapane.getLayoutX()
-	// + bill.getChrac().getX() + 32) {
-	// return "right stop";
-	// }
-	// stopAction();
-	// return "";
-	// }
 
 	public void stopAction() {
 
@@ -864,8 +890,6 @@ public class GameController extends Controller {
 		detecteur.astar(t1, t2);
 		int x = detecteur.getTileList().get(1).getX();
 		int y = detecteur.getTileList().get(1).getY();
-		// System.out.println(x + " " + y);
-		// System.out.println(c.getX() + " a " + c.getY());
 		if (c.getX() < x) // à refaire
 			c.move("Right", true);
 		else if (c.getX() > x)
@@ -907,47 +931,39 @@ public class GameController extends Controller {
 
 	@FXML
 	void use(ActionEvent event) {
-		if (equiper.getText().equals("Equiper")) {
-			bill.getChrac().setEquiped(focused);
-			equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
-			equip.setId(focused.getName());
-			equiped = focused;
-		} else if (equiper.getText().equals("Craft")) {
-			String need = "";
-			for (int i = 0; i < selected.size(); i++) {
-				InventoryItem item = selected.get(i);
-				need += item.getQuantity() + " " + item.getName();
-				if (i != selected.size() - 1)
-					need += ", ";
-			}
-			InventoryItem crafted = Craft.objetÀcraft.getOrDefault(need, null);
-			if (crafted != null) {
-				selected.forEach(item -> inventaire.removeFromInventory(item.getName(), item.getQuantity()));
-				inventaire.addToInventory(crafted);
-			}
+		bill.getChrac().setEquiped(focused);
+		equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
+		equip.setId(focused.getName());
+		equiped = focused;
+		if (!(equiped instanceof Weapon)) {
+			floor.setDisable(false);
+			pnjPane.setDisable(true);
+		} else {
+			floor.setDisable(true);
+			pnjPane.setDisable(false);
 		}
 		selected.clear();
 	}
 
-	public void test(MouseEvent k) {
+	public void clickAction(MouseEvent k) {
 		delete = "mouse";
 		Node clicked = k.getPickResult().getIntersectedNode();
 		int[][] tabSol = mapPrincipale.getMapSol();
 		int coordX = ((bill.getChrac().getX() - 31 + (int) k.getX() / 32) + 300) % 300;
 		int coordY = bill.getChrac().getY() - 16 + (int) k.getY() / 32;
 		if (Math.abs(30 - (int) k.getX() / 32) <= 3 && Math.abs(16 - (int) k.getY() / 32) <= 4) {
-			/*
-			 * if (coordX < 0) coordX += 300; else if (coordX >= 300) coordX -= 300;
-			 */
-
-			if (k.isPrimaryButtonDown() && bill.getChrac().getEquiped() instanceof Tool
-					&& bill.getChrac().getEquiped().getName().equals("pioche")) {
-				if (tabSol[coordX][coordY] != 0) {
+			if (k.isPrimaryButtonDown()) {
+				if (tabSol[coordX][coordY] != 0 && equiped.getName().equals("pioche")) {
 					TileView mat = (TileView) clicked;
 					add = "background";
-					System.out.println(coordX + "  " + coordY);
 					inventaire.addToInventory(new Material(Material.getNameByCode(mat.getTile().getCode()), 1, ""));
 					floor.getChildren().removeIf(Tile -> Tile == clicked);
+				} else if (equiped instanceof Weapon && clicked instanceof EnnemyView) {
+					if (equiped instanceof ColdSteel) {
+						EnnemyView en = (EnnemyView) clicked;
+						ColdSteel kn = (ColdSteel) equiped;
+						en.getChrac().damage(kn.getDamage());
+					}
 				}
 			}
 			if (k.isSecondaryButtonDown() && equiped instanceof Material && !equiped.getName().equals("pioche")) {
@@ -958,9 +974,39 @@ public class GameController extends Controller {
 						TileView tv = new TileView(t);
 						tv.relocate(((int) k.getX() / 32) * 32 - 32 + countX, ((int) k.getY() / 32) * 32 - countY);
 						floor.getChildren().add(tv);
-						System.out.println(equiped.getName());
 						inventaire.removeFromInventory(equiped.getName(), 1);
 					}
+				}
+			}
+		}
+	}
+
+	public void setVisibleCraftPane() {
+		craftContainer.setVisible(!craftContainer.isVisible());
+	}
+
+	@FXML
+	void Crafting(ActionEvent event) {
+		boolean ok = true;
+		String[] need = Craft.getNeed(focused);
+		if (need != null) {
+			int i = 0;
+			while (i < need.length && ok) {
+				int index = inventaire.indexOf(need[i + 1]);
+				if (index != -1) {
+					if (inventaire.get(index).getQuantity() >= Integer.parseInt(need[i])) {
+						ok = true;
+					} else
+						ok = false;
+				} else
+					ok = false;
+				i += 2;
+			}
+
+			if (ok) {
+				inventaire.addToInventory(focused);
+				for (int j = 0; j < need.length; j += 2) {
+					inventaire.removeFromInventory(need[j + 1], Integer.parseInt(need[j]));
 				}
 			}
 		}
