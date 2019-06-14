@@ -49,7 +49,6 @@ public class GestionCollision {
 	 * @return true si il y a rien au dessus du personnage.
 	 */
 	public boolean verifTop(Character ch) {
-		// System.out.println(ch.getX() +"\t"+ch.getY());
 		return (map.getMapSol()[(ch.getX() - 1+map.Largeur)%map.Largeur][ch.getY() + 1] == 0 && map.getMapSol()[(ch.getX() - 1+map.Largeur)%map.Largeur][ch.getY()] == 0);
 	}
 
@@ -144,9 +143,9 @@ public class GestionCollision {
 		}
 	}
 	
-	public static boolean collide(Objet environnement, Objet character) {
-		return environnement.getRectangle2D().intersects(character.getRectangle2D());
-	}
+//	public static boolean collide(Objet environnement, Objet character) {
+//		return environnement.getRectangle2D().intersects(character.getRectangle2D());
+//	}
 
 	// public void astar(Character c, Character c2) {
 	// ArrayList<Nodes>file=new ArrayList<Nodes>();

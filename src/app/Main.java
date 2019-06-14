@@ -7,7 +7,6 @@ import controller.GameController;
 import controller.Controller;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
@@ -34,8 +33,8 @@ public class Main extends Application {
 			// quand une touche est pressé
 			scene.setOnKeyPressed(e -> {
 				c.addKeyCode(e.getCode());
-				if (e.getCode() == KeyCode.I)
-					c.getInventoryContainer().setVisible(c.getInventoryContainer().isVisible() ? false : true);
+				if (e.getCode() == KeyCode.I || e.getCode() == KeyCode.TAB)
+					c.setVisibilityInventoryContainer();
 				e.consume();
 			});
 		
@@ -48,8 +47,6 @@ public class Main extends Application {
 			});
 			scene.setOnMousePressed(e -> {
 				c.test(e);	
-				if (c.getInventoryContainer().isVisible() && e.isPrimaryButtonDown())
-					c.clickGrid(e);
 			});
 			primaryStage.setTitle("Last man in Vietnam");
 			primaryStage.setScene(scene);

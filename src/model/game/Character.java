@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Rectangle2D;
 
 public class Character extends AnimatedObject {
+	private InventoryItem equiped;
 	private int speed, hp, aggroRange;
 	SimpleIntegerProperty hpProperty;
 
@@ -62,6 +63,13 @@ public class Character extends AnimatedObject {
 
 	public Rectangle2D getRectangle2D() {
 		return new Rectangle2D(getX(), getY(), 27, 50);
+	}
+	public InventoryItem getEquiped() {
+		return equiped;
+	}
+
+	public void setEquiped(InventoryItem equiped) {
+		this.equiped = equiped;
 	}
 
 	public int getHp() {
