@@ -59,7 +59,7 @@ public class Main extends Application {
 				changeMenu(primaryStage);
 			});
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace();//
 		}
 	}
 
