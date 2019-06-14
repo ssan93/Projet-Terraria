@@ -37,5 +37,11 @@ public class Tiles extends Objet{
 	public static Image selectionTuile(int c) {
 		return new Image("view/resources/tiles/tile"+c+".png");
 	}
+	public String toString() {
+		return this.x.get() + " " + this.y.get();
+	}
+	public int compareTo(Tiles t2) {
+		return Math.abs(t2.getX()-this.x.get())+Math.abs(t2.getY()-this.y.get()); 
+	}
 	
 }

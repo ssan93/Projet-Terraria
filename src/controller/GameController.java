@@ -29,9 +29,12 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import view.game.BillView;
+import view.game.EnnemyView;
 import view.game.MapView;
 import view.game.TileView;
 import model.game.Craft;
+import model.game.Character;
+import model.game.Ennemy;
 import model.game.GestionCollision;
 import model.game.Inventory;
 import model.game.InventoryItem;
@@ -94,9 +97,18 @@ public class GameController extends Controller {
 	@FXML
 	private Pane floor;
 	@FXML
+	private Pane pnjPane;
+	@FXML
 	private Pane charapane;
 	@FXML
 	private ImageView equip;
+
+	private EnnemyView ennemy = new EnnemyView("view/resources/personnages/right_static_bill.png", 5, 20, 10);
+	private EnnemyView buffalo = new EnnemyView("view/resources/personnages/buffalo.gif", 1, 20, 10);
+	private EnnemyView chicken = new EnnemyView("view/resources/personnages/Chicken.gif", 42 * 4, 22, 10);
+	private EnnemyView fly = new EnnemyView("view/resources/personnages/heli1.gif", 42, 15, 10);
+	private int temps2 = 0;
+	int move = 1;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -127,8 +139,25 @@ public class GameController extends Controller {
 		inventaire.addToInventory(Craft.objetÀcraft.get("10 fer, 10 plastique, 10 cuivre, etabli"));
 		inventaire.addToInventory(new Material("bois", 1, "bois qui vient des arbres"));
 		inventaire.addToInventory(new Material("metal", 2, "metal "));
-		// inventaire.addToInventory("plastique", 1);
-		// inventaire.addToInventory("metal", 5);
+		pnjPane.getChildren().add(ennemy.getImage());
+		pnjPane.getChildren().add(buffalo.getImage());
+		pnjPane.getChildren().add(chicken.getImage());
+		pnjPane.getChildren().add(fly.getImage());
+		charapane.setDisable(true);
+		pnjPane.setDisable(true);
+		buffalo.getImage().layoutXProperty().bind(buffalo.getChrac().getXProperty().multiply(32 / 4));
+		buffalo.getImage().layoutYProperty().bind(buffalo.getChrac().getYProperty().multiply(32));
+		chicken.getImage().layoutXProperty().bind(chicken.getChrac().getXProperty().multiply(32 / 4));
+		chicken.getImage().layoutYProperty().bind(chicken.getChrac().getYProperty().multiply(32));
+		ennemy.getImage().layoutXProperty().bind(ennemy.getChrac().getXProperty().multiply(32));
+		ennemy.getImage().layoutYProperty().bind(ennemy.getChrac().getYProperty().multiply(32));
+		fly.getImage().layoutXProperty().bind(fly.getChrac().getXProperty().multiply(32).subtract(32));
+		fly.getImage().layoutYProperty().bind(fly.getChrac().getYProperty().multiply(32).subtract(32));
+		ennemy.getChrac().getHpProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue.equals(0))
+				floor.getChildren().remove(ennemy.getImage());
+		});
+		detecteur.astar(new Tiles(23, 23), new Tiles(25, 23));
 	}
 
 	/**
@@ -155,7 +184,7 @@ public class GameController extends Controller {
 								img.relocate(tileAdded.getX() * 32, 0);
 								break;
 							case "Down":
-								img.relocate(tileAdded.getX() * 32, 33 * 32);
+								img.relocate(tileAdded.getX() * 32 - addLignX * 32 - 32 + countX, 33 * 32);
 								break;
 							}
 							floor.getChildren().add(img);
@@ -187,7 +216,6 @@ public class GameController extends Controller {
 
 			@Override
 			public void onChanged(Change<? extends Node> c) {
-				// TODO Auto-generated method stub
 				while (c.next()) {
 					if (c.wasRemoved()) {
 						if (delete == "mouse") {
@@ -219,6 +247,7 @@ public class GameController extends Controller {
 									mapPrincipale.setTileSol(tile.getX(), tile.getY(), tile.getCode());
 								}
 							}
+
 						}
 					}
 				}
@@ -311,6 +340,7 @@ public class GameController extends Controller {
 					else
 						equiper.setText("Equiper");
 				}
+				loop.play();
 			}
 		});
 
@@ -331,9 +361,12 @@ public class GameController extends Controller {
 	public void isAlive() {
 
 		bill.setLife(heart);
-		if (bill.getChrac().getHp() == 0)
+		if (bill.getChrac().getHp() == 0) {
+			loop.stop();
+			System.gc();
 			isAlive.set(false);
-		else
+
+		} else
 			isAlive.set(true);
 
 	}
@@ -362,20 +395,16 @@ public class GameController extends Controller {
 	 */
 	public void actions() {
 		if (allowMouv && ((keyPressed.contains(KeyCode.D) || keyPressed.contains(KeyCode.RIGHT)))
-				&& detecteur.verifRight(bill.getChrac(), jumping, falling)) {
-			// if (!stopSroll().equals("right stop")) {
-			bill.getChrac().animation("RunRight");
-
-			oldAnim = "RunRight";
+				&& detecteur.verifRight(bill.getChrac(), jumping, falling, "bill")) {
+			bill.getChrac().animation("Right");
+			oldAnim = "Right";
 			scroll("Right");
 
 		}
 		if (allowMouv && ((keyPressed.contains(KeyCode.Q) || keyPressed.contains(KeyCode.LEFT)))
-				&& detecteur.verifLeft(bill.getChrac(), jumping, falling)) {
-			// if (!stopSroll().equals("left stop")) {
-			bill.getChrac().animation("RunLeft");
-
-			oldAnim = "RunLeft";
+				&& detecteur.verifLeft(bill.getChrac(), jumping, falling, "bill")) {
+			bill.getChrac().animation("Left");
+			oldAnim = "Left";
 			scroll("Left");
 
 		}
@@ -394,12 +423,14 @@ public class GameController extends Controller {
 
 			for (int i = 0; i < floor.getChildren().size(); i++)
 				relocateImages(direction, i);
+			pnjPane.relocate(pnjPane.getLayoutX() - bill.getChrac().getSpeed(), pnjPane.getLayoutY());
 			CountAddDelete("Right");
 			break;
 
 		case "Left":
 			for (int i = floor.getChildren().size() - 1; i >= 0; i--)
 				relocateImages(direction, i);
+			pnjPane.relocate(pnjPane.getLayoutX() + bill.getChrac().getSpeed(), pnjPane.getLayoutY());
 			CountAddDelete("Left");
 			break;
 
@@ -407,6 +438,7 @@ public class GameController extends Controller {
 			jumping = true;
 			for (int i = 0; i < floor.getChildren().size(); i++)
 				relocateImages("Up", i);
+			pnjPane.relocate(pnjPane.getLayoutX(), pnjPane.getLayoutY() + bill.getChrac().getSpeed());
 			relocated += bill.getChrac().getSpeed();
 			CountAddDelete("Up");
 			break;
@@ -415,6 +447,7 @@ public class GameController extends Controller {
 			relocated -= bill.getChrac().getSpeed();
 			for (int i = 0; i < floor.getChildren().size(); i++)
 				relocateImages("Down", i);
+			pnjPane.relocate(pnjPane.getLayoutX(), pnjPane.getLayoutY() - bill.getChrac().getSpeed());
 			CountAddDelete("Down");
 
 			break;
@@ -458,7 +491,7 @@ public class GameController extends Controller {
 		case "Right":
 			countX -= bill.getChrac().getSpeed();
 			if (countX < 0) {
-				bill.getChrac().move("RunRight");
+				bill.getChrac().move("Right", false);
 				addImages("Right");
 				deleteImages("Left");
 				countX += 32;
@@ -468,7 +501,7 @@ public class GameController extends Controller {
 		case "Left":
 			countX += bill.getChrac().getSpeed();
 			if (32 < countX) {
-				bill.getChrac().move("RunLeft");
+				bill.getChrac().move("Left", false);
 				addImages("Left");
 				deleteImages("Right");
 				countX -= 32;
@@ -479,7 +512,7 @@ public class GameController extends Controller {
 
 			countY -= bill.getChrac().getSpeed();
 			if (countY < 0) {
-				bill.getChrac().move("Up");
+				bill.getChrac().move("Up", false);
 				addImages("Up");
 				deleteImages("Down");
 				countY += 32;
@@ -487,8 +520,8 @@ public class GameController extends Controller {
 			break;
 		case "Down":
 			countY += bill.getChrac().getSpeed();
-			if (32 - countY < 0) {
-				bill.getChrac().move("Down");
+			if (32 - countY <= 0) {
+				bill.getChrac().move("Down", false);
 				addImages("Down");
 				countY -= 32;
 			}
@@ -524,10 +557,12 @@ public class GameController extends Controller {
 			 */
 
 			for (Tiles tile : ListMid)
-				if (tile.getX() == (addLignX + 61) % 300 && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+				if (tile.getX() == (addLignX + 60) % Map.Largeur && addLignTop <= tile.getY()
+						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == (addLignX + 61) % 300 && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+				if (tile.getX() == (addLignX + 60) % Map.Largeur && addLignTop <= tile.getY()
+						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			addLignX++;
 
@@ -536,10 +571,12 @@ public class GameController extends Controller {
 		case "Left":
 			add = "Left";
 			for (Tiles tile : ListMid)
-				if (tile.getX() == addLignX % 300 && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+				if (tile.getX() == (addLignX + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
+						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == addLignX % 300 && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+				if (tile.getX() == (addLignX + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
+						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			addLignX--;
 
@@ -548,25 +585,29 @@ public class GameController extends Controller {
 		case "Up":
 			add = "Up";
 			for (Tiles tile : ListSol)
-				if (tile.getX() < 60 && tile.getY() == addLignTop) {
+				if (tile.getX() >= addLignX && tile.getX() < addLignX + 60 && tile.getY() == addLignTop)
 					viewAbleSol.add(tile);
-				}
+
 			addLignBot--;
 			break;
 
 		case "Down":
 			add = "Down";
+			System.out.println(
+					((addLignX + Map.Largeur) % Map.Largeur) + "   a   " + (addLignX + 60 + Map.Largeur) % Map.Largeur);
+			for (Tiles tile : ListMid)
+				if ( ((tile.getX() >= ((addLignX + Map.Largeur) % Map.Largeur) && tile.getX() < ((addLignX + 60 + Map.Largeur) % Map.Largeur))
+						|| ((addLignX + Map.Largeur) % Map.Largeur > (addLignX + 60 + Map.Largeur) % Map.Largeur 
+					&& (tile.getX() >= (addLignX + Map.Largeur) % Map.Largeur || tile.getX() < (addLignX + 60 + Map.Largeur) % Map.Largeur))) && tile.getY() == addLignBot)
+						viewAbleSol.add(tile);
+			
 			for (Tiles tile : ListSol)
-				if (tile.getX() < 60 && tile.getY() == addLignBot) {
+				if( ((tile.getX() >= ((addLignX + Map.Largeur) % Map.Largeur) && tile.getX() < ((addLignX + 60 + Map.Largeur) % Map.Largeur))
+						|| ((addLignX + Map.Largeur) % Map.Largeur > (addLignX + 60 + Map.Largeur) % Map.Largeur 
+					&& (tile.getX() >= (addLignX + Map.Largeur) % Map.Largeur || tile.getX() < (addLignX + 60 + Map.Largeur) % Map.Largeur))) && tile.getY() == addLignBot)
+				/*if (tile.getX() >= ((addLignX + Map.Largeur) % Map.Largeur)
+						&& tile.getX() < ((addLignX + 60 + Map.Largeur) % Map.Largeur) && tile.getY() == addLignBot)*/
 					viewAbleSol.add(tile);
-				}
-			/*
-			 * for(int x = 0; x < 60; x++) { if(mapMid[x][addLignBot]!=0) { Tiles t = new
-			 * Tiles (x,addLignBot,mapMid[x][addLignBot]); viewAbleSol.add(t); }
-			 * if(mapSol[x][addLignBot]!=0) { Tiles t = new Tiles
-			 * (x,addLignBot,mapSol[x][addLignBot]); viewAbleSol.add(t); } }
-			 */
-
 			addLignBot++;
 
 			break;
@@ -625,11 +666,11 @@ public class GameController extends Controller {
 	public void stopAction() {
 
 		switch (oldAnim) {
-		case "RunRight":
+		case "Right":
 			bill.getChrac().animation("idleRight");
 			oldAnim = "idleRight";
 			break;
-		case "RunLeft":
+		case "Left":
 			bill.getChrac().animation("idleLeft");
 			oldAnim = "idleLeft";
 			break;
@@ -641,13 +682,12 @@ public class GameController extends Controller {
 		temps = 0;
 		loop.setCycleCount(Timeline.INDEFINITE);
 		KeyFrame kf = new KeyFrame(Duration.millis(25), (ev -> {
-			if (temps % 40 == 0 && bill.getChrac().getHp() > 0) {
-				isAlive();
-			}
+			isAlive();
 			if (jumping && !falling && temps != 19 && detecteur.verifTop(bill.getChrac())) {
 				scroll("Up");
 				temps++;
-			} else if (detecteur.verifUnder(bill.getChrac())) {
+
+			} else if (detecteur.verifUnder(bill.getChrac(), "bill")) {
 				falling = true;
 				scroll("Down");
 				temps = 0;
@@ -655,9 +695,103 @@ public class GameController extends Controller {
 				jumping = false;
 				falling = false;
 			}
+			temps2++;
 			actions();
+			flyMove();
+			randomMove(buffalo.getChrac(), "buffalo");
+			randomMove(chicken.getChrac(), "chicken");
+			animalFalling();
+
 		}));
 		loop.getKeyFrames().add(kf);
+	}
+
+	public void animalFalling() {
+		if (detecteur.verifUnder(chicken.getChrac(), "chicken"))
+			chicken.getChrac().move("Down", true);
+		if (detecteur.verifUnder(buffalo.getChrac(), "buffalo"))
+			buffalo.getChrac().move("Down", true);
+	}
+
+	public void randomMove(Character ch, String character) {
+		if (temps2 % ((int) Math.random() * 11 + 10) == 0)
+			move = (int) (Math.random() * 5) + 1;
+		switch (move) {
+		case 1:
+			if (detecteur.verifRight(ch, false, false, character))
+				ch.move("Right", true);
+			else if (detecteur.verifTopRight(ch, character)) {
+				ch.move("Up", true);
+				ch.move("Right", true);
+			}
+			ch.animation("right_run_" + character);
+			break;
+		case 2:
+
+			if (detecteur.verifLeft(ch, false, false, character))
+				ch.move("Left", true);
+			else if (detecteur.verifTopLeft(ch, character)) {
+				ch.move("Up", true);
+				ch.move("Left", true);
+			}
+			ch.animation("left_run_" + character);
+			break;
+		case 3:
+			ch.animation("right_static_" + character);
+			break;
+		case 4:
+			ch.animation("left_static_" + character);
+			break;
+		}
+	}
+
+	public void flyMove() {
+		int[][] tabSol = mapPrincipale.getMapSol();
+		int flyX = fly.getChrac().getX();
+		int flyY = fly.getChrac().getY();
+		int billX = bill.getChrac().getX();
+		int billY = bill.getChrac().getY();
+		if (tabSol[flyX][flyY] == 0 && temps2 % 10 == 0) {
+			Tiles t = new Tiles(flyX, flyY);
+			Tiles t2 = new Tiles(billX + 1, billY - 1);
+			if (detecteur.heuristic(t, t2) == 0) {
+				// bill.getChrac().damage(10);
+				fly.getChrac().animation("shoot");
+			} else if (tabSol[(billX + 1 + Map.Largeur) % Map.Largeur][billY - 1] != 0
+					&& detecteur.heuristic(t, t2) < fly.getChrac().getAggroRange()) {
+
+			} else if (detecteur.heuristic(t, t2) < fly.getChrac().getAggroRange()
+					&& detecteur.heuristic(new Tiles(43, 15), t) < 30) {
+				astarMove(fly.getChrac(), t, t2);
+				fly.getChrac().animation("stand");
+			}
+
+			else if (fly.getChrac().getX() <= 45 && fly.getChrac().getY() == 15) {
+				astarMove(fly.getChrac(), t, new Tiles(45, 16));
+				fly.getChrac().animation("stand");
+
+			} else {
+				astarMove(fly.getChrac(), t, new Tiles(39, 15));
+				fly.getChrac().animation("stand");
+
+			}
+		}
+	}
+
+	public void astarMove(Character c, Tiles t1, Tiles t2) {
+		detecteur.astar(t1, t2);
+		int x = detecteur.getTileList().get(1).getX();
+		int y = detecteur.getTileList().get(1).getY();
+		// System.out.println(x + " " + y);
+		// System.out.println(c.getX() + " a " + c.getY());
+		if (c.getX() < x) // à refaire
+			c.move("Right", true);
+		else if (c.getX() > x)
+			c.move("Left", true);
+		else if (c.getY() < y)
+			c.move("Down", true);
+		else if (c.getY() > y)
+			c.move("Up", true);
 	}
 
 	public void addKeyCode(KeyCode k) {
@@ -720,27 +854,19 @@ public class GameController extends Controller {
 		int coordX = ((bill.getChrac().getX() - 31 + (int) k.getX() / 32) + 300) % 300;
 		int coordY = bill.getChrac().getY() - 16 + (int) k.getY() / 32;
 		if (Math.abs(30 - (int) k.getX() / 32) <= 3 && Math.abs(16 - (int) k.getY() / 32) <= 4) {
-			/*
-			 * if (coordX < 0) coordX += 300; else if (coordX >= 300) coordX -= 300;
-			 */
-
+		System.out.println(clicked);
 			if (k.isPrimaryButtonDown()) {
 				if (tabSol[coordX][coordY] != 0) {
 
 					add = "background";
-					if (clicked instanceof Pane) {
-						if (clicked.getId().equals("charapane"))
-							floor.getChildren()
-									.removeIf(img -> img.getLayoutY() >= k.getY() - 32 && img.getLayoutY() < k.getY()
-											&& img.getLayoutX() >= k.getX() - 32 && img.getLayoutX() < k.getX());
-					} else
-						floor.getChildren().removeIf(Tile -> Tile == clicked);
+					System.out.println(coordX + "  " + coordY);
+					floor.getChildren().removeIf(Tile -> Tile == clicked);
 				}
 			}
 			if (k.isSecondaryButtonDown()) {
 				add = "mouse";
 				if (Math.abs(30 - (int) k.getX() / 32) != 0 || Math.abs(16 - (int) k.getY() / 32) != 0) {
-					if (tabSol[coordX][coordY] == 0) {
+					if (tabSol[coordX][coordY] == 0 && blocPosable(coordX, coordY)) {
 						Tiles t = new Tiles(coordX, coordY, 2);
 						TileView tv = new TileView(t);
 						tv.relocate(((int) k.getX() / 32) * 32 - 32 + countX, ((int) k.getY() / 32) * 32 - countY);
@@ -749,29 +875,13 @@ public class GameController extends Controller {
 				}
 			}
 		}
-
-		// case "mouse":
-		// ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
-		// int[][] tabSol = mapPrincipale.getMapSol();
-		// ListSol.remove(tile);
-		// tabSol[tile.getX()][tile.getY()]=0;
-		// System.out.println(tile.getX() + " "+ tile.getY());
-		// floor.getChildren().removeIf(img -> (int)img.getLayoutX()/32== tile.getX() &&
-		// (int)img.getLayoutY()/32 == tile.getY()-1);
-		// break;
-		// public void test(javafx.scene.input.MouseEvent k) {
-		// delete="mouse";
-		// System.out.println(viewAbleSol.size());
-		// // System.out.println((int)k.getX()/32+" "+(int)k.getY()/32);
-		// if(k.isPrimaryButtonDown())
-		// viewAbleSol.removeIf(img -> img.getY() == (int)k.getY()/32);
-		// System.out.println(viewAbleSol.size());
-		//
-		// }
 	}
 
-	// public boolean aroundBill() {
-	// return true;
-	// }
-
+	public boolean blocPosable(int x, int y) {
+		int[][] tabSol = mapPrincipale.getMapSol();
+		for (int i = -1; i <= 2; i += 2)
+			if (tabSol[x + i][y] != 0 || tabSol[x][y + i] != 0)
+				return true;
+		return false;
+	}
 }
