@@ -87,7 +87,7 @@ public class GameController extends Controller {
 	private Timeline loop;
 	private int countX = 32, countY = 0, relocated = 0;
 	private String delete, add;
-	private int addLignTop = 0, addLignBot = 33, addLignX = 0;
+	private int addLignTop = 0, addLignBot = 34, addLignX = 0;
 	private int deleteLignX = 0, deleteLignY = 0;
 	private boolean jumping = false, falling = true;
 	private long temps;
@@ -171,7 +171,7 @@ public class GameController extends Controller {
 								img.relocate(tileAdded.getX() * 32, 0);
 								break;
 							case "Down":
-								img.relocate(tileAdded.getX() * 32, 33 * 32);
+								img.relocate(tileAdded.getX() * 32 - addLignX * 32 - 32 + countX, 33 * 32);
 								break;
 							}
 							floor.getChildren().add(img);
@@ -514,10 +514,12 @@ public class GameController extends Controller {
 		case "Left":
 			add = "Left";
 			for (Tiles tile : ListMid)
-				if (tile.getX() == (addLignX+Map.Largeur) % Map.Largeur && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+				if (tile.getX() == (addLignX + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
+						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == (addLignX+Map.Largeur) % Map.Largeur && addLignTop <= tile.getY() && tile.getY() <= addLignBot)
+				if (tile.getX() == (addLignX + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
+						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			addLignX--;
 
@@ -526,25 +528,29 @@ public class GameController extends Controller {
 		case "Up":
 			add = "Up";
 			for (Tiles tile : ListSol)
-				if (tile.getX() < 60 && tile.getY() == addLignTop) {
+				if (tile.getX() >= addLignX && tile.getX() < addLignX + 60 && tile.getY() == addLignTop)
 					viewAbleSol.add(tile);
-				}
+
 			addLignBot--;
 			break;
 
 		case "Down":
 			add = "Down";
+			System.out.println(
+					((addLignX + Map.Largeur) % Map.Largeur) + "   a   " + (addLignX + 60 + Map.Largeur) % Map.Largeur);
+			for (Tiles tile : ListMid)
+				if ( ((tile.getX() >= ((addLignX + Map.Largeur) % Map.Largeur) && tile.getX() < ((addLignX + 60 + Map.Largeur) % Map.Largeur))
+						|| ((addLignX + Map.Largeur) % Map.Largeur > (addLignX + 60 + Map.Largeur) % Map.Largeur 
+					&& (tile.getX() >= (addLignX + Map.Largeur) % Map.Largeur || tile.getX() < (addLignX + 60 + Map.Largeur) % Map.Largeur))) && tile.getY() == addLignBot)
+						viewAbleSol.add(tile);
+			
 			for (Tiles tile : ListSol)
-				if (tile.getX() < 60 && tile.getY() == addLignBot) {
+				if( ((tile.getX() >= ((addLignX + Map.Largeur) % Map.Largeur) && tile.getX() < ((addLignX + 60 + Map.Largeur) % Map.Largeur))
+						|| ((addLignX + Map.Largeur) % Map.Largeur > (addLignX + 60 + Map.Largeur) % Map.Largeur 
+					&& (tile.getX() >= (addLignX + Map.Largeur) % Map.Largeur || tile.getX() < (addLignX + 60 + Map.Largeur) % Map.Largeur))) && tile.getY() == addLignBot)
+				/*if (tile.getX() >= ((addLignX + Map.Largeur) % Map.Largeur)
+						&& tile.getX() < ((addLignX + 60 + Map.Largeur) % Map.Largeur) && tile.getY() == addLignBot)*/
 					viewAbleSol.add(tile);
-				}
-			/*
-			 * for(int x = 0; x < 60; x++) { if(mapMid[x][addLignBot]!=0) { Tiles t = new
-			 * Tiles (x,addLignBot,mapMid[x][addLignBot]); viewAbleSol.add(t); }
-			 * if(mapSol[x][addLignBot]!=0) { Tiles t = new Tiles
-			 * (x,addLignBot,mapSol[x][addLignBot]); viewAbleSol.add(t); } }
-			 */
-
 			addLignBot++;
 
 			break;
@@ -632,20 +638,21 @@ public class GameController extends Controller {
 			randomMove(buffalo.getChrac(), "buffalo");
 			randomMove(chicken.getChrac(), "chicken");
 			animalFalling();
-			
 
 		}));
 		loop.getKeyFrames().add(kf);
 	}
+
 	public void animalFalling() {
 		if (detecteur.verifUnder(chicken.getChrac(), "chicken"))
 			chicken.getChrac().move("Down", true);
 		if (detecteur.verifUnder(buffalo.getChrac(), "buffalo"))
 			buffalo.getChrac().move("Down", true);
 	}
+
 	public void randomMove(Character ch, String character) {
 		if (temps2 % ((int) Math.random() * 11 + 10) == 0)
-			move = (int) (Math.random() * 5)+1;
+			move = (int) (Math.random() * 5) + 1;
 		switch (move) {
 		case 1:
 			if (detecteur.verifRight(ch, false, false, character))
@@ -654,7 +661,7 @@ public class GameController extends Controller {
 				ch.move("Up", true);
 				ch.move("Right", true);
 			}
-			ch.animation("right_run_"+character);
+			ch.animation("right_run_" + character);
 			break;
 		case 2:
 
@@ -664,13 +671,13 @@ public class GameController extends Controller {
 				ch.move("Up", true);
 				ch.move("Left", true);
 			}
-			ch.animation("left_run_"+character);
+			ch.animation("left_run_" + character);
 			break;
-		case 3 :
-			ch.animation("right_static_"+character);
+		case 3:
+			ch.animation("right_static_" + character);
 			break;
-		case 4 :
-			ch.animation("left_static_"+character);
+		case 4:
+			ch.animation("left_static_" + character);
 			break;
 		}
 	}
