@@ -87,7 +87,7 @@ public class GameController extends Controller {
 	private Timeline loop;
 	private int countX = 32, countY = 0, relocated = 0;
 	private String delete, add;
-	private int addLignTop = 0, addLignBot = 34, addLignX = 0;
+	private int addLignTop = 0, addLignBot = 35, addLignX = 0;
 	private int deleteLignX = 0, deleteLignY = 0;
 	private boolean jumping = false, falling = true;
 	private long temps;
@@ -162,16 +162,16 @@ public class GameController extends Controller {
 							ImageView img = new TileView(tileAdded);
 							switch (add) {
 							case "Left":
-								img.relocate(5, tileAdded.getY() * 32 + relocated);
+								img.relocate(5-32, tileAdded.getY() * 32 + relocated);
 								break;
 							case "Right":
-								img.relocate(59 * 32 - 5, tileAdded.getY() * 32 + relocated);
+								img.relocate(60 * 32 - 5, tileAdded.getY() * 32 + relocated);
 								break;
 							case "Up":
 								img.relocate(tileAdded.getX() * 32, 0);
 								break;
 							case "Down":
-								img.relocate(tileAdded.getX() * 32 - addLignX * 32 - 32 + countX, 33 * 32);
+								img.relocate((tileAdded.getX() * 32 - addLignX * 32 - 32 + countX)%(Map.Largeur*32), 34 * 32);
 								break;
 							}
 							floor.getChildren().add(img);
@@ -189,7 +189,7 @@ public class GameController extends Controller {
 							floor.getChildren().removeIf(img -> img.getLayoutY() < 0);
 							break;
 						case "Down":
-							floor.getChildren().removeIf(img -> img.getLayoutY() > 33 * 32);
+							floor.getChildren().removeIf(img -> img.getLayoutY() > 34 * 32);
 							break;
 						case "mouse":
 
@@ -500,11 +500,11 @@ public class GameController extends Controller {
 			 */
 
 			for (Tiles tile : ListMid)
-				if (tile.getX() == (addLignX + 60) % Map.Largeur && addLignTop <= tile.getY()
+				if (tile.getX() == (addLignX + 61) % Map.Largeur && addLignTop <= tile.getY()
 						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == (addLignX + 60) % Map.Largeur && addLignTop <= tile.getY()
+				if (tile.getX() == (addLignX + 61) % Map.Largeur && addLignTop <= tile.getY()
 						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			addLignX++;
@@ -514,11 +514,11 @@ public class GameController extends Controller {
 		case "Left":
 			add = "Left";
 			for (Tiles tile : ListMid)
-				if (tile.getX() == (addLignX + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
+				if (tile.getX() == (addLignX-1 + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
 						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			for (Tiles tile : ListSol)
-				if (tile.getX() == (addLignX + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
+				if (tile.getX() == (addLignX-1 + Map.Largeur) % Map.Largeur && addLignTop <= tile.getY()
 						&& tile.getY() <= addLignBot)
 					viewAbleSol.add(tile);
 			addLignX--;
@@ -536,18 +536,16 @@ public class GameController extends Controller {
 
 		case "Down":
 			add = "Down";
-			System.out.println(
-					((addLignX + Map.Largeur) % Map.Largeur) + "   a   " + (addLignX + 60 + Map.Largeur) % Map.Largeur);
+			int leftBorn = (addLignX-1 + Map.Largeur) % Map.Largeur;
+			int rightBorn = (addLignX + 61 + Map.Largeur) % Map.Largeur;
 			for (Tiles tile : ListMid)
-				if ( ((tile.getX() >= ((addLignX + Map.Largeur) % Map.Largeur) && tile.getX() < ((addLignX + 60 + Map.Largeur) % Map.Largeur))
-						|| ((addLignX + Map.Largeur) % Map.Largeur > (addLignX + 60 + Map.Largeur) % Map.Largeur 
-					&& (tile.getX() >= (addLignX + Map.Largeur) % Map.Largeur || tile.getX() < (addLignX + 60 + Map.Largeur) % Map.Largeur))) && tile.getY() == addLignBot)
+				if( ( leftBorn > rightBorn && ((tile.getX() >= leftBorn || tile.getX() < rightBorn) && tile.getY() == addLignBot))
+						|| (tile.getX() >= leftBorn && tile.getX() < rightBorn && tile.getY() == addLignBot))
 						viewAbleSol.add(tile);
 			
 			for (Tiles tile : ListSol)
-				if( ((tile.getX() >= ((addLignX + Map.Largeur) % Map.Largeur) && tile.getX() < ((addLignX + 60 + Map.Largeur) % Map.Largeur))
-						|| ((addLignX + Map.Largeur) % Map.Largeur > (addLignX + 60 + Map.Largeur) % Map.Largeur 
-					&& (tile.getX() >= (addLignX + Map.Largeur) % Map.Largeur || tile.getX() < (addLignX + 60 + Map.Largeur) % Map.Largeur))) && tile.getY() == addLignBot)
+				if( ( leftBorn > rightBorn && ((tile.getX() >= leftBorn || tile.getX() < rightBorn) && tile.getY() == addLignBot))
+						|| (tile.getX() >= leftBorn && tile.getX() < rightBorn && tile.getY() == addLignBot))
 				/*if (tile.getX() >= ((addLignX + Map.Largeur) % Map.Largeur)
 						&& tile.getX() < ((addLignX + 60 + Map.Largeur) % Map.Largeur) && tile.getY() == addLignBot)*/
 					viewAbleSol.add(tile);
@@ -578,7 +576,7 @@ public class GameController extends Controller {
 			break;
 		case "Down":
 			delete = "Down";
-			viewAbleSol.removeIf(f -> f.getX() == deleteLignY + 32);
+			viewAbleSol.removeIf(f -> f.getX() == deleteLignY + 34);
 			deleteLignY++;
 			break;
 		}

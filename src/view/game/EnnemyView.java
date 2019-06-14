@@ -24,30 +24,30 @@ public class EnnemyView extends CharacterView{
 				case "stand":
 					getImage().setImage(new Image("view/resources/personnages/heli1.gif"));
 					break;
-				case "right_run_buffalo":
-					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
-					break;
-				case "right_run_chicken":
-					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
-					break;
-				case "left_run_buffalo":
-					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
-					break;
-				case "left_run_chicken":
-					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
-					break;
-				case "right_static_buffalo":
-					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
-					break;
-				case "right_static_chicken":
-					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
-					break;
-				case "left_static_buffalo":
-					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
-					break;
-				case "left_static_chicken":
-					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
-					break;
+//				case "right_run_buffalo":
+//					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
+//					break;
+//				case "right_run_chicken":
+//					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
+//					break;
+//				case "left_run_buffalo":
+//					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
+//					break;
+//				case "left_run_chicken":
+//					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
+//					break;
+//				case "right_static_buffalo":
+//					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
+//					break;
+//				case "right_static_chicken":
+//					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
+//					break;
+//				case "left_static_buffalo":
+//					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
+//					break;
+//				case "left_static_chicken":
+//					getImage().setImage(new Image("view/resources/personnages/"+newValue+".gif"));
+//					break;
 				default:
 					break;
 				}

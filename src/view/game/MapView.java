@@ -39,9 +39,9 @@ public class MapView {
 		}*/
 		int [][] tabMid = m.getMapMid();
 		int x = 0;
-		while(x<60) {
+		while(x<61) {
 			int y=0;
-			while(y<40) {
+			while(y<41) {
 				if(tabMid[x][y]!=0) {
 				Tiles t = new Tiles (x,y,tabMid[x][y]);
 				viewAbleSol.add(t);
@@ -56,9 +56,9 @@ public class MapView {
 		//ObservableList<Tiles> ListSol = m.getTilesListSol();
 		int [][] test = m.getMapSol();
 		 x = 0;
-		while(x<60) {
+		while(x<61) {
 			int y=0;
-			while(y<40) {
+			while(y<41) {
 				if(test[x][y]!=0) {
 				Tiles t = new Tiles (x,y,test[x][y]);
 				viewAbleSol.add(t);
