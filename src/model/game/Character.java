@@ -5,16 +5,24 @@ import javafx.geometry.Rectangle2D;
 
 public class Character extends AnimatedObject {
 
-	private int speed, hp;
-	SimpleIntegerProperty hpProperty;
 	private InventoryItem equiped;
-
+	private int speed, hp, aggroRange;
+	SimpleIntegerProperty hpProperty;
 
 	public Character(int x, int y, int speed, int hp) {
 		super(x, y);
 		this.speed = speed;
 		this.hp = hp;
 		this.hpProperty = new SimpleIntegerProperty(hp);
+
+	}
+
+	public Character(int x, int y, int speed, int hp, int aggro) {
+		super(x, y);
+		this.speed = speed;
+		this.hp = hp;
+		this.hpProperty = new SimpleIntegerProperty(hp);
+		this.aggroRange = aggro;
 
 	}
 
@@ -31,17 +39,17 @@ public class Character extends AnimatedObject {
 		this.speed = vitesse;
 	}
 
-	public void move(String direction) {
+	public void move(String direction, boolean pnj) {
 		switch (direction) {
-		case "RunLeft":
+		case "Left":
 			this.x.set(this.x.get() - 1);
-			if (this.getX() <= 0)
+			if (this.getX() < 0 && !pnj)
 				this.x.set(299);
 			break;
-		case "RunRight":
+		case "Right":
 			this.x.set(this.x.get() + 1);
-			if (this.getX() > 299)
-				this.x.set(1);
+			if (this.getX() > 299 && !pnj)
+				this.x.set(0);
 			break;
 		case "Up":
 			this.y.set(this.y.get() - 1);
@@ -69,6 +77,10 @@ public class Character extends AnimatedObject {
 		return this.hp;
 	}
 
+	public int getAggroRange() {
+		return this.aggroRange;
+	}
+
 	public void setHp(int hp) {
 		this.hp = hp;
 		setHpProperty(hp);
@@ -77,11 +89,13 @@ public class Character extends AnimatedObject {
 	public void damage(int dp) {
 		this.hp -= dp;
 	}
-	
+
 	public void setHpProperty(int hp) {
 		this.hpProperty.set(hp);
 	}
+
 	public SimpleIntegerProperty getHpProperty() {
 		return this.hpProperty;
 	}
+
 }

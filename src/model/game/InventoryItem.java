@@ -3,7 +3,7 @@ package model.game;
 public class InventoryItem {
 
 	private int quantity;
-	private String name;
+	protected String name;
 	private String description;
 
 	/**
