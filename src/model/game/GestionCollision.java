@@ -2,6 +2,7 @@ package model.game;
 
 import java.util.ArrayList;
 import java.util.Queue;
+import java.util.Stack;
 
 public class GestionCollision {
 
@@ -189,18 +190,24 @@ public class GestionCollision {
 	//
 	// }
 	public void astar(Tiles t1, Tiles t2) {
-
-		ArrayList<Nodes> queue = new ArrayList<Nodes>();
+		Stack<Nodes> queue = new Stack<Nodes>();
+//		ArrayList<Nodes> queue = new ArrayList<Nodes>();
+//		Stack<Nodes> tileTreate = new Stack<>();
+//		Stack<Nodes> test = new Stack<>();
 		ArrayList<Nodes> tileTreated = new ArrayList<Nodes>();
-		ArrayList<Nodes> path = new ArrayList<Nodes>();
-		queue.add(new Nodes(t1, t1, 0));
+		Stack<Nodes> path = new Stack<Nodes>();
+//		queue.add(new Nodes(t1, t1, 0));
+		queue.push(new Nodes(t1, t1, 0));
 		// from.add(new Nodes(c.getX(),c.getY(),0));
 		// cost.add(new Nodes(c.getX(),c.getY(),0));
-		tileTreated.add(queue.get(0));
-		while (queue.size() > 0) {
-
-			Nodes current = queue.remove(0);
-			path.add(current);
+//		tileTreated.add(queue.get(0));
+		tileTreated.add(queue.peek());
+//		tileTreate.push(queue.peek());
+//		while (queue.size() > 0) {	
+		while (!queue.isEmpty()) {
+//			Nodes current = queue.remove(0);
+			Nodes current = queue.pop();
+			path.push(current);
 			if (current.getTile().compareTo(t2) == 0 || heuristic(t2, current.getTile()) > 40) // goal reached or no path possible(stop after too much distance)
 				break;
 			
@@ -208,17 +215,32 @@ public class GestionCollision {
 				int newCost = current.getCost() + no.getCost();
 				boolean contain = false;
 				int index = 0;
+//				int cost = 1000;
+//				while(!tileTreate.isEmpty() && tileTreate.peek().getTile().compareTo(no.getTile()) != 0) 
+//					test.push(tileTreate.pop());
+//				if(!tileTreate.empty()) {
+//					cost = tileTreate.peek().getCost();
+//					contain = true;     
+//				}
+				
+//					
 				while (index < tileTreated.size() && tileTreated.get(index).getTile().compareTo(no.getTile()) != 0)
 					index++;
 				if (index < tileTreated.size() && tileTreated.get(index).getTile().compareTo(no.getTile()) == 0)
 					contain = true;
 				if (/* !cost.contains(no) */!contain || newCost < tileTreated.get(index).getCost()) {
+//				if (/* !cost.contains(no) */!contain || newCost < cost) {
 					no.setCost(newCost);
 					if (!contain) {
 						tileTreated.add(no);
+//						tileTreate.push(no);
 					} else {
 						tileTreated.set(index, no);
+//						tileTreate.pop();
+//						tileTreate.push(no);
 					}
+//					while(!test.isEmpty())
+//						tileTreate.push(test.pop());
 					int prio = newCost + heuristic(t2, no.getTile());
 
 					insert(new Nodes(no.getTile(), current.getTile(), prio), queue);
@@ -230,18 +252,18 @@ public class GestionCollision {
 		tileList.add(0, t1);
 		// for (Tiles t : tileList)
 		// System.out.println(t);
-		// for(Nodes n : path)
-		// System.out.println(n);
+//		 for(Nodes n : path)
+//		 System.out.println(n);
 
 	}
 
-	public void insert(Nodes n, ArrayList<Nodes> file) {
-		int i = 0;
-
-		while (file.size() > i && file.get(i).getCost() < n.getCost()) {
-			i++;
-		}
-		file.add(i, n);
+	public void insert(Nodes n, Stack<Nodes> queue) {
+		Stack<Nodes> waitingStack = new Stack<Nodes>();
+		while(!queue.isEmpty() && queue.peek().getCost() < n.getCost()) 
+			waitingStack.push(queue.pop());
+		waitingStack.push(n);
+		while(!waitingStack.isEmpty())
+			queue.push(waitingStack.pop());		
 	}
 
 	public ArrayList<Nodes> neighbors(Nodes n) {
@@ -264,8 +286,7 @@ public class GestionCollision {
 		return Math.abs(goal.getX() - nextNode.getX()) + Math.abs(goal.getY() - nextNode.getY());
 	}
 
-	public void pathFinding(ArrayList<Nodes> path, Tiles start, Tiles goal) {
-
+	public void pathFinding(Stack<Nodes> path, Tiles start, Tiles goal) {
 		for (Nodes n : path) {
 			if (!goal.equals(start) && n.getTile().compareTo(goal) == 0) {
 				tileList.add(0, n.getTile());
