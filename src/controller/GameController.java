@@ -55,7 +55,7 @@ public class GameController extends Controller {
 	private Timeline loop;
 	private int countX = 32, countY = 0, relocated = 0;
 	private String delete, add;
-	private int addLignTop = 0, addLignBot = 33, addLignX = 299;
+	private int addLignTop = 0, addLignBot = 34, addLignX = 0;
 	private int deleteLignX = 0, deleteLignY = 0;
 	private boolean jumping = false, falling = true;
 	private long temps;
@@ -312,6 +312,11 @@ public class GameController extends Controller {
 								lastCol++;
 						});
 						desc.setText("");
+						focused = inventaire.get(0);
+						equiped=focused;
+						equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
+						equip.setId(focused.getName());
+						//ici
 					}
 				}
 			}
@@ -615,6 +620,7 @@ public class GameController extends Controller {
 		}
 	}
 
+	//if((addLignX + Map.Largeur) % Map.Largeur) >= tile.getX() && tile.getX() <= (addLignX + 60 + Map.Largeur) % Map.Largeur)  );
 	/**
 	 * delete images according to the direction
 	 * 
@@ -857,20 +863,23 @@ public class GameController extends Controller {
 		System.out.println(clicked);
 			if (k.isPrimaryButtonDown()) {
 				if (tabSol[coordX][coordY] != 0) {
-
+					TileView mat = (TileView) clicked;
 					add = "background";
 					System.out.println(coordX + "  " + coordY);
+					inventaire.addToInventory(new Material(Material.getNameByCode(mat.getTile().getCode()), 1, ""));
 					floor.getChildren().removeIf(Tile -> Tile == clicked);
 				}
 			}
-			if (k.isSecondaryButtonDown()) {
+			if (k.isSecondaryButtonDown() && equiped instanceof Material && !equiped.getName().equals("pioche")) {
 				add = "mouse";
 				if (Math.abs(30 - (int) k.getX() / 32) != 0 || Math.abs(16 - (int) k.getY() / 32) != 0) {
 					if (tabSol[coordX][coordY] == 0 && blocPosable(coordX, coordY)) {
-						Tiles t = new Tiles(coordX, coordY, 2);
+						Tiles t = new Tiles(coordX, coordY, Material.codeByName(equiped.getName()));
 						TileView tv = new TileView(t);
 						tv.relocate(((int) k.getX() / 32) * 32 - 32 + countX, ((int) k.getY() / 32) * 32 - countY);
 						floor.getChildren().add(tv);
+						System.out.println(equiped.getName());
+						inventaire.removeFromInventory(equiped.getName(), 1);
 					}
 				}
 			}
