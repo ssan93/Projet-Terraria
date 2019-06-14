@@ -35,6 +35,8 @@ public class Main extends Application {
 				c.addKeyCode(e.getCode());
 				if (e.getCode() == KeyCode.I || e.getCode() == KeyCode.TAB)
 					c.setVisibilityInventoryContainer();
+				else if(e.getCode() == KeyCode.C)
+					c.setVisibleCraftPane();
 				e.consume();
 			});
 		
@@ -46,7 +48,7 @@ public class Main extends Application {
 				e.consume();
 			});
 			scene.setOnMousePressed(e -> {
-				c.test(e);	
+				c.clickAction(e);	
 			});
 			primaryStage.setTitle("Last man in Vietnam");
 			primaryStage.setScene(scene);
