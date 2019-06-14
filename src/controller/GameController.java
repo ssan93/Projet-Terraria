@@ -98,7 +98,8 @@ public class GameController extends Controller {
 	private EnnemyView chicken = new EnnemyView("view/resources/personnages/Chicken.gif", 42 * 4, 22, 10);
 	private EnnemyView fly = new EnnemyView("view/resources/personnages/heli1.gif", 42, 15, 10);
 	private int temps2 = 0;
-	int move = 1;
+	int moveBuffalo = 1;
+	int moveChicken = 1 ;
 	ObservableList<Tiles> viewAbleSol;
 
 	@Override
@@ -649,8 +650,17 @@ public class GameController extends Controller {
 	}
 
 	public void randomMove(Character ch, String character) {
-		if (temps2 % ((int) Math.random() * 11 + 10) == 0)
-			move = (int) (Math.random() * 5) + 1;
+		if (temps2 % ((int) Math.random() * 11 + 10) == 0) {
+				moveBuffalo = (int) (Math.random() * 5) + 1;
+				moveChicken = (int) (Math.random() * 5) + 1;
+		}
+		if(character.equals("buffalo"))
+			switchMove(ch, character, moveBuffalo);
+		else if(character.equals("chicken"))
+			switchMove(ch, character, moveChicken);
+
+	}
+	public void switchMove(Character ch, String character, int move) {
 		switch (move) {
 		case 1:
 			if (detecteur.verifRight(ch, false, false, character))
@@ -679,7 +689,6 @@ public class GameController extends Controller {
 			break;
 		}
 	}
-
 	public void flyMove() {
 		int[][] tabSol = mapPrincipale.getMapSol();
 		int flyX = fly.getChrac().getX();
