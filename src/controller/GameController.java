@@ -56,6 +56,7 @@ public class GameController extends Controller {
 	private InventoryItem focused = null;
 	private ObservableList<Tiles> viewAbleSol;
 	private ObservableList<InventoryItem> selected;
+	private ObservableList<EnnemyView> enemies;
 	private Inventory craftable;
 	private InventoryItem equiped;
 	private boolean isPlaying = false;
@@ -118,7 +119,6 @@ public class GameController extends Controller {
 	@FXML
 	private Button craft;
 
-	
 	private EnnemyView buffalo = new EnnemyView("view/resources/personnages/buffalo.gif", 1, 20, 10);
 	private EnnemyView chicken = new EnnemyView("view/resources/personnages/Chicken.gif", 42 * 4, 22, 10);
 	private EnnemyView oculus = new EnnemyView("view/resources/personnages/oculus.gif", 43 * 4, 22, 10);
@@ -133,6 +133,7 @@ public class GameController extends Controller {
 		TileView.inizImages();
 		craftable = new Inventory();
 		selected = FXCollections.observableArrayList();
+		enemies = FXCollections.observableArrayList();
 		changeRdi(null);
 		effect.visibleProperty().bind(inventoryContainer.visibleProperty());
 		inventoryContainer.setVisible(false);
@@ -155,18 +156,13 @@ public class GameController extends Controller {
 		bill.getChrac().setEquiped(equiped);
 		equip.setImage(new Image("view/resources/Inventaire/" + focused.getName() + "_Inv.png"));
 		inventaire.addToInventory(Craft.objetÀcraft.get("10 fer, 10 plastique, 10 cuivre, etabli"));
-		inventaire.addToInventory(new Material("bois", 1, "bois qui vient des arbres"));
-		inventaire.addToInventory(new Material("metal", 2, "metal "));
-		// inventaire.addToInventory("plastique", 1);
-		// inventaire.addToInventory("metal", 5);
-		inventaire.addToInventory(new InventoryItem("M16", 1, ""));
 		play();
 		inventaire.addToInventory(new Material("bois", 1, ""));
 		inventaire.addToInventory(new Material("metal", 2, ""));
-		pnjPane.getChildren().add(buffalo);
-		pnjPane.getChildren().add(chicken);
-		pnjPane.getChildren().add(fly);
-		pnjPane.getChildren().add(oculus);
+		enemies.add(buffalo);
+		enemies.add(chicken);
+		enemies.add(fly);
+		enemies.add(oculus);
 		charapane.setDisable(true);
 		pnjPane.setDisable(true);
 		buffalo.layoutXProperty().bind(buffalo.getChrac().getXProperty().multiply(32 / 4));
@@ -405,6 +401,26 @@ public class GameController extends Controller {
 				}
 			}
 		});
+		enemies.addListener(new ListChangeListener<EnnemyView>() {
+
+			@Override
+			public void onChanged(Change<? extends EnnemyView> c) {
+				while (c.next()) {
+					if (c.wasAdded()) {
+						// ici
+						pnjPane.getChildren().addAll(c.getAddedSubList());
+						c.getAddedSubList().forEach(
+								en -> en.getChrac().getHpProperty().addListener((observable, oldValue, newValue) -> {
+									if (newValue.intValue() <= 0) {
+										pnjPane.getChildren().remove(en);
+										enemies.remove(en);
+									}
+									
+								}));
+					}
+				}
+			}
+		});
 	}
 
 	public void play() {
@@ -637,23 +653,10 @@ public class GameController extends Controller {
 	public void addImages(String direction) {
 		ObservableList<Tiles> ListSol = mapPrincipale.getTilesListSol();
 		ObservableList<Tiles> ListMid = mapPrincipale.getTilesListMid();
-		/*
-		 * int [][] mapMid = mapPrincipale.getMapMid(); int [][] mapSol =
-		 * mapPrincipale.getMapSol();
-		 */
 		switch (direction) {
 
 		case "Right":
 			add = "Right";
-
-			/*
-			 * for(int y = addLignTop; y <= addLignBot; y++) { if(mapMid[(addLignX + 61) %
-			 * 300][y]!=0) { Tiles t = new Tiles ((addLignX + 61) % 300,y,mapMid[(addLignX +
-			 * 61) % 300][y]); viewAbleSol.add(t); } if(mapSol[(addLignX + 61) % 300][y]!=0)
-			 * { Tiles t = new Tiles ((addLignX + 61) % 300,y,mapSol[(addLignX + 61) %
-			 * 300][y]); viewAbleSol.add(t); } }
-			 */
-
 			for (Tiles tile : ListMid)
 				if (tile.getX() == (addLignX + 61) % Map.Largeur && addLignTop <= tile.getY()
 						&& tile.getY() <= addLignBot)
@@ -781,23 +784,8 @@ public class GameController extends Controller {
 			randomMove(buffalo.getChrac(), "buffalo");
 			randomMove(chicken.getChrac(), "chicken");
 			animalFalling();
-			if (bill.getChrac().getX() < oculus.getChrac().getX()/4) {
-				if (detecteur.verifLeft(oculus.getChrac(), false, false, "chicken"))
-					oculus.getChrac().move("Left", true);
-				else if (detecteur.verifTopLeft(oculus.getChrac(), "chicken")) {
-					oculus.getChrac().move("Up", true);
-					oculus.getChrac().move("Left", true);
-				}
-			}
-			else if(bill.getChrac().getX() > oculus.getChrac().getX()/4){
-				if (detecteur.verifRight(oculus.getChrac(), false, false, "chicken"))
-					oculus.getChrac().move("Right", true);
-				else if (detecteur.verifTopRight(oculus.getChrac(), "chicken")) {
-					oculus.getChrac().move("Up", true);
-					oculus.getChrac().move("Right", true);
-				}
-			}
-				
+			oculusMove();
+
 		}));
 		loop.getKeyFrames().add(kf);
 	}
@@ -853,35 +841,61 @@ public class GameController extends Controller {
 		}
 	}
 
-	public void flyMove() {
-		int[][] tabSol = mapPrincipale.getMapSol();
-		int flyX = fly.getChrac().getX();
-		int flyY = fly.getChrac().getY();
-		int billX = bill.getChrac().getX();
-		int billY = bill.getChrac().getY();
-		if (tabSol[flyX][flyY] == 0 && temps2 % 10 == 0) {
-			Tiles t = new Tiles(flyX, flyY);
-			Tiles t2 = new Tiles(billX + 1, billY - 1);
-			if (detecteur.heuristic(t, t2) == 0) {
-				// bill.getChrac().damage(10);
-				fly.getChrac().animation("shoot");
-			} else if (tabSol[(billX + 1 + Map.Largeur) % Map.Largeur][billY - 1] != 0
-					&& detecteur.heuristic(t, t2) < fly.getChrac().getAggroRange()) {
-
-			} else if (detecteur.heuristic(t, t2) < fly.getChrac().getAggroRange()
-					&& detecteur.heuristic(new Tiles(43, 15), t) < 30) {
-				astarMove(fly.getChrac(), t, t2);
-				fly.getChrac().animation("stand");
+	public void oculusMove() {
+		if (enemies.contains(oculus)) {
+			if (bill.getChrac().getX() < oculus.getChrac().getX() / 4) {
+				if (detecteur.verifLeft(oculus.getChrac(), false, false, "chicken"))
+					oculus.getChrac().move("Left", true);
+				else if (detecteur.verifTopLeft(oculus.getChrac(), "chicken")) {
+					oculus.getChrac().move("Up", true);
+					oculus.getChrac().move("Left", true);
+				} 
 			}
+			else if (bill.getChrac().getX() == oculus.getChrac().getX() / 4 && bill.getChrac().getY() == oculus.getChrac().getY())
+				bill.getChrac().damage(1);
 
-			else if (fly.getChrac().getX() <= 45 && fly.getChrac().getY() == 15) {
-				astarMove(fly.getChrac(), t, new Tiles(45, 16));
-				fly.getChrac().animation("stand");
+			 else if (bill.getChrac().getX() > oculus.getChrac().getX() / 4) {
+				if (detecteur.verifRight(oculus.getChrac(), false, false, "chicken"))
+					oculus.getChrac().move("Right", true);
+				else if (detecteur.verifTopRight(oculus.getChrac(), "chicken")) {
+					oculus.getChrac().move("Up", true);
+					oculus.getChrac().move("Right", true);
+				}
+			}
+		}
+	}
 
-			} else {
-				astarMove(fly.getChrac(), t, new Tiles(39, 15));
-				fly.getChrac().animation("stand");
+	public void flyMove() {
+		if (enemies.contains(fly)) {
+			int[][] tabSol = mapPrincipale.getMapSol();
+			int flyX = fly.getChrac().getX();
+			int flyY = fly.getChrac().getY();
+			int billX = bill.getChrac().getX();
+			int billY = bill.getChrac().getY();
+			if (tabSol[flyX][flyY] == 0 && temps2 % 10 == 0) {
+				Tiles t = new Tiles(flyX, flyY);
+				Tiles t2 = new Tiles(billX + 1, billY - 1);
+				if (detecteur.heuristic(t, t2) == 0) {
+					 bill.getChrac().damage(10);
+					fly.getChrac().animation("shoot");
+				} else if (tabSol[(billX + 1 + Map.Largeur) % Map.Largeur][billY - 1] != 0
+						&& detecteur.heuristic(t, t2) < fly.getChrac().getAggroRange()) {
 
+				} else if (detecteur.heuristic(t, t2) < fly.getChrac().getAggroRange()
+						&& detecteur.heuristic(new Tiles(43, 15), t) < 30) {
+					astarMove(fly.getChrac(), t, t2);
+					fly.getChrac().animation("stand");
+				}
+
+				else if (fly.getChrac().getX() <= 45 && fly.getChrac().getY() == 15) {
+					astarMove(fly.getChrac(), t, new Tiles(45, 16));
+					fly.getChrac().animation("stand");
+
+				} else {
+					astarMove(fly.getChrac(), t, new Tiles(39, 15));
+					fly.getChrac().animation("stand");
+
+				}
 			}
 		}
 	}
